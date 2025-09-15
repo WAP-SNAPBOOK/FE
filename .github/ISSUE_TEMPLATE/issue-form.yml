@@ -9,9 +9,12 @@ body:
     attributes:
       label: '🙋 담당자(Assignee)'
       options:
+        - seobeeeee1001
         - seobeeee2024
         - 0411mia
         - choiwlsdnr
+        - heejintv
+        - jinohpark371
     validations:
       required: true
       
