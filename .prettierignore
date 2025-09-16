@@ -1,0 +1,20 @@
+# 빌드 결과물
+dist
+build
+
+# 패키지 관리
+node_modules
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# 환경 변수 파일
+.env
+.env.* 
+
+# Git 관련
+.git
+.github
+
+# 기타
+.vscode
