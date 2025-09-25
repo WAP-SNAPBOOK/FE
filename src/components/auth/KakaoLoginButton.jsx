@@ -27,10 +27,12 @@ function KakaoLoginButton() {
   };
 
   return (
-    <KakaoButton onClick={handleLogin}>
-      <img src={kakaoIcon} alt="kakao symbol" aria-hidden="true" />
-      <span>카카오로 계속하기</span>
-    </KakaoButton>
+    <>
+      <KakaoButton onClick={handleLogin}>
+        <img src={kakaoIcon} alt="kakao symbol" aria-hidden="true" />
+        <span>카카오로 계속하기</span>
+      </KakaoButton>
+    </>
   );
 }
 
