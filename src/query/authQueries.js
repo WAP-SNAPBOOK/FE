@@ -1,10 +1,8 @@
 import { useMutation } from '@tanstack/react-query';
+import { kakaoAuthService } from '../api/auth/kakaoAuthService';
 
 export const useHandleAuthCode = () => {
   return useMutation({
-    mutationFn: (code) => {
-      //TODO : 서버 인가코드 전달
-      return code;
-    },
+    mutationFn: (code) => kakaoAuthService.exchangeCodeForToken(code),
   });
 };
