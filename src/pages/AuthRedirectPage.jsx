@@ -13,22 +13,11 @@ function AuthRedirectPage() {
     }
   }, [searchParams]);
 
-  if (handleAuthCode.isPending) {
-    return <div>인가 코드 처리 중</div>;
-  }
+  if (handleAuthCode.isPending) return <div>로그인 처리 중</div>;
 
-  if (handleAuthCode.isError) {
-    return <div>에러 발생</div>;
-  }
+  if (handleAuthCode.isError) return <div>로그인 실패</div>;
 
-  if (handleAuthCode.isSuccess) {
-    return (
-      <div>
-        <h2>인가 코드 받기 성공</h2>
-        <p>{handleAuthCode.data}</p>
-      </div>
-    );
-  }
+  if (handleAuthCode.isSuccess) return <div>로그인 성공 {JSON.stringify(handleAuthCode.data)}</div>;
 
   return <div>인가 코드 확인 중</div>;
 }
