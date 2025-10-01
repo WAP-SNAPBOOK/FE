@@ -17,7 +17,7 @@ function AuthRedirectPage() {
 
   if (handleAuthCode.isError) return <div>로그인 실패</div>;
 
-  if (handleAuthCode.isSuccess) return <div>로그인 성공 {JSON.stringify(handleAuthCode.data)}</div>;
+  if (handleAuthCode.isSuccess) return <div>로그인 성공!</div>;
 
   return <div>인가 코드 확인 중</div>;
 }
