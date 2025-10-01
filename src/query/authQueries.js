@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import { kakaoAuthService } from '../api/auth/kakaoAuthService';
+import { kakaoAuthService } from '../api/services/kakaoAuthService';
 import { authStorage } from '../utils/authStorage';
 
 export const useHandleAuthCode = () => {
