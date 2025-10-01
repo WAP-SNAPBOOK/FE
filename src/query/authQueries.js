@@ -14,6 +14,7 @@ export const useHandleAuthCode = () => {
 
       const status = data?.authStatus;
       if (status === 'SIGNUP_REQUIRED') {
+        //신규 유저 -> 가입 선택 화면으로
         navigate('/signup');
       } else {
         // 로그인 성공
