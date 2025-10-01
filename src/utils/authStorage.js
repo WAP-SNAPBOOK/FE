@@ -20,7 +20,7 @@ export const authStorage = {
   },
 
   //엑세스토큰 꺼내기
-  getAccessToken: () => () => authStorage.get()?.accessToken || null,
+  getAccessToken: () => authStorage.get()?.accessToken || null,
 
   //리프레쉬토큰 꺼내기
   getRefreshToken: () => authStorage.get()?.refreshToken || null,
