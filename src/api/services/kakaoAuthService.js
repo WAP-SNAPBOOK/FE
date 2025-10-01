@@ -7,7 +7,6 @@ export const kakaoAuthService = {
   getAuthUrl: () =>
     `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}`,
 
-  //TODO 실제 api함수 교체
   exchangeCodeForToken: async (code) => {
     const res = await axiosClient.post('/oauth/login/kakao', { accessCode: code });
     return res.data;
