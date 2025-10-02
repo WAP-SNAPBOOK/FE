@@ -11,4 +11,10 @@ export const kakaoAuthService = {
     const res = await axiosClient.post('/oauth/login/kakao', { accessCode: code });
     return res.data;
   },
+
+  //회원탈퇴
+  deleteUser: async () => {
+    const res = await axiosClient.delete('/user');
+    return res.data;
+  },
 };

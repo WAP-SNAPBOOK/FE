@@ -23,3 +23,22 @@ export const useHandleAuthCode = () => {
     },
   });
 };
+
+// 로그아웃
+export function useDeleteUser() {
+  const navigate = useNavigate();
+
+  return useMutation({
+    mutationFn: kakaoAuthService.deleteUser,
+    onSuccess: () => {
+      //기존 사용자 정보 다 날리기
+      authStorage.clear();
+
+      //홈 화면 이동
+      navigate('/');
+    },
+    onError: (error) => {
+      console.error('로그아웃 실패:', error);
+    },
+  });
+}
