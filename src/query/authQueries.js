@@ -24,7 +24,7 @@ export const useHandleAuthCode = () => {
   });
 };
 
-// 로그아웃
+// 회원탈퇴
 export function useDeleteUser() {
   const navigate = useNavigate();
 
