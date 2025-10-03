@@ -1,7 +1,7 @@
 // pages/SignupGate.jsx
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { authStorage } from '../../utils/authStorage';
+import { authStorage } from '../../utils/auth/authStorage';
 
 function SignupGatePage() {
   const navigate = useNavigate();

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { authStorage } from '../../utils/authStorage';
+import { authStorage } from '../../utils/auth/authStorage';
 import { useSignupCustomer } from '../../query/signupQueries';
 import { useNavigate } from 'react-router-dom';
 
