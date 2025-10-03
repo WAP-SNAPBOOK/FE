@@ -2,6 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 import { kakaoAuthService } from '../api/services/kakaoAuthService';
 import { authStorage } from '../utils/auth/authStorage';
 import { useNavigate } from 'react-router-dom';
+import normalizeAuthResponse from '../utils/auth/normalizeAuthResponse';
 
 export const useHandleAuthCode = () => {
   const navigate = useNavigate();
@@ -9,8 +10,9 @@ export const useHandleAuthCode = () => {
   return useMutation({
     mutationFn: (code) => kakaoAuthService.exchangeCodeForToken(code),
     onSuccess: (data) => {
+      const normalized = normalizeAuthResponse(data);
       // 로그인 성공 시 응답 데이터를 저장
-      authStorage.save(data);
+      authStorage.save(normalized);
 
       const status = data?.authStatus;
       if (status === 'SIGNUP_REQUIRED') {
