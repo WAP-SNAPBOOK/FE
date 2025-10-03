@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import { kakaoAuthService } from '../api/services/kakaoAuthService';
-import { authStorage } from '../utils/authStorage';
+import { authStorage } from '../utils/auth/authStorage';
 import { useNavigate } from 'react-router-dom';
 
 export const useHandleAuthCode = () => {
