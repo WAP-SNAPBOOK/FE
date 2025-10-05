@@ -1,40 +1,28 @@
-const STORAGE_KEY = 'authData';
+const STORAGE_KEY = 'authTokens';
 
 export const authStorage = {
-  //로그인 관련 데이터 자장
-  save: (normalized) => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(normalized));
+  saveTokens({ accessToken, refreshToken }) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ accessToken, refreshToken }));
   },
 
-  //로그인 데이터 꺼내기
-  get: () => {
+  //전체 토큰 반환
+  getTokens() {
     const raw = localStorage.getItem(STORAGE_KEY);
     return raw ? JSON.parse(raw) : null;
   },
 
-  //로그인 데이터 초기화
-  clear: () => {
+  //로컬 스토리지 초기화
+  clear() {
     localStorage.removeItem(STORAGE_KEY);
   },
 
-  //엑세스토큰 꺼내기
-  getAccessToken: () => authStorage.get()?.tokens?.accessToken || null,
+  //엑세스 토큰 반환
+  getAccessToken() {
+    return authStorage.getTokens()?.accessToken ?? null;
+  },
 
-  //리프레쉬토큰 꺼내기
-  getRefreshToken: () => authStorage.get()?.tokens?.refreshToken || null,
-
-  //사용자 유형(CUSTOMER | OWNER)
-  getUserType: () => authStorage.get()?.getUserType || null,
-
-  //사용자 로그인 상태 꺼내기
-  getStatus: () => authStorage.get()?.authStatus || null,
-
-  // 공통 프로필 (닉네임 등)
-  getNickname: () => authStorage.get()?.profile?.nickname ?? null,
-
-  // 점주 전용 정보
-  getBusinessName: () => authStorage.get()?.profile?.businessName ?? null,
-  getBusinessNumber: () => authStorage.get()?.profile?.businessNumber ?? null,
-  getAddress: () => authStorage.get()?.profile?.address ?? null,
-  getPhoneNumber: () => authStorage.get()?.profile?.phoneNumber ?? null,
+  //리프레쉬 토큰 반환
+  getRefreshToken() {
+    return authStorage.getTokens()?.refreshToken ?? null;
+  },
 };
