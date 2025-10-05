@@ -33,12 +33,16 @@ export const useHandleAuthCode = () => {
 
 // 회원탈퇴
 export function useDeleteUser() {
+  const { logout } = useAUth();
   const navigate = useNavigate();
 
   return useMutation({
     mutationFn: kakaoAuthService.deleteUser,
     onSuccess: () => {
       //기존 사용자 정보 다 날리기
+      logout();
+
+      //스토리지 초기화
       authStorage.clear();
 
       //홈 화면 이동
