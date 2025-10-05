@@ -2,20 +2,25 @@ import { useMutation } from '@tanstack/react-query';
 import { kakaoAuthService } from '../api/services/kakaoAuthService';
 import { authStorage } from '../utils/auth/authStorage';
 import { useNavigate } from 'react-router-dom';
+import { useAUth } from '../context/AuthContext';
 import normalizeAuthResponse from '../utils/auth/normalizeAuthResponse';
 
 export const useHandleAuthCode = () => {
+  const { login } = useAUth();
   const navigate = useNavigate();
 
   return useMutation({
     mutationFn: (code) => kakaoAuthService.exchangeCodeForToken(code),
     onSuccess: (data) => {
       const normalized = normalizeAuthResponse(data);
-      // 로그인 성공 시 응답 데이터를 저장
-      authStorage.save(normalized);
+      //토큰은 스토리지에 저장
+      authStorage.saveTokens(normalized);
 
-      const status = data?.authStatus;
-      if (status === 'SIGNUP_REQUIRED') {
+      //사용자 정보는 Context에 따로 관리
+      login(normalized.profile);
+
+      //회언가입 분기처리
+      if (data.authStatus === 'SIGNUP_REQUIRED') {
         //신규 유저 -> 가입 선택 화면으로
         navigate('/signup');
       } else {
