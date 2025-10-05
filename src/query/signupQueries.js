@@ -3,6 +3,7 @@ import { signupService } from '../api/services/signupService';
 import { authStorage } from '../utils/auth/authStorage';
 import { useNavigate } from 'react-router-dom';
 import normalizeAuthResponse from '../utils/auth/normalizeAuthResponse';
+import { useAuth } from '../context/AuthContext';
 export const useSignupCustomer = () => {
   const naviagate = useNavigate();
   return useMutation({
@@ -23,6 +24,7 @@ export const useSignupCustomer = () => {
 };
 
 export const useSignupOwner = () => {
+  const setUser = useAuth();
   const navigate = useNavigate();
   return useMutation({
     mutationFn: (payload) => signupService.signupOwner(payload),
@@ -34,7 +36,10 @@ export const useSignupOwner = () => {
       const normalized = normalizeAuthResponse(data);
 
       //응답 구조에 맞춰 사용자 정보 저장
-      authStorage.save(normalized);
+      authStorage.saveTokens(normalized.tokens);
+
+      //사용자 정보 전역 상태 추가
+      setUser(normalized.profile);
 
       navigate('/');
     },
