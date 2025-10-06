@@ -29,7 +29,7 @@ function KakaoLoginButton() {
     window.location.href = kakaoAuthService.getAuthUrl(); //카카오 로그인 URL변경
   };
 
-  //로그아웃
+  //회원탈퇴
   const handleDeleteUser = () => {
     deleteUser.mutate();
   };

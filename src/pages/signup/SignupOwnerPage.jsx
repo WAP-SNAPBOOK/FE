@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { authStorage } from '../../utils/auth/authStorage';
+import { useLocation } from 'react-router-dom';
 import { useSignupOwner } from '../../query/signupQueries';
 import { useNavigate } from 'react-router-dom';
+import { authStorage } from '../../utils/auth/authStorage';
 
 function SignupOwnerPage() {
   const navigate = useNavigate();
-  const status = authStorage.getStatus();
+  const location = useLocation();
+  const isSignupRequired = location.state?.isSignupRequired;
   const signup = useSignupOwner();
 
   const [form, setForm] = useState({
@@ -17,8 +19,9 @@ function SignupOwnerPage() {
   });
 
   useEffect(() => {
-    if (status !== 'SIGNUP_REQUIRED') navigate('/');
-  }, [status, navigate]);
+    //비인가된 접근 시 홈으로
+    if (!isSignupRequired) navigate('/');
+  }, [navigate]);
 
   const onChange = (e) => setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
   const onSubmit = (e) => {
