@@ -3,7 +3,6 @@ import { kakaoAuthService } from '../api/services/kakaoAuthService';
 import { authStorage } from '../utils/auth/authStorage';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import normalizeAuthResponse from '../utils/auth/normalizeAuthResponse';
 
 export const useHandleAuthCode = () => {
   const { login } = useAuth();
@@ -12,12 +11,8 @@ export const useHandleAuthCode = () => {
   return useMutation({
     mutationFn: (code) => kakaoAuthService.exchangeCodeForToken(code),
     onSuccess: (data) => {
-      const normalized = normalizeAuthResponse(data);
-      //토큰은 스토리지에 저장
-      authStorage.saveTokens(normalized.tokens);
-
-      //사용자 정보는 Context에 따로 관리
-      login(normalized.profile);
+      //로그인 후 응답값 전역상태+authstorage 저장
+      login(data);
 
       //회언가입 분기처리
       if (data.authStatus === 'SIGNUP_REQUIRED') {
@@ -27,6 +22,10 @@ export const useHandleAuthCode = () => {
         // 로그인 성공
         navigate('/');
       }
+    },
+    onError: (error) => {
+      console.error('로그인 실패:', error);
+      alert('로그인 중 문제가 발생했습니다. 다시 시도해주세요.');
     },
   });
 };
