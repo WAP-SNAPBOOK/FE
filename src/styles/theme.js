@@ -17,7 +17,7 @@ const theme = {
     },
 
     primary: '#F08080',
-    focus: '#F08080',
+    highlight: { DEFAULT: '#F08080', 10: 'rgba(240, 128, 128 0.1)' },
 
     success: '#4CAF50',
     warning: '#FFC107',
