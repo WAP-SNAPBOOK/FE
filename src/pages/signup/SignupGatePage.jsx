@@ -1,6 +1,8 @@
 // pages/SignupGate.jsx
 import React, { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import Container from '../../components/common/Container';
+import { SignupButton } from '../../components/auth/SignupButton';
 
 function SignupGatePage() {
   const navigate = useNavigate();
@@ -15,18 +17,23 @@ function SignupGatePage() {
   }, [navigate]);
 
   return (
-    <div style={{ padding: 24 }}>
-      <h2>회원가입</h2>
-      <p>일반 고객으로 가입하시겠어요, 점주로 가입하시겠어요?</p>
-      <div style={{ display: 'flex', gap: 12, marginTop: 16 }}>
-        <button onClick={() => navigate('/signup/customer', { state: { isSignupRequired: true } })}>
-          일반 고객
-        </button>
-        <button onClick={() => navigate('/signup/owner', { state: { isSignupRequired: true } })}>
-          점주
-        </button>
+    <Container>
+      <div className="w-[305px] flex flex-col items-center">
+        <h1 className="mb-[73px] text-[30px] font-semibold border-b-2">회원가입</h1>
+        <div className="w-full flex justify-between">
+          <SignupButton.Customer
+            onClick={() => navigate('/signup/customer', { state: { isSignupRequired: true } })}
+          >
+            고객
+          </SignupButton.Customer>
+          <SignupButton.Owner
+            onClick={() => navigate('/signup/owner', { state: { isSignupRequired: true } })}
+          >
+            점주
+          </SignupButton.Owner>
+        </div>
       </div>
-    </div>
+    </Container>
   );
 }
 
