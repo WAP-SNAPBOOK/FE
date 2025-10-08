@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Container from '../../components/common/Container';
 import { SignupButton } from '../../components/auth/SignupButton';
+import { NextButton } from '../../components/common/NextButton';
 
 function SignupGatePage() {
   const navigate = useNavigate();
@@ -20,7 +21,7 @@ function SignupGatePage() {
     <Container>
       <div className="w-[305px] flex flex-col items-center">
         <h1 className="mb-[73px] text-[30px] font-semibold border-b-2">회원가입</h1>
-        <div className="w-full flex justify-between">
+        <div className="w-full flex justify-between mb-[300px]">
           <SignupButton.Customer
             onClick={() => navigate('/signup/customer', { state: { isSignupRequired: true } })}
           >
@@ -32,6 +33,7 @@ function SignupGatePage() {
             점주
           </SignupButton.Owner>
         </div>
+        <NextButton>다음</NextButton>
       </div>
     </Container>
   );
