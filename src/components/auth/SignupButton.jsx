@@ -12,9 +12,13 @@ export const SignupButton = {
     background-color: ${theme.colors.gray[20]};
     color: ${theme.colors.black[75]};
 
-    &:hover {
-      background-color: #43a047;
-    }
+    ${({ $isSelected }) =>
+      $isSelected &&
+      css`
+        background-color: ${theme.colors.highlight[10]};
+        color: ${theme.colors.highlight.DEFAULT};
+        border: 2px solid ${theme.colors.highlight.DEFAULT};
+      `}
   `,
 
   Owner: styled(Button).attrs({
@@ -25,8 +29,12 @@ export const SignupButton = {
     background-color: ${theme.colors.gray[20]};
     color: ${theme.colors.black[75]};
 
-    &:hover {
-      background-color: #1565c0;
-    }
+    ${({ $isSelected }) =>
+      $isSelected &&
+      css`
+        background-color: ${theme.colors.highlight[10]};
+        color: ${theme.colors.highlight.DEFAULT};
+        border: 2px solid ${theme.colors.highlight.DEFAULT};
+      `}
   `,
 };
