@@ -1,5 +1,5 @@
 // src/components/auth/SignupButton.jsx
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { Button } from '../common/Button';
 import theme from '../../styles/theme';
 
