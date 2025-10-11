@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { authStorage } from '../../utils/auth/authStorage';
 import { useSignupCustomer } from '../../query/signupQueries';
 import { useNavigate } from 'react-router-dom';
+import { SignupTitle } from '../../components/title/SignupTitle';
 
 function SignupCustomerPage() {
   const navigate = useNavigate();
-  const status = authStorage.getStatus();
   const signup = useSignupCustomer();
   const [nickname, setNickname] = useState('');
 
@@ -20,7 +20,7 @@ function SignupCustomerPage() {
 
   return (
     <form onSubmit={onSubmit} style={{ padding: 24 }}>
-      <h3>일반 고객 가입</h3>
+      <SignupTitle>고객 회원가입</SignupTitle>
       <label>
         닉네임
         <input value={nickname} onChange={(e) => setNickname(e.target.value)} required />

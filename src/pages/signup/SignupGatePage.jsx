@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import Container from '../../components/common/Container';
 import { SignupButton } from '../../components/auth/SignupButton';
 import { NextButton } from '../../components/common/NextButton';
+import { SignupTitle } from '../../components/title/SignupTitle';
 
 //회원가입 분기 페이지
 function SignupGatePage() {
@@ -28,7 +29,7 @@ function SignupGatePage() {
   return (
     <Container>
       <div className="w-[305px] flex flex-col items-center">
-        <h1 className="mb-[73px] text-[30px] font-semibold border-b-2">회원가입</h1>
+        <SignupTitle>회원가입</SignupTitle>
         <div className="w-full flex justify-between mb-[300px]">
           <SignupButton.Customer
             $isSelected={selectedRole === 'customer'}

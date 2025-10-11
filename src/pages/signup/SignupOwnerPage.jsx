@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useSignupOwner } from '../../query/signupQueries';
 import { useNavigate } from 'react-router-dom';
-import { authStorage } from '../../utils/auth/authStorage';
+import { SignupTitle } from '../../components/title/SignupTitle';
 
 function SignupOwnerPage() {
   const navigate = useNavigate();
@@ -31,7 +31,7 @@ function SignupOwnerPage() {
 
   return (
     <form onSubmit={onSubmit} style={{ padding: 24 }}>
-      <h3>점주 가입</h3>
+      <SignupTitle>점주 회원가입</SignupTitle>
 
       {['nickname', 'businessName', 'businessNumber', 'address', 'phoneNumber'].map((key) => (
         <label key={key} style={{ display: 'block', marginTop: 8 }}>
