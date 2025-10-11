@@ -12,6 +12,7 @@ export const AuthInput = styled(Input).attrs({
 })`
   &::placeholder {
     color: ${({ $placeholder }) => $placeholder};
+    font-weight: 900;
   }
 
   &:focus {
