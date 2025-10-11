@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { authStorage } from '../../utils/auth/authStorage';
 import { useSignupCustomer } from '../../query/signupQueries';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { SignupTitle } from '../../components/title/SignupTitle';
 
 function SignupCustomerPage() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const isSignupRequired = location.state?.isSignupRequired;
   const signup = useSignupCustomer();
   const [nickname, setNickname] = useState('');
 
   useEffect(() => {
-    if (status !== 'SIGNUP_REQUIRED') navigate('/');
-  }, [status, navigate]);
+    ///비인가된 접근 시 홈으로
+    if (!isSignupRequired) navigate('/');
+  }, [navigate]);
 
   const onSubmit = (e) => {
     e.preventDefault();
