@@ -8,10 +8,12 @@ const theme = {
     black: {
       DEFAULT: '#000000',
       20: 'rgba(0 0, 0, 0.2)',
+      30: 'rgba(0, 0, 0, 0.3)',
       75: 'rgba(0 0, 0, 0.75)',
     },
     gray: {
       DEFAULT: '#D1D3D8',
+      border: '#D3D3D3',
       20: 'rgba(209, 211, 216, 0.2)',
       25: 'rgba(209, 211, 216, 0.25)',
     },
