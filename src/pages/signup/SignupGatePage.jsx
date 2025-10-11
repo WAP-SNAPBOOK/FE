@@ -28,7 +28,7 @@ function SignupGatePage() {
 
   return (
     <Container>
-      <div className="w-[305px] h-[529.600px] flex flex-col items-center">
+      <div className="w-[305px] h-[530px] flex flex-col items-center">
         <SignupTitle>회원가입</SignupTitle>
         <div className="w-full flex justify-between mb-[300px]">
           <SignupButton.Customer
