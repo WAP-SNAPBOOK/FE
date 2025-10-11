@@ -2,7 +2,19 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useSignupOwner } from '../../query/signupQueries';
 import { useNavigate } from 'react-router-dom';
-import { authStorage } from '../../utils/auth/authStorage';
+import { SignupTitle } from '../../components/title/SignupTitle';
+import { AuthInput } from '../../components/auth/AuthInput';
+import Container from '../../components/common/Container';
+import { NextButton } from '../../components/common/NextButton';
+
+//필드 라벨 전환 객체
+const fieldLabels = {
+  nickname: '이름',
+  businessName: '상호명',
+  businessNumber: '가게 전화번호',
+  address: '주소',
+  phoneNumber: '전화번호',
+};
 
 function SignupOwnerPage() {
   const navigate = useNavigate();
@@ -30,24 +42,22 @@ function SignupOwnerPage() {
   };
 
   return (
-    <form onSubmit={onSubmit} style={{ padding: 24 }}>
-      <h3>점주 가입</h3>
-
-      {['nickname', 'businessName', 'businessNumber', 'address', 'phoneNumber'].map((key) => (
-        <label key={key} style={{ display: 'block', marginTop: 8 }}>
-          {key}
-          <input name={key} value={form[key]} onChange={onChange} required />
-        </label>
-      ))}
-
-      <div style={{ marginTop: 12 }}>
-        <button type="submit" disabled={signup.isPending}>
-          {signup.isPending ? '가입 중...' : '가입하기'}
-        </button>
+    <Container>
+      <div className="w-[305px] h-[530px] flex flex-col items-center">
+        <SignupTitle>점주 회원가입</SignupTitle>
+        <form onSubmit={onSubmit} className="w-full flex flex-col items-center">
+          {Object.entries(fieldLabels).map(([key, label]) => (
+            <label key={key} className="w-full block mb-[15px]">
+              <AuthInput name={key} value={form[key]} placeholder={label} onChange={onChange} />
+            </label>
+          ))}
+          <NextButton type="submit" disabled={signup.isPending} className="mt-[30px]">
+            {signup.isPending ? '가입중...' : '가입하기'}
+          </NextButton>
+          {signup.isError && <p style={{ color: 'red' }}>가입 실패: {signup.error?.message}</p>}
+        </form>
       </div>
-
-      {signup.isError && <p style={{ color: 'red' }}>가입 실패: {signup.error?.message}</p>}
-    </form>
+    </Container>
   );
 }
 

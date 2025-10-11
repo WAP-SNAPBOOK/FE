@@ -1,11 +1,23 @@
 // pages/SignupGate.jsx
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import Container from '../../components/common/Container';
+import { SignupButton } from '../../components/auth/SignupButton';
+import { NextButton } from '../../components/common/NextButton';
+import { SignupTitle } from '../../components/title/SignupTitle';
 
+//회원가입 분기 페이지
 function SignupGatePage() {
+  const [selectedRole, setSelectedRole] = useState(null); //회원 유형
   const navigate = useNavigate();
   const location = useLocation();
   const isSignupRequired = location.state?.isSignupRequired;
+
+  const handleNext = () => {
+    if (!selectedRole) return alert('회원 유형을 선택해주세요');
+    //회원 분기에 따라 분기
+    navigate(`/signup/${selectedRole}`, { state: { isSignupRequired: true } });
+  };
 
   useEffect(() => {
     if (!isSignupRequired) {
@@ -15,18 +27,26 @@ function SignupGatePage() {
   }, [navigate]);
 
   return (
-    <div style={{ padding: 24 }}>
-      <h2>회원가입</h2>
-      <p>일반 고객으로 가입하시겠어요, 점주로 가입하시겠어요?</p>
-      <div style={{ display: 'flex', gap: 12, marginTop: 16 }}>
-        <button onClick={() => navigate('/signup/customer', { state: { isSignupRequired: true } })}>
-          일반 고객
-        </button>
-        <button onClick={() => navigate('/signup/owner', { state: { isSignupRequired: true } })}>
-          점주
-        </button>
+    <Container>
+      <div className="w-[305px] h-[530px] flex flex-col items-center">
+        <SignupTitle>회원가입</SignupTitle>
+        <div className="w-full flex justify-between mb-[300px]">
+          <SignupButton.Customer
+            $isSelected={selectedRole === 'customer'}
+            onClick={() => setSelectedRole('customer')}
+          >
+            고객
+          </SignupButton.Customer>
+          <SignupButton.Owner
+            $isSelected={selectedRole === 'owner'}
+            onClick={() => setSelectedRole('owner')}
+          >
+            점주
+          </SignupButton.Owner>
+        </div>
+        <NextButton onClick={handleNext}>다음</NextButton>
       </div>
-    </div>
+    </Container>
   );
 }
 

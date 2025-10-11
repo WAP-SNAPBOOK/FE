@@ -1,7 +1,6 @@
 import React from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import KakaoLoginButton from './components/auth/KakaoLoginButton';
 import AuthRedirectPage from './pages/AuthRedirectPage';
 import SignupGatePage from './pages/signup/SignupGatePage';
 import SignupOwnerPage from './pages/signup/SignupOwnerPage';

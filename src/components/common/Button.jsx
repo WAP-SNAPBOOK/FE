@@ -6,12 +6,12 @@ export const Button = styled.button`
   justify-content: ${({ $align }) => $align || 'center'};
   gap: ${({ $gap }) => $gap || '8px'};
 
-  height: 50px;
+  height: ${({ $height }) => $height || '50px'};
   padding: 0 16px;
 
   border: none;
   border-radius: 12px; /* 공통 라운드 */
-  font-size: 15px;
+  font-size: ${({ $fontSize }) => $fontSize || '15px'};
   font-weight: 700;
   cursor: pointer;
   user-select: none;
