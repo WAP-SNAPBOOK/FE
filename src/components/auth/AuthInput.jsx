@@ -1,6 +1,6 @@
 // src/components/input/AuthInput.jsx
 import styled, { css } from 'styled-components';
-import { Input } from '../common/input';
+import { Input } from '../common/Input';
 import theme from '../../styles/theme';
 
 export const AuthInput = styled(Input).attrs({
