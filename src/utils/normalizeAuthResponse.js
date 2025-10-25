@@ -19,7 +19,6 @@ export default function normalizeAuthResponse(raw) {
     tokens,
     role: raw.role ?? null,
     message: raw.message ?? null,
-    authStatus: raw.authStatus ?? null,
     name: raw.name ?? null,
     phoneNumber: raw.phoneNumber ?? null,
   };
