@@ -3,12 +3,11 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import AuthRedirectPage from './pages/AuthRedirectPage';
 import SignupGatePage from './pages/signup/SignupGatePage';
-import SignupOwnerPage from './pages/signup/SignupOwnerPage';
-import SignupCustomerPage from './pages/signup/SignupCustomerPage';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { AuthProvider } from './context/AuthContext';
 import LoginPage from './pages/login/LoginPage';
 import GlobalStyle from './styles/GlobalStyled';
+import SignupPage from './pages/signup/SignupPage';
 
 const queryClient = new QueryClient();
 
@@ -24,8 +23,8 @@ function App() {
               <Route path="/" element={<LoginPage />} />
               <Route path="/auth" element={<AuthRedirectPage />} />
               <Route path="/signup" element={<SignupGatePage />} />
-              <Route path="/signup/owner" element={<SignupOwnerPage />} />
-              <Route path="/signup/customer" element={<SignupCustomerPage />} />
+              <Route path="/signup/customer" element={<SignupPage userType="CUSTOMER" />} />
+              <Route path="/signup/owner" element={<SignupPage userType="OWNER" />} />
             </Routes>
           </BrowserRouter>
         </AuthProvider>
