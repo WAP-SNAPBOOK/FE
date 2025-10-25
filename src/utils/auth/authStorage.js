@@ -1,15 +1,21 @@
+import normalizeAuthResponse from '../normalizeAuthResponse';
+
 const STORAGE_KEY = 'authData';
 
 export const authStorage = {
   //로그인 관련 데이터 자장
-  save: (normalized) => {
+  save: (raw) => {
+    if (raw === undefined) return; // 저장하지 않음
+    const normalized = normalizeAuthResponse(raw);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(normalized));
   },
 
   //로그인 데이터 꺼내기
   get: () => {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : null;
+    const authData = localStorage.getItem(STORAGE_KEY);
+
+    if (!authData || authData === 'undefined') return null;
+    return JSON.parse(authData);
   },
 
   //로그인 데이터 초기화
@@ -17,9 +23,8 @@ export const authStorage = {
     localStorage.removeItem(STORAGE_KEY);
   },
 
-  //엑세스토큰 꺼내기
+  //엑세스 토큰 접근
   getAccessToken: () => authStorage.get()?.tokens?.accessToken || null,
-
-  //리프레쉬토큰 꺼내기
+  //리프레쉬 토큰 접근
   getRefreshToken: () => authStorage.get()?.tokens?.refreshToken || null,
 };
