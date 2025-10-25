@@ -1,11 +1,10 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { authStorage } from '../utils/auth/authStorage';
-import normalizeAuthResponse from '../utils/auth/normalizeAuthResponse';
 
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
-  const [auth, setAuth] = useState(null);
+  const [auth, setAuth] = useState({ name: '', phoneNumber: '' });
 
   useEffect(() => {
     const stored = authStorage.get();
@@ -16,15 +15,18 @@ export function AuthProvider({ children }) {
     }
   }, []);
 
-  //로그인 후 받은 응답으로 토큰을 제외한 나머지 사용자 상태만 관리
-  const login = (rawResponse) => {
-    const normalized = normalizeAuthResponse(rawResponse);
-    if (!normalized) return;
-    //유저 타입, 프로필 정보, 로그인상태만
-    const { userType, profile, authStatus } = normalized;
-    setAuth({ userType, profile, authStatus });
-    //토큰 포함해서 모두 저장
-    authStorage.save(normalized);
+  //로그인 후 받은 응답으로 토큰을 제외한 나머지 사용자 정보 상태만 관리
+  const login = (response) => {
+    if (!response) return;
+
+    // 화면에서 관리할 사용자 정보만 설정 (토큰 제외)
+    setAuth({
+      name: response.name,
+      phoneNumber: response.phoneNumber,
+    });
+
+    // 토큰 포함해서 모두 저장
+    authStorage.save(response);
   };
 
   //사용자 정보, 로그인 상태 초기화(로그아웃)
