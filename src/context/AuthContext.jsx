@@ -9,7 +9,6 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     const stored = authStorage.get();
-    console.log(stored);
     if (stored) {
       //토큰을 제외한 사용자 정보만 관리
       const { name, phoneNumber } = stored;
