@@ -4,14 +4,16 @@ import { authStorage } from '../utils/auth/authStorage';
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
+  //회원 정보 전역 상태
   const [auth, setAuth] = useState({ name: '', phoneNumber: '' });
 
   useEffect(() => {
     const stored = authStorage.get();
+    console.log(stored);
     if (stored) {
       //토큰을 제외한 사용자 정보만 관리
-      const { userType, profile, authStatus } = stored;
-      setAuth({ userType, profile, authStatus });
+      const { name, phoneNumber } = stored;
+      setAuth({ name, phoneNumber });
     }
   }, []);
 
