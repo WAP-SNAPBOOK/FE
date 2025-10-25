@@ -11,7 +11,7 @@ export const useHandleAuthCode = () => {
   return useMutation({
     mutationFn: (code) => kakaoAuthService.exchangeCodeForToken(code),
     onSuccess: (data) => {
-      //로그인 후 응답값 전역상태+authstorage 저장
+      //로그인 후 회원 정보 전역 상태로 저장
       login(data);
 
       //회언가입 분기처리
