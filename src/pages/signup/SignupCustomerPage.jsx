@@ -11,18 +11,37 @@ function SignupCustomerPage() {
   const location = useLocation();
   const isSignupRequired = location.state?.isSignupRequired;
   const signup = useSignupCustomer();
-  const [nickname, setNickname] = useState('');
+  //회원가입 입력 폼 상태
+  const [formData, setFormData] = useState({
+    name: '',
+    phoneNumber: '',
+  });
 
   useEffect(() => {
     ///비인가된 접근 시 홈으로
     if (!isSignupRequired) navigate('/');
   }, [navigate]);
 
-  const onChange = (e) => setNickname(e.target.value);
+  //회원가입 입력 폼 헨들러
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
+  //회원가입 입력폼 제출 헨들러
   const onSubmit = (e) => {
     e.preventDefault();
-    signup.mutate({ nickname });
+
+    const { name, phoneNumber } = formData;
+    if (!name || !phoneNumber) {
+      alert('이름과 전화번호를 모두 입력해주세요.');
+      return;
+    }
+
+    signup.mutate(formData);
   };
 
   return (
@@ -30,12 +49,21 @@ function SignupCustomerPage() {
       <div className="w-[305px] h-[530px] flex flex-col items-center">
         <SignupTitle>고객 회원가입</SignupTitle>
         <form onSubmit={onSubmit} className="w-full flex flex-col items-center">
-          <label key={'닉네임'} className="w-full block mb-[15px]">
+          <label className="w-full block mb-[15px]">
             <AuthInput
-              name={'닉네임'}
-              value={nickname}
-              placeholder={'닉네임'}
-              onChange={onChange}
+              name="name"
+              value={formData.name}
+              placeholder="이름"
+              onChange={handleChange}
+            />
+          </label>
+
+          <label className="w-full block mb-[15px]">
+            <AuthInput
+              name="phoneNumber"
+              value={formData.phoneNumber}
+              placeholder="전화번호"
+              onChange={handleChange}
             />
           </label>
           <NextButton type="submit" disabled={signup.isPending} className="mt-[30px]">
