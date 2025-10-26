@@ -33,7 +33,8 @@ export const useSignupOwner = () => {
       //사용자 정보 전역 상태 + 스토리지 저장
       login(data);
 
-      navigate('/');
+      //추가 정보(가게 등록) 페이지로 이동
+      navigate('/signup/owner/shop-info', { state: { isSignupRequired: true } });
     },
   });
 };
