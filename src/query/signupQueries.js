@@ -33,6 +33,19 @@ export const useSignupOwner = () => {
       //사용자 정보 전역 상태 + 스토리지 저장
       login(data);
 
+      //추가 정보(가게 등록) 페이지로 이동
+      navigate('/signup/owner/shop-info', { state: { isSignupRequired: true } });
+    },
+  });
+};
+
+// 점주 추가정보 등록 (가게 정보 등록)
+export const useRegisterShopInfo = () => {
+  const navigate = useNavigate();
+
+  return useMutation({
+    mutationFn: (payload) => signupService.registerShopInfo(payload),
+    onSuccess: () => {
       navigate('/');
     },
   });

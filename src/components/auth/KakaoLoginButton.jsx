@@ -4,7 +4,6 @@ import { Button } from '../common/Button';
 import styled from 'styled-components';
 import theme from '../../styles/theme';
 import kakaoIcon from '../../assets/icons/kakao-icon.svg';
-import { useDeleteUser } from '../../query/authQueries';
 
 const KakaoButton = styled(Button).attrs({
   $align: 'flex-start',
@@ -23,13 +22,9 @@ const KakaoButton = styled(Button).attrs({
 `;
 
 function KakaoLoginButton() {
-  const deleteuser = useDeleteUser();
+  //카카오 로그인 URL변경
   const handleLogin = () => {
-    window.location.href = kakaoAuthService.getAuthUrl(); //카카오 로그인 URL변경
-  };
-
-  const deleteUserHandler = () => {
-    deleteuser.mutate();
+    window.location.href = kakaoAuthService.getAuthUrl();
   };
 
   return (
@@ -38,7 +33,6 @@ function KakaoLoginButton() {
         <img src={kakaoIcon} alt="kakao symbol" aria-hidden="true" />
         <span>카카오로 계속하기</span>
       </KakaoButton>
-      <button onClick={deleteUserHandler}>임시회원탈퇴</button>
     </>
   );
 }
