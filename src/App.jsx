@@ -8,6 +8,7 @@ import { AuthProvider } from './context/AuthContext';
 import LoginPage from './pages/login/LoginPage';
 import GlobalStyle from './styles/GlobalStyled';
 import SignupPage from './pages/signup/SignupPage';
+import ShopInfoPage from './pages/signup/ShopInfoPage';
 
 const queryClient = new QueryClient();
 
@@ -25,6 +26,7 @@ function App() {
               <Route path="/signup" element={<SignupGatePage />} />
               <Route path="/signup/customer" element={<SignupPage userType="CUSTOMER" />} />
               <Route path="/signup/owner" element={<SignupPage userType="OWNER" />} />
+              <Route path="/signup/owner/shop-info" element={<ShopInfoPage />} />
             </Routes>
           </BrowserRouter>
         </AuthProvider>
