@@ -8,6 +8,9 @@ import { AuthProvider } from './context/AuthContext';
 import LoginPage from './pages/login/LoginPage';
 import GlobalStyle from './styles/GlobalStyled';
 import SignupPage from './pages/signup/SignupPage';
+import ShopInfoPage from './pages/signup/ShopInfoPage';
+import HomePage from './pages/home/HomePage';
+import { useAuth } from './context/AuthContext';
 
 const queryClient = new QueryClient();
 
@@ -15,23 +18,32 @@ function App() {
   return (
     <>
       <GlobalStyle />
-
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
           <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<LoginPage />} />
-              <Route path="/auth" element={<AuthRedirectPage />} />
-              <Route path="/signup" element={<SignupGatePage />} />
-              <Route path="/signup/customer" element={<SignupPage userType="CUSTOMER" />} />
-              <Route path="/signup/owner" element={<SignupPage userType="OWNER" />} />
-            </Routes>
+            <AppRoutes /> {/* AuthProvider 내부로 분리 */}
           </BrowserRouter>
         </AuthProvider>
 
         <ReactQueryDevtools initialIsOpen={false} position="bottom" />
       </QueryClientProvider>
     </>
+  );
+}
+
+function AppRoutes() {
+  const { auth } = useAuth();
+
+  return (
+    <Routes>
+      {/* 로그인 여부에 따라 분기 */}
+      <Route path="/" element={auth ? <HomePage /> : <LoginPage />} />
+      <Route path="/auth" element={<AuthRedirectPage />} />
+      <Route path="/signup" element={<SignupGatePage />} />
+      <Route path="/signup/customer" element={<SignupPage userType="CUSTOMER" />} />
+      <Route path="/signup/owner" element={<SignupPage userType="OWNER" />} />
+      <Route path="/signup/owner/shop-info" element={<ShopInfoPage />} />
+    </Routes>
   );
 }
 
