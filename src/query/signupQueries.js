@@ -38,3 +38,15 @@ export const useSignupOwner = () => {
     },
   });
 };
+
+// 점주 추가정보 등록 (가게 정보 등록)
+export const useRegisterShopInfo = () => {
+  const navigate = useNavigate();
+
+  return useMutation({
+    mutationFn: (payload) => signupService.registerShopInfo(payload),
+    onSuccess: () => {
+      navigate('/');
+    },
+  });
+};
