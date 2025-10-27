@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { Button } from '../../components/common/Button';
+import { BaseButton } from '../../components/common/Button';
 import { useDeleteUser } from '../../query/authQueries';
 
 export default function HomePage() {
@@ -27,14 +27,14 @@ export default function HomePage() {
         <>
           <p className="mb-2">안녕하세요, {auth.name || '사용자'}님 </p>
           <div className="flex gap-4 mt-4">
-            <Button onClick={goToChat}>💬 채팅 목록 보기</Button>
-            <Button onClick={deleteUserHandler}>임시 회원탈퇴</Button>
+            <BaseButton onClick={goToChat}>💬 채팅 목록 보기</BaseButton>
+            <BaseButton onClick={deleteUserHandler}>임시 회원탈퇴</BaseButton>
           </div>
         </>
       ) : (
         <p>로그인 정보가 없습니다.</p>
       )}
-      <Button></Button>
+      <BaseButton></BaseButton>
     </div>
   );
 }
