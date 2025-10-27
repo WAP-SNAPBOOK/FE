@@ -19,4 +19,5 @@ export const Header = styled.h2`
 export const RoomList = styled.div`
   flex: 1;
   overflow-y: auto;
+  scroll-behavior: smooth;
 `;
