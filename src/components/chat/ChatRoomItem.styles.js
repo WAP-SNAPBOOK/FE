@@ -50,7 +50,7 @@ export const ShopName = styled.span`
 
 export const Time = styled.span`
   font-size: 12px;
-  color: ${theme.colors.gray.text};
+  color: ${theme.colors.gray.dark.DEFAULT};
 `;
 
 export const LastMessage = styled.span`
@@ -59,7 +59,7 @@ export const LastMessage = styled.span`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  color: ${theme.colors.gray.text};
+  color: ${theme.colors.gray.dark.DEFAULT};
 `;
 
 export const UnreadBadge = styled.div`
