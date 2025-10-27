@@ -1,12 +1,19 @@
+import { useNavigate } from 'react-router-dom';
 import * as S from './ChatRoomItem.styles';
 
 export default function ChatRoomItem({ room }) {
+  const navigate = useNavigate();
   const { shopBusinessName, otherUserName, lastMessageContent, lastMessageAt, unreadCount } = room;
+
+  //해당 채팅방 이동 헨들러
+  const handleClick = () => {
+    navigate(`/chat/${room.chatRoomId}`);
+  };
 
   return (
     <S.Container>
       <S.Avatar>{otherUserName[0]}</S.Avatar>
-      <S.InfoWrapper>
+      <S.InfoWrapper onClick={handleClick}>
         <S.TopRow>
           <S.ShopName>{shopBusinessName}</S.ShopName>
           <S.Time>
