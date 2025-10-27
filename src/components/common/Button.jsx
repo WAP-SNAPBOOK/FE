@@ -10,7 +10,7 @@ export const BaseButton = styled.button`
   padding: 0 16px;
 
   border: none;
-  border-radius: 12px; /* 공통 라운드 */
+  border-radius: ${({ $radius }) => $radius || '12px'}; /* 공통 라운드 */
   font-size: ${({ $fontSize }) => $fontSize || '15px'};
   font-weight: 700;
   cursor: pointer;
