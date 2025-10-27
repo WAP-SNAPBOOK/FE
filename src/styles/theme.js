@@ -14,7 +14,10 @@ const theme = {
     gray: {
       DEFAULT: '#D1D3D8',
       border: '#D3D3D3',
-      text: '#5D5D5D',
+      dark: {
+        DEFAULT: '#5D5D5D',
+        50: 'rgba(93, 93, 93, 0.5)',
+      },
       20: 'rgba(209, 211, 216, 0.2)',
       25: 'rgba(209, 211, 216, 0.25)',
     },
