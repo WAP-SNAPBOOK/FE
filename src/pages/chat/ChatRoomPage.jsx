@@ -88,6 +88,7 @@ export default function ChatRoomPage() {
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+            maxLength={300}
           />
           <S.ChatButton onClick={handleSend}>
             <img src={sendIcon} alt="send" />
