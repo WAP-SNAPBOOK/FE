@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { BaseButton } from '../../components/common/Button';
 import theme from '../../styles/theme';
 
 export const PageWrapper = styled.div`
@@ -9,11 +10,25 @@ export const PageWrapper = styled.div`
   background: white;
 `;
 
+export const HeaderBar = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid ${theme.colors.gray.DEFAULT};
+`;
+
 export const Header = styled.h2`
-  padding: 20px 26px;
   font-size: 24px;
   font-weight: bold;
-  border-bottom: 1px solid ${theme.colors.gray.DEFAULT};
+`;
+
+export const MenuButton = styled(BaseButton).attrs({
+  $height: '24px',
+  $padding: '0px',
+})`
+  width: 24px;
+  background: transparent;
 `;
 
 export const RoomList = styled.div`
