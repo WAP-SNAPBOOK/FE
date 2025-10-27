@@ -1,11 +1,11 @@
 import React from 'react';
 import { kakaoAuthService } from '../../api/services/kakaoAuthService';
-import { Button } from '../common/Button';
+import { BaseButton } from '../common/Button';
 import styled from 'styled-components';
 import theme from '../../styles/theme';
 import kakaoIcon from '../../assets/icons/kakao-icon.svg';
 
-const KakaoButton = styled(Button).attrs({
+const KakaoButton = styled(BaseButton).attrs({
   $align: 'flex-start',
   $gap: '35px',
 })`
