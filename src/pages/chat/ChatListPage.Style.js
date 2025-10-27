@@ -4,7 +4,7 @@ import theme from '../../styles/theme';
 export const PageWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  height: 100%;
+  height: 100vh;
   width: 100%;
   background: white;
 `;
