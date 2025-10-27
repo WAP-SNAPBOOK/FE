@@ -1,4 +1,3 @@
-// src/components/common/BaseInput.jsx
 import styled from 'styled-components';
 
 export const BaseInput = styled.input`
