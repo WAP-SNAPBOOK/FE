@@ -3,6 +3,21 @@ description: 'SNAPBOOK_FE Repo에 이슈를 생성하며, 생성된 이슈는 Ji
 labels: [order]
 title: '이슈 이름을 작성해주세요'
 body:
+
+  - type: dropdown
+    id: assignee
+    attributes:
+      label: '🙋 담당자(Assignee)'
+      options:
+        - seobeeeee1001
+        - seobeeee2024
+        - 0411mia
+        - choiwlsdnr
+        - heejintv
+        - jinohpark371
+    validations:
+      required: true
+      
   - type: input
     id: parentKey
     attributes:
