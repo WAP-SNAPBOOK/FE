@@ -1,9 +1,8 @@
-// src/components/input/AuthInput.jsx
 import styled, { css } from 'styled-components';
-import { Input } from '../common/input';
+import { BaseInput } from '../common/BaseInput';
 import theme from '../../styles/theme';
 
-export const AuthInput = styled(Input).attrs({
+export const AuthInput = styled(BaseInput).attrs({
   $border: `1.5px solid ${theme.colors.gray.border}`,
   $color: `${theme.colors.black[90]}`,
   $placeholder: `${theme.colors.black[30]}`,

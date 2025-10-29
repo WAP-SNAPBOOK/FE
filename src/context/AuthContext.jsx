@@ -5,7 +5,7 @@ const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   //회원 정보 전역 상태
-  const [auth, setAuth] = useState({ name: '', phoneNumber: '', userType: '' });
+  const [auth, setAuth] = useState(null);
 
   useEffect(() => {
     const stored = authStorage.get();

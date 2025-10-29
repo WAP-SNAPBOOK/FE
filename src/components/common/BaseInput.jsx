@@ -1,7 +1,7 @@
 // src/components/common/BaseInput.jsx
 import styled from 'styled-components';
 
-export const Input = styled.input`
+export const BaseInput = styled.input`
   width: 100%;
   height: ${({ $height }) => $height || '48px'};
   padding: 0 14px;
