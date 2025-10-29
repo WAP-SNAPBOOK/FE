@@ -92,10 +92,15 @@ export default function ChatRoomPage() {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  //스크롤 제어
+  //스크롤 제어(사용자가 메시지 추가시)
   useEffect(() => {
     scrollToBottom();
-  }, [data]);
+  }, [liveMessages]);
+
+  //스크롤 제어(화면 처음 렌더링 시)
+  useEffect(() => {
+    scrollToBottom();
+  }, []);
 
   //스크롤 감지를 통한 다음 메시지 불러오기
   useEffect(() => {
@@ -120,7 +125,6 @@ export default function ChatRoomPage() {
     if (!input.trim()) return;
     sendMessage(input.trim());
     setInput('');
-    scrollToBottom();
   };
 
   // 모든 메시지 병합 (기존 + 실시간)
