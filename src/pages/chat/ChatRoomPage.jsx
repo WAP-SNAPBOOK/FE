@@ -1,55 +1,130 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useSendMessage, useChatMessages } from '../../query/chatQueries';
+import { chatSocketService } from '../../api/services/chatSocketService';
+import { formatTime } from '../../utils/formatTime';
 import Container from '../../components/common/Container';
 import * as S from './ChatRoomPage.Style';
 import sendIcon from '../../assets/icons/send-icon.svg';
 import addIcon from '../../assets/icons/add-icon.svg';
 import backIcon from '../../assets/icons/back-icon.svg';
 import { ChatRoomTitle } from '../../components/title/SignupTitle';
+import { authStorage } from '../../utils/auth/authStorage';
 
 export default function ChatRoomPage() {
-  const [message, setMessage] = useState(''); //입력 메시지 상태
-  const [messages, setMessages] = useState([
-    { id: 1, text: '안녕하세요! 예약 가능할까요?', sender: 'me', time: '오전 11:03' },
-    { id: 2, text: '네 가능합니다. 언제 오실까요?', sender: 'other', time: '오전 11:12' },
-    { id: 3, text: '오늘 오후 3시에요.', sender: 'me', time: '오전 11:14' },
-  ]); //메세지 목록 상태
+  const [input, setInput] = useState('');
+  const [liveMessages, setLiveMessages] = useState([]);
 
-  //스크롤 제어용 Ref
+  //스크롤 감지용 ref
+  const topObserberRef = useRef(null);
+  //스크롤 제어 참조 훅
   const bottomRef = useRef(null);
-
-  //메시지 추가 시 자동 스크롤
-  useEffect(() => {
-    if (bottomRef.current) {
-      bottomRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [messages]);
-
   const navigate = useNavigate();
-  const { chatRoomId } = useParams(); // URL 파라미터 추출
+  //해당 채팅방 ID
+  const { chatRoomId } = useParams();
 
-  // 메시지 전송 헨들러
-  const handleSend = () => {
-    if (!message.trim()) return;
+  const accessToken = authStorage.getAccessToken();
 
-    //현재 입력한 채팅 옆 시간 추가
+  // 기존 메시지, cursor (HTTP GET 기반)
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useChatMessages(chatRoomId);
+
+  // 모든 페이지 메시지(기존) 합치기
+  const oldMessages = data?.pages.flatMap((page) => page.messages).reverse() ?? [];
+  //메시지 전송 훅
+  const { mutate: sendMessage } = useSendMessage(chatRoomId, (message) => {
+    // 낙관적 업데이트(즉시 메시지 표시)
     const now = new Date();
-    const hours = now.getHours();
-    const minutes = now.getMinutes().toString().padStart(2, '0');
-    const ampm = hours >= 12 ? '오후' : '오전';
-    const formattedTime = `${ampm} ${hours % 12 || 12}:${minutes}`;
+    const tempId = `temp-${Date.now()}`;
 
-    const newMessage = {
-      id: Date.now(),
-      text: message,
-      sender: 'me',
-      time: formattedTime,
+    // 서버와 동일한 구조로 임시 메시지 반영
+    setLiveMessages((prev) => [
+      ...prev,
+      {
+        clientId: tempId,
+        messageId: Date.now(), // 임시 ID
+        senderId: 0, //  TODO: 백엔드에서 보낸 실제 사용자 본인 ID로 교체
+        senderName: '박진오', // TODO: 백앤드에서 보낸 실제 사용자 본인 이름으로 교체
+        message,
+        sentAt: now.toISOString(),
+        isMine: true,
+        pending: true,
+        roomId: Number(chatRoomId),
+      },
+    ]);
+  });
+
+  //WebSocket 연결
+  useEffect(() => {
+    chatSocketService.connect(accessToken, () => {
+      //구독시 상대방 메시지 실시간 업데이트
+      chatSocketService.subscribe(chatRoomId, (incoming) => {
+        setLiveMessages((prev) => {
+          // 1. 같은 메시지(내가 낙관적으로 추가한 메시지)인지 확인
+          const idx = prev.findIndex(
+            (m) =>
+              m.pending &&
+              m.clientId &&
+              m.message === incoming.message &&
+              Math.abs(new Date(m.sentAt) - new Date(incoming.sentAt)) < 2000
+          );
+
+          if (idx >= 0) {
+            // 2. 낙관적 메시지를 서버 메시지로 교체
+            const updated = [...prev];
+            updated[idx] = { ...incoming, pending: false };
+            return updated;
+          }
+
+          // 3. 새로운 메시지면 그냥 추가
+          return [...prev, incoming];
+        });
+      });
+    });
+
+    return () => {
+      chatSocketService.disconnect();
     };
-    setMessages((prev) => [...prev, newMessage]);
-    setMessage('');
+  }, [chatRoomId]);
+
+  //스크롤 제어(새로운 메시지 추가시 추가된 매시지 보기)
+  // 메시지 전송 후 호출
+  const scrollToBottom = () => {
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  //스크롤 제어
+  useEffect(() => {
+    scrollToBottom();
+  }, [data]);
+
+  //스크롤 감지를 통한 다음 메시지 불러오기
+  useEffect(() => {
+    if (!topObserberRef.current || !hasNextPage) return;
+
+    const observer = new IntersectionObserver((entries) => {
+      const first = entries[0];
+      console.log('감지됨: 다음 50개 불러오기');
+      if (first.isIntersecting && hasNextPage && !isFetchingNextPage) {
+        fetchNextPage(); // 다음 50개
+        observer.unobserve(first.target); // 중복 방지: 잠시 해제
+      }
+    });
+
+    observer.observe(topObserberRef.current);
+
+    return () => observer.disconnect();
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  // 메시지 전송 핸들러
+  const handleSend = () => {
+    if (!input.trim()) return;
+    sendMessage(input.trim());
+    setInput('');
+    scrollToBottom();
+  };
+
+  // 모든 메시지 병합 (기존 + 실시간)
+  const allMessages = [...(oldMessages ?? []), ...liveMessages];
   return (
     <Container $start>
       <S.PageWrapper>
@@ -61,32 +136,36 @@ export default function ChatRoomPage() {
           <S.BookButton>예약</S.BookButton>
         </S.Header>
         <S.MessageList>
-          {messages.map((msg) => (
-            <S.MessageRow key={msg.id} $isMine={msg.sender === 'me'}>
-              {/*상대방, 본인을 구분하여 채팅 말풍선 정렬 */}
-              {msg.sender === 'me' ? (
-                <>
-                  <S.Time>{msg.time}</S.Time>
-                  <S.Bubble $isMine>{msg.text}</S.Bubble>
-                </>
-              ) : (
-                <>
-                  <S.Bubble $isMine={false}>{msg.text}</S.Bubble>
-                  <S.Time>{msg.time}</S.Time>
-                </>
-              )}
-            </S.MessageRow>
-          ))}
-          {/* 항상 마지막 메시지 뒤에 붙인 ref */}
+          {allMessages.map((msg, pageIndex) => {
+            const isMine = msg.senderName === '박진오'; // TODO: senderId 비교
+            return (
+              //상대방, 본인 메시지에 따른 정렬
+              <S.MessageRow key={`${pageIndex}-${msg.messageId}`} $isMine={isMine}>
+                {isMine ? (
+                  <>
+                    <S.Time>{formatTime(msg.sentAt)}</S.Time>
+                    <S.Bubble $isMine>{msg.message}</S.Bubble>
+                  </>
+                ) : (
+                  <>
+                    <S.Bubble $isMine={false}>{msg.message}</S.Bubble>
+                    <S.Time>{formatTime(msg.sentAt)}</S.Time>
+                  </>
+                )}
+              </S.MessageRow>
+            );
+          })}
+          {/*스크롤 제어용 div */}
           <div ref={bottomRef} />
         </S.MessageList>
+
         <S.InputBar>
           <S.AddButton>
             <img src={addIcon} alt="addMenu" />
           </S.AddButton>
           <S.ChatInput
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSend()}
             maxLength={300}
           />
