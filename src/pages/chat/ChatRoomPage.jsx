@@ -17,7 +17,7 @@ export default function ChatRoomPage() {
 
   //스크롤 감지용 ref
   const topObserberRef = useRef(null);
-  //스크롤 제어 참조 훅
+  //스크롤 제어 ref
   const bottomRef = useRef(null);
   const navigate = useNavigate();
   //해당 채팅방 ID
@@ -46,7 +46,6 @@ export default function ChatRoomPage() {
         senderName: '박진오', // TODO: 백앤드에서 보낸 실제 사용자 본인 이름으로 교체
         message,
         sentAt: now.toISOString(),
-        isMine: true,
         pending: true,
         roomId: Number(chatRoomId),
       },
@@ -99,8 +98,9 @@ export default function ChatRoomPage() {
 
   //스크롤 제어(화면 처음 렌더링 시)
   useEffect(() => {
-    scrollToBottom();
-  }, []);
+    if (!data) return;
+    setTimeout(() => scrollToBottom(), 0);
+  }, [data]);
 
   //스크롤 감지를 통한 다음 메시지 불러오기
   useEffect(() => {
