@@ -20,7 +20,6 @@ class ChatSocketService {
       connectHeaders: {
         Authorization: `Bearer ${accessToken}`,
       },
-      debug: (str) => console.log('[STOMP]', str),
       reconnectDelay: 5000,
       onConnect,
       onStompError: (frame) => {
@@ -42,11 +41,9 @@ class ChatSocketService {
     if (!this.client || !this.client.connected) return;
 
     const destination = `/topic/chat/${chatRoomId}`;
-    console.log(`[SUBSCRIBE] ${destination}`);
 
     this.client.subscribe(destination, (message) => {
       const body = JSON.parse(message.body);
-      console.log(body);
       onMessage(body);
     });
   }
@@ -61,8 +58,6 @@ class ChatSocketService {
 
     const destination = `/pub/chat/${chatRoomId}`;
     const payload = { message };
-
-    console.log(`[SEND] ${destination}`, payload);
 
     this.client.publish({
       destination,
