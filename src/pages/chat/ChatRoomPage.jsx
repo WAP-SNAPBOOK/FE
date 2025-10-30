@@ -181,8 +181,9 @@ export default function ChatRoomPage() {
     setInput('');
   };
 
-  // 모든 메시지 병합 (기존 + 실시간)
-  const allMessages = [...(oldMessages ?? []), ...liveMessages];
+  // 모든 메시지 병합 (기존 + 실시간, 중복 제거)
+  const merged = [...(oldMessages ?? []), ...liveMessages];
+  const allMessages = Array.from(new Map(merged.map((m) => [m.messageId, m])).values());
   return (
     <Container $start>
       <S.PageWrapper>
