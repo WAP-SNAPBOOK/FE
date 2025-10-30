@@ -96,9 +96,11 @@ export default function ChatRoomPage() {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  //스크롤 제어(사용자가 메시지 추가시)
+  // 실시간(내가 보낸 메시지 or 상대방 메시지 수신)일 때만 하단 이동
   useEffect(() => {
-    scrollToBottom();
+    if (liveMessages.length > 0) {
+      scrollToBottom();
+    }
   }, [liveMessages]);
 
   // 과거 메시지 로드 시 스크롤 위치 보정
