@@ -5,14 +5,14 @@ const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   //회원 정보 전역 상태
-  const [auth, setAuth] = useState({ name: '', phoneNumber: '', userType: '' });
+  const [auth, setAuth] = useState(null);
 
   useEffect(() => {
     const stored = authStorage.get();
     if (stored) {
       //토큰을 제외한 사용자 정보만 관리
-      const { name, phoneNumber, userType } = stored;
-      setAuth({ name, phoneNumber, userType });
+      const { name, phoneNumber, userType, userId } = stored;
+      setAuth({ name, phoneNumber, userType, userId });
     }
   }, []);
 
@@ -25,6 +25,7 @@ export function AuthProvider({ children }) {
       name: response.name,
       phoneNumber: response.phoneNumber,
       userType: response.userType,
+      userId: response.userId,
     });
 
     // 토큰 포함해서 모두 저장

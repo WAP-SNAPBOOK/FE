@@ -1,10 +1,10 @@
 // src/components/auth/SignupButton.jsx
 import styled, { css } from 'styled-components';
-import { Button } from '../common/Button';
+import { BaseButton } from '../common/Button';
 import theme from '../../styles/theme';
 
 export const SignupButton = {
-  Customer: styled(Button).attrs({
+  Customer: styled(BaseButton).attrs({
     className: 'w-[143px] font-semibold',
     $height: '55px',
     $fontSize: '19px',
@@ -21,7 +21,7 @@ export const SignupButton = {
       `}
   `,
 
-  Owner: styled(Button).attrs({
+  Owner: styled(BaseButton).attrs({
     className: 'w-[143px] font-semibold',
     $height: '55px',
     $fontSize: '19px',
