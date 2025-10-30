@@ -96,11 +96,39 @@ export default function ChatRoomPage() {
     scrollToBottom();
   }, [liveMessages]);
 
-  //스크롤 제어(화면 처음 렌더링 시)
+  // 과거 메시지 로드 시 스크롤 위치 보정
+  // 과거 메시지 prepend 시 스크롤 위치 유지
+  const wasFetchingRef = useRef(false);
+  const prevHRef = useRef(0);
+  const prevTopRef = useRef(0);
+
   useEffect(() => {
-    if (!data) return;
-    setTimeout(() => scrollToBottom(), 0);
-  }, [data]);
+    const list = messageListRef.current;
+    if (!list) return;
+
+    // 로드 시작 시점: 현재 높이/위치 저장
+    if (!wasFetchingRef.current && isFetchingNextPage) {
+      wasFetchingRef.current = true;
+      prevHRef.current = list.scrollHeight; //과거의 전체 스크롤 영역 높이
+      prevTopRef.current = list.scrollTop; //과거의 스크롤 위치
+    }
+
+    // 로드 종료 시점: DOM 붙은 뒤 보정
+    if (wasFetchingRef.current && !isFetchingNextPage) {
+      wasFetchingRef.current = false;
+
+      // 렌더 프레임 2번 넘겨서 레이아웃 확정 후 보정
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          const newH = list.scrollHeight; //현재의 전체 스크롤 영역 높이
+          const diff = newH - prevHRef.current; //과거와의 스크롤과의 차이
+
+          // 차이만큼 더해 줘서 현재 보던 지점 유지
+          list.scrollTop = prevTopRef.current + diff;
+        });
+      });
+    }
+  }, [isFetchingNextPage]);
 
   //스크롤 감지를 통한 다음 메시지 불러오기
   useEffect(() => {
