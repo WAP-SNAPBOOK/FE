@@ -14,6 +14,7 @@ import { authStorage } from '../../utils/auth/authStorage';
 export default function ChatRoomPage() {
   const [input, setInput] = useState('');
   const [liveMessages, setLiveMessages] = useState([]);
+  const [readyToObserve, setReadyToObserve] = useState(false);
 
   //스크롤 감지용 ref
   const topObserberRef = useRef(null);
