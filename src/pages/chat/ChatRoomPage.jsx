@@ -10,19 +10,23 @@ import addIcon from '../../assets/icons/add-icon.svg';
 import backIcon from '../../assets/icons/back-icon.svg';
 import { ChatRoomTitle } from '../../components/title/SignupTitle';
 import { authStorage } from '../../utils/auth/authStorage';
+import { useAuth } from '../../context/AuthContext';
 
 export default function ChatRoomPage() {
   const [input, setInput] = useState('');
   const [liveMessages, setLiveMessages] = useState([]);
   const [readyToObserve, setReadyToObserve] = useState(false);
 
+  const { auth } = useAuth();
+  const userId = auth?.userId;
+
   //스크롤 위치 제어용 ref
   const messageListRef = useRef(null);
-
   //스크롤 감지용 ref
   const topObserberRef = useRef(null);
   //스크롤 제어 ref
   const bottomRef = useRef(null);
+
   const navigate = useNavigate();
   //해당 채팅방 ID
   const { chatRoomId } = useParams();
@@ -47,8 +51,8 @@ export default function ChatRoomPage() {
       {
         clientId: tempId,
         messageId: Date.now(), // 임시 ID
-        senderId: 0, //  TODO: 백엔드에서 보낸 실제 사용자 본인 ID로 교체
-        senderName: '박진오', // TODO: 백앤드에서 보낸 실제 사용자 본인 이름으로 교체
+        senderId: userId,
+        senderName: 'me', // TODO: 백앤드에서 보낸 실제 사용자 본인 이름으로 교체
         message,
         sentAt: now.toISOString(),
         pending: true,
@@ -198,7 +202,7 @@ export default function ChatRoomPage() {
           {/*상단 스크롤 감지용 */}
           <div ref={topObserberRef} />
           {allMessages.map((msg, pageIndex) => {
-            const isMine = msg.senderName === '박진오'; // TODO: senderId 비교
+            const isMine = msg.senderId === userId; //사용자 본인 Id를 통한 메시지 판별
             return (
               //상대방, 본인 메시지에 따른 정렬
               <S.MessageRow key={`${pageIndex}-${msg.messageId}`} $isMine={isMine}>
