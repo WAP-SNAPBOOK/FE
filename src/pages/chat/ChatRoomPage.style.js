@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import theme from '../../styles/theme';
 import { BaseButton } from '../../components/common/Button';
-import { BaseInput } from '../../components/common/Input';
+import { BaseInput } from '../../components/common/BaseInput';
 
 export const PageWrapper = styled.div`
   display: flex;
