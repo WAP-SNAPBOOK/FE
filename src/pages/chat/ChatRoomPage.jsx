@@ -30,7 +30,8 @@ export default function ChatRoomPage() {
   const accessToken = authStorage.getAccessToken();
 
   // 기존 메시지, cursor (HTTP GET 기반)
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useChatMessages(chatRoomId);
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isSuccess } =
+    useChatMessages(chatRoomId);
 
   // 모든 페이지 메시지(기존) 합치기
   const oldMessages = data?.pages.flatMap((page) => page.messages).reverse() ?? [];
