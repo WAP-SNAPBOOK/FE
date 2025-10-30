@@ -4,7 +4,7 @@ import { useSendMessage, useChatMessages } from '../../query/chatQueries';
 import { chatSocketService } from '../../api/services/chatSocketService';
 import { formatTime } from '../../utils/formatTime';
 import Container from '../../components/common/Container';
-import * as S from './ChatRoomPage.Style';
+import * as S from './ChatRoomPage.style';
 import sendIcon from '../../assets/icons/send-icon.svg';
 import addIcon from '../../assets/icons/add-icon.svg';
 import backIcon from '../../assets/icons/back-icon.svg';
