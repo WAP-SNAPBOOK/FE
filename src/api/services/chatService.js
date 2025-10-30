@@ -21,8 +21,8 @@ export const chatService = {
       });
       const messages = res.data;
 
-      // nextCursor 계산: 메시지가 있다면 첫번째 messageId
-      const nextCursor = messages.length > 0 ? messages[0].messageId : null;
+      // nextCursor 계산: 이번에 받은 것 중 가장 오래된 메시지ID
+      const nextCursor = messages.length === size ? messages[messages.length - 1].messageId : null;
 
       return { messages, nextCursor };
     } catch (error) {

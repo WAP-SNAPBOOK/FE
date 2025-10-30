@@ -159,7 +159,7 @@ export default function ChatRoomPage() {
               </S.MessageRow>
             );
           })}
-          {/*스크롤 제어용 div */}
+          {/* 하단 스크롤 고정용 */}
           <div ref={bottomRef} />
         </S.MessageList>
 
