@@ -1,9 +1,9 @@
 // src/components/auth/SignupNextButton.jsx
 import styled from 'styled-components';
-import { Button } from '../common/Button';
+import { BaseButton } from '../common/Button';
 import theme from '../../styles/theme';
 
-export const NextButton = styled(Button).attrs({
+export const NextButton = styled(BaseButton).attrs({
   className: 'w-[100%]',
   $height: '55px',
   $fontSize: '18px',

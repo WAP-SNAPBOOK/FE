@@ -11,6 +11,8 @@ import SignupPage from './pages/signup/SignupPage';
 import ShopInfoPage from './pages/signup/ShopInfoPage';
 import HomePage from './pages/home/HomePage';
 import { useAuth } from './context/AuthContext';
+import ChatListPage from './pages/chat/ChatListPage';
+import ChatRoomPage from './pages/chat/ChatRoomPage';
 
 const queryClient = new QueryClient();
 
@@ -33,7 +35,6 @@ function App() {
 
 function AppRoutes() {
   const { auth } = useAuth();
-
   return (
     <Routes>
       {/* 로그인 여부에 따라 분기 */}
@@ -43,6 +44,8 @@ function AppRoutes() {
       <Route path="/signup/customer" element={<SignupPage userType="CUSTOMER" />} />
       <Route path="/signup/owner" element={<SignupPage userType="OWNER" />} />
       <Route path="/signup/owner/shop-info" element={<ShopInfoPage />} />
+      <Route path="/chat" element={<ChatListPage />} />
+      <Route path="/chat/:chatRoomId" element={<ChatRoomPage />} />
     </Routes>
   );
 }

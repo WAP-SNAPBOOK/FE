@@ -21,5 +21,6 @@ export default function normalizeAuthResponse(raw) {
     message: raw.message ?? null,
     name: raw.name ?? null,
     phoneNumber: raw.phoneNumber ?? null,
+    userId: raw.userId ?? null,
   };
 }
