@@ -139,21 +139,40 @@ export default function ChatRoomPage() {
 
   //스크롤 감지를 통한 다음 메시지 불러오기
   useEffect(() => {
-    if (!topObserberRef.current || !hasNextPage) return;
+    if (!data || isFetchingNextPage || readyToObserve) return;
 
-    const observer = new IntersectionObserver((entries) => {
-      const first = entries[0];
-      console.log('감지됨: 다음 50개 불러오기');
-      if (first.isIntersecting && hasNextPage && !isFetchingNextPage) {
-        fetchNextPage(); // 다음 50개
-        observer.unobserve(first.target); // 중복 방지: 잠시 해제
-      }
+    // DOM 렌더 완료 이후로 확실히 미루기
+    requestAnimationFrame(() => {
+      setTimeout(() => {
+        scrollToBottom();
+        setReadyToObserve(true); // 옵저버 켜질 수 있는 신호
+      }, 50);
     });
+  }, [data?.pages?.length, isFetchingNextPage, readyToObserve]);
 
-    observer.observe(topObserberRef.current);
+  useEffect(() => {
+    //첫 페이지 마운트시 스크롤 하단 제어 후 옵저버 등록
+    if (!isSuccess || !readyToObserve) return;
 
+    const target = topObserberRef.current;
+    if (!target) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const first = entries[0];
+        if (first.isIntersecting && hasNextPage && !isFetchingNextPage) {
+          fetchNextPage();
+        }
+      },
+      {
+        threshold: 1.0,
+        root: messageListRef.current,
+      }
+    );
+
+    observer.observe(target);
     return () => observer.disconnect();
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+  }, [readyToObserve]);
 
   // 메시지 전송 핸들러
   const handleSend = () => {
