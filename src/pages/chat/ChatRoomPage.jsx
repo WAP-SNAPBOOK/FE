@@ -194,7 +194,9 @@ export default function ChatRoomPage() {
           <ChatRoomTitle>채팅방 #{chatRoomId}</ChatRoomTitle>
           <S.BookButton>예약</S.BookButton>
         </S.Header>
-        <S.MessageList>
+        <S.MessageList ref={messageListRef}>
+          {/*상단 스크롤 감지용 */}
+          <div ref={topObserberRef} />
           {allMessages.map((msg, pageIndex) => {
             const isMine = msg.senderName === '박진오'; // TODO: senderId 비교
             return (
