@@ -16,6 +16,9 @@ export default function ChatRoomPage() {
   const [liveMessages, setLiveMessages] = useState([]);
   const [readyToObserve, setReadyToObserve] = useState(false);
 
+  //스크롤 위치 제어용 ref
+  const messageListRef = useRef(null);
+
   //스크롤 감지용 ref
   const topObserberRef = useRef(null);
   //스크롤 제어 ref
