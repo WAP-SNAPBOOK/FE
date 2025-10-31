@@ -3,8 +3,10 @@ import styled from 'styled-components';
 export const BaseButton = styled.button`
   display: flex;
   align-items: center;
+  flex-direction: ${({ $column }) => ($column ? 'column' : 'row')};
   justify-content: ${({ $align }) => $align || 'center'};
   gap: ${({ $gap }) => $gap || '8px'};
+  width: ${({ $width }) => $width || 'auto'};
 
   height: ${({ $height }) => $height || '50px'};
   padding: ${({ $padding }) => $padding || '0 16px'};
