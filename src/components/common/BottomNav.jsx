@@ -1,3 +1,36 @@
+import styled from 'styled-components';
+import { useNavigate, useLocation } from 'react-router-dom';
+import HomeIcon from '../../assets/icons/home-icon.svg';
+import UserIcon from '../../assets/icons/user-icon.svg';
+import theme from '../../styles/theme';
+import { BaseButton } from './Button';
+
+export default function BottomNav() {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  //바텀 메뉴 내용 배열
+  const tabs = [
+    { path: '/', label: '홈', icon: HomeIcon },
+    { path: '/mypage', label: '마이', icon: UserIcon },
+  ];
+
+  return (
+    <NavContainer>
+      {tabs.map(({ path, label, icon }) => {
+        //현재 경로로 현재 활성화된 페이지 구별
+        const active = location.pathname === path;
+        return (
+          <TabButton key={path} $active={active} onClick={() => navigate(path)}>
+            <img src={icon} alt={label} />
+            <span>{label}</span>
+          </TabButton>
+        );
+      })}
+    </NavContainer>
+  );
+}
+
 const NavContainer = styled.nav`
   position: fixed;
   bottom: 16px;
