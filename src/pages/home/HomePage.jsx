@@ -33,6 +33,7 @@ export default function HomePage() {
           <MainActionButton onClick={goToChat} icon={ChatIcon} label="채팅방 조회" />
           <MainActionButton onClick={goToChat} icon={BookIcon} label="예약 내역" />
         </S.ButtonGroup>
+        <BottomNav />
       </S.CenterArea>
     </Container>
   );
