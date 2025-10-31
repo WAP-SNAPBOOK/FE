@@ -1,8 +1,14 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { BaseButton } from '../../components/common/Button';
 import { useDeleteUser } from '../../query/authQueries';
+import * as S from './HomePage.styles';
+import ChatIcon from '../../assets/icons/mainChat-icon.svg';
+import BookIcon from '../../assets/icons/book-icon.svg';
+import Container from '../../components/common/Container';
+import Header from '../../components/common/Header';
+import MainActionButton from '../../components/home/MainActionButton ';
+import BottomNav from '../../components/common/BottomNav';
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -21,20 +27,15 @@ export default function HomePage() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-white">
-      <h2 className="text-2xl font-semibold mb-4">홈화면 (임시)</h2>
-      {auth ? (
-        <>
-          <p className="mb-2">안녕하세요, {auth.name || '사용자'}님 </p>
-          <div className="flex gap-4 mt-4">
-            <BaseButton onClick={goToChat}>💬 채팅 목록 보기</BaseButton>
-            <BaseButton onClick={deleteUserHandler}>임시 회원탈퇴</BaseButton>
-          </div>
-        </>
-      ) : (
-        <p>로그인 정보가 없습니다.</p>
-      )}
-      <BaseButton></BaseButton>
-    </div>
+    <Container $start $padding="23px 0">
+      <Header title="SNAPBOOK" showSetting={true} />
+      <S.CenterArea>
+        <S.ButtonGroup>
+          <MainActionButton onClick={goToChat} icon={ChatIcon} label="채팅방 조회" />
+          <MainActionButton onClick={goToChat} icon={BookIcon} label="예약 내역" />
+        </S.ButtonGroup>
+        <BottomNav />
+      </S.CenterArea>
+    </Container>
   );
 }

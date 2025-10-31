@@ -3,10 +3,12 @@ import styled from 'styled-components';
 export const BaseButton = styled.button`
   display: flex;
   align-items: center;
+  flex-direction: ${({ $column }) => ($column ? 'column' : 'row')};
   justify-content: ${({ $align }) => $align || 'center'};
   gap: ${({ $gap }) => $gap || '8px'};
+  width: ${({ $width }) => $width || 'auto'};
 
-  height: ${({ $height }) => $height || '50px'};
+  height: ${({ $height }) => $height || 'auto'};
   padding: ${({ $padding }) => $padding || '0 16px'};
   border: none;
   border-radius: ${({ $radius }) => $radius || '12px'}; /* 공통 라운드 */

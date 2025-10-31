@@ -8,6 +8,7 @@ import kakaoIcon from '../../assets/icons/kakao-icon.svg';
 const KakaoButton = styled(BaseButton).attrs({
   $align: 'flex-start',
   $gap: '35px',
+  $height: '48px',
 })`
   background: ${theme.colors.kakakoYellow};
   color: ${theme.colors.kakaoTextBlack};
