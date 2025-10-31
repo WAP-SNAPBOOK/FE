@@ -8,6 +8,7 @@ import BookIcon from '../../assets/icons/book-icon.svg';
 import Container from '../../components/common/Container';
 import Header from '../../components/common/Header';
 import MainActionButton from '../../components/home/MainActionButton ';
+import BottomNav from '../../components/common/BottomNav';
 
 export default function HomePage() {
   const navigate = useNavigate();
