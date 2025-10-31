@@ -2,7 +2,7 @@ const theme = {
   colors: {
     kakakoYellow: '#FEE500',
     kakaoTextBlack: 'rgba(0,0,0,0.85)',
-
+    mainButtonGray: 'rgba(229, 231, 236, 0.25)',
     // 공통 색상
     white: '#FFFFFF',
     black: {
@@ -32,6 +32,7 @@ const theme = {
   },
   radius: {
     md: '12px',
+    lg: '30px',
   },
 };
 
