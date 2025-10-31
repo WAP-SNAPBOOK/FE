@@ -8,7 +8,7 @@ export const BaseButton = styled.button`
   gap: ${({ $gap }) => $gap || '8px'};
   width: ${({ $width }) => $width || 'auto'};
 
-  height: ${({ $height }) => $height || '50px'};
+  height: ${({ $height }) => $height || 'auto'};
   padding: ${({ $padding }) => $padding || '0 16px'};
   border: none;
   border-radius: ${({ $radius }) => $radius || '12px'}; /* 공통 라운드 */
