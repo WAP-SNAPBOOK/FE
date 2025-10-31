@@ -31,9 +31,7 @@ export default function HomePage() {
       <S.CenterArea>
         <S.ButtonGroup>
           <MainActionButton onClick={goToChat} icon={ChatIcon} label="채팅방 조회" />
-          <MainActionButton onClick={goToChat} icon={BookIcon} label="예약 내역">
-            채팅방 목록
-          </MainActionButton>
+          <MainActionButton onClick={goToChat} icon={BookIcon} label="예약 내역" />
         </S.ButtonGroup>
       </S.CenterArea>
     </Container>
