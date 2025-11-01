@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSendMessage, useChatMessages } from '../../query/chatQueries';
 import { chatSocketService } from '../../api/services/chatSocketService';
+import DateDivider from '../../components/chat/DateDivider';
+import dayjs from 'dayjs';
 import { formatTime } from '../../utils/formatTime';
 import Container from '../../components/common/Container';
 import * as S from './ChatRoomPage.Style';
@@ -156,23 +158,34 @@ export default function ChatRoomPage() {
         <S.MessageList ref={messageListRef}>
           {/*상단 스크롤 감지용 */}
           <div ref={topObserverRef} />
-          {allMessages.map((msg, pageIndex) => {
+          {allMessages.map((msg, index) => {
             const isMine = msg.senderId === userId; //사용자 본인 Id를 통한 메시지 판별
+
+            const currentDate = dayjs(msg.sentAt).format('YYYY-MM-DD'); //현재 날짜
+            const prevDate =
+              index > 0 ? dayjs(allMessages[index - 1].sentAt).format('YYYY-MM-DD') : null; //이전 날짜, 메시지 하나일 시 null
+
+            const showDateDivider = currentDate !== prevDate; //다른 날짜 판별 기준값
+
             return (
-              //상대방, 본인 메시지에 따른 정렬
-              <S.MessageRow key={`${pageIndex}-${msg.messageId}`} $isMine={isMine}>
-                {isMine ? (
-                  <>
-                    <S.Time>{formatTime(msg.sentAt)}</S.Time>
-                    <S.Bubble $isMine>{msg.message}</S.Bubble>
-                  </>
-                ) : (
-                  <>
-                    <S.Bubble $isMine={false}>{msg.message}</S.Bubble>
-                    <S.Time>{formatTime(msg.sentAt)}</S.Time>
-                  </>
-                )}
-              </S.MessageRow>
+              <React.Fragment key={`${index}-${msg.messageId}`}>
+                {/*이전 날짜와 현재 날짜과 다르다면 구분선 추가*/}
+                {showDateDivider && <DateDivider date={msg.sentAt} />}
+                {/*상대방, 본인 메시지에 따른 정렬*/}
+                <S.MessageRow $isMine={isMine}>
+                  {isMine ? (
+                    <>
+                      <S.Time>{formatTime(msg.sentAt)}</S.Time>
+                      <S.Bubble $isMine>{msg.message}</S.Bubble>
+                    </>
+                  ) : (
+                    <>
+                      <S.Bubble $isMine={false}>{msg.message}</S.Bubble>
+                      <S.Time>{formatTime(msg.sentAt)}</S.Time>
+                    </>
+                  )}
+                </S.MessageRow>
+              </React.Fragment>
             );
           })}
           {/* 하단 스크롤 고정용 */}
