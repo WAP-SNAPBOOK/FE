@@ -7,8 +7,14 @@ export const kakaoAuthService = {
   getAuthUrl: () =>
     `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}`,
 
+  // 인가 코드 교환 (로컬/배포 자동 선택)
   exchangeCodeForToken: async (code) => {
-    const res = await axiosClient.post('/oauth/login/kakao', { accessCode: code });
+    const endpoint =
+      import.meta.env.VITE_KAKAO_LOGIN_MODE === 'local'
+        ? '/oauth/login/kakao/local' // 로컬 테스트용
+        : '/oauth/login/kakao'; // 실제 운영용
+
+    const res = await axiosClient.post(endpoint, { accessCode: code });
     return res.data;
   },
 
