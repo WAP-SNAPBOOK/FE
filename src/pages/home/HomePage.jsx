@@ -22,8 +22,14 @@ export default function HomePage() {
     deleteuser.mutate();
   };
 
+  //채팅방 목록 이동
   const goToChat = () => {
-    navigate('/chat'); //chat 경로로 이동
+    navigate('/chat');
+  };
+
+  // 예약 내역 이동
+  const goToReservationList = () => {
+    navigate('/reservations'); // or 실제 라우트 이름에 맞게 수정
   };
 
   return (
@@ -32,7 +38,7 @@ export default function HomePage() {
       <S.CenterArea>
         <S.ButtonGroup>
           <MainActionButton onClick={goToChat} icon={ChatIcon} label="채팅방 조회" />
-          <MainActionButton onClick={goToChat} icon={BookIcon} label="예약 내역" />
+          <MainActionButton onClick={goToReservationList} icon={BookIcon} label="예약 내역" />
         </S.ButtonGroup>
         <BottomNav />
       </S.CenterArea>
