@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Container from "./common/Container";
+import Container from "../common/Container";
 import ModalOverlay from "./ModalOverlay";
 import StepBasic from "./StepBasic";
 import StepOptions from "./StepOptions";
