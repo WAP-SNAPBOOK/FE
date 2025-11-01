@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSendMessage, useChatMessages } from '../../query/chatQueries';
 import { chatSocketService } from '../../api/services/chatSocketService';
+import DateDivider from '../../components/chat/DateDivider';
+import dayjs from 'dayjs';
 import { formatTime } from '../../utils/formatTime';
 import Container from '../../components/common/Container';
 import * as S from './ChatRoomPage.style';
@@ -11,6 +13,9 @@ import backIcon from '../../assets/icons/back-icon.svg';
 import { ChatRoomTitle } from '../../components/title/SignupTitle';
 import { authStorage } from '../../utils/auth/authStorage';
 import { useAuth } from '../../context/AuthContext';
+import { usePreserveScrollPosition } from '../../hooks/chat/usePreserveScrollPosition';
+import { useInitScrollToBottom } from '../../hooks/chat/useInitScrollToBottom';
+import { useTopObserver } from '../../hooks/chat/useTopObserver';
 
 export default function ChatRoomPage() {
   const [input, setInput] = useState('');
@@ -23,7 +28,7 @@ export default function ChatRoomPage() {
   //스크롤 위치 제어용 ref
   const messageListRef = useRef(null);
   //스크롤 감지용 ref
-  const topObserberRef = useRef(null);
+  const topObserverRef = useRef(null);
   //스크롤 제어 ref
   const bottomRef = useRef(null);
 
@@ -107,76 +112,28 @@ export default function ChatRoomPage() {
     }
   }, [liveMessages]);
 
-  // 과거 메시지 로드 시 스크롤 위치 보정
-  // 과거 메시지 prepend 시 스크롤 위치 유지
-  const wasFetchingRef = useRef(false);
-  const prevHRef = useRef(0);
-  const prevTopRef = useRef(0);
+  //메시지 prepend시 스크롤 제어
+  usePreserveScrollPosition(messageListRef, isFetchingNextPage);
 
-  useEffect(() => {
-    const list = messageListRef.current;
-    if (!list) return;
+  //페이지 첫 마운트 시 스크롤 하단 제어
+  useInitScrollToBottom(
+    data,
+    isFetchingNextPage,
+    readyToObserve,
+    scrollToBottom,
+    setReadyToObserve
+  );
 
-    // 로드 시작 시점: 현재 높이/위치 저장
-    if (!wasFetchingRef.current && isFetchingNextPage) {
-      wasFetchingRef.current = true;
-      prevHRef.current = list.scrollHeight; //과거의 전체 스크롤 영역 높이
-      prevTopRef.current = list.scrollTop; //과거의 스크롤 위치
-    }
-
-    // 로드 종료 시점: DOM 붙은 뒤 보정
-    if (wasFetchingRef.current && !isFetchingNextPage) {
-      wasFetchingRef.current = false;
-
-      // 렌더 프레임 2번 넘겨서 레이아웃 확정 후 보정
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          const newH = list.scrollHeight; //현재의 전체 스크롤 영역 높이
-          const diff = newH - prevHRef.current; //과거와의 스크롤과의 차이
-
-          // 차이만큼 더해 줘서 현재 보던 지점 유지
-          list.scrollTop = prevTopRef.current + diff;
-        });
-      });
-    }
-  }, [isFetchingNextPage]);
-
-  //스크롤 감지를 통한 다음 메시지 불러오기
-  useEffect(() => {
-    if (!data || isFetchingNextPage || readyToObserve) return;
-
-    // DOM 렌더 완료 이후로 확실히 미루기
-    requestAnimationFrame(() => {
-      setTimeout(() => {
-        scrollToBottom();
-        setReadyToObserve(true); // 옵저버 켜질 수 있는 신호
-      }, 50);
-    });
-  }, [data?.pages?.length, isFetchingNextPage, readyToObserve]);
-
-  useEffect(() => {
-    //첫 페이지 마운트시 스크롤 하단 제어 후 옵저버 등록
-    if (!isSuccess || !readyToObserve) return;
-
-    const target = topObserberRef.current;
-    if (!target) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const first = entries[0];
-        if (first.isIntersecting && hasNextPage && !isFetchingNextPage) {
-          fetchNextPage();
-        }
-      },
-      {
-        threshold: 1.0,
-        root: messageListRef.current,
-      }
-    );
-
-    observer.observe(target);
-    return () => observer.disconnect();
-  }, [readyToObserve]);
+  //상단 스크롤 제어를 통한 fetch 훅
+  useTopObserver(
+    isSuccess,
+    readyToObserve,
+    topObserverRef,
+    messageListRef,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage
+  );
 
   // 메시지 전송 핸들러
   const handleSend = () => {
@@ -200,24 +157,35 @@ export default function ChatRoomPage() {
         </S.Header>
         <S.MessageList ref={messageListRef}>
           {/*상단 스크롤 감지용 */}
-          <div ref={topObserberRef} />
-          {allMessages.map((msg, pageIndex) => {
+          <div ref={topObserverRef} />
+          {allMessages.map((msg, index) => {
             const isMine = msg.senderId === userId; //사용자 본인 Id를 통한 메시지 판별
+
+            const currentDate = dayjs(msg.sentAt).format('YYYY-MM-DD'); //현재 날짜
+            const prevDate =
+              index > 0 ? dayjs(allMessages[index - 1].sentAt).format('YYYY-MM-DD') : null; //이전 날짜, 메시지 하나일 시 null
+
+            const showDateDivider = currentDate !== prevDate; //다른 날짜 판별 기준값
+
             return (
-              //상대방, 본인 메시지에 따른 정렬
-              <S.MessageRow key={`${pageIndex}-${msg.messageId}`} $isMine={isMine}>
-                {isMine ? (
-                  <>
-                    <S.Time>{formatTime(msg.sentAt)}</S.Time>
-                    <S.Bubble $isMine>{msg.message}</S.Bubble>
-                  </>
-                ) : (
-                  <>
-                    <S.Bubble $isMine={false}>{msg.message}</S.Bubble>
-                    <S.Time>{formatTime(msg.sentAt)}</S.Time>
-                  </>
-                )}
-              </S.MessageRow>
+              <React.Fragment key={`${index}-${msg.messageId}`}>
+                {/*이전 날짜와 현재 날짜과 다르다면 구분선 추가*/}
+                {showDateDivider && <DateDivider date={msg.sentAt} />}
+                {/*상대방, 본인 메시지에 따른 정렬*/}
+                <S.MessageRow $isMine={isMine}>
+                  {isMine ? (
+                    <>
+                      <S.Time>{formatTime(msg.sentAt)}</S.Time>
+                      <S.Bubble $isMine>{msg.message}</S.Bubble>
+                    </>
+                  ) : (
+                    <>
+                      <S.Bubble $isMine={false}>{msg.message}</S.Bubble>
+                      <S.Time>{formatTime(msg.sentAt)}</S.Time>
+                    </>
+                  )}
+                </S.MessageRow>
+              </React.Fragment>
             );
           })}
           {/* 하단 스크롤 고정용 */}
