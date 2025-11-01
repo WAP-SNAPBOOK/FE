@@ -17,7 +17,7 @@ export default function ReservationModal({ isOpen, onClose, onSubmit }) {
 
   // Step 2
   const [removeYn, setRemoveYn] = useState("유");
-  const [handFootYn, setHandFootYn] = useState("유");
+  const [handFootYn, setHandFootYn] = useState("손");
   const [extYn, setExtYn] = useState("무");
   const [extCount, setExtCount] = useState("");
   const [wrapYn, setWrapYn] = useState("무");
@@ -36,7 +36,7 @@ export default function ReservationModal({ isOpen, onClose, onSubmit }) {
     setDate("");
     setTime("");
     setRemoveYn("유");
-    setHandFootYn("유");
+    setHandFootYn("손");
     setExtYn("무");
     setExtCount("");
     setWrapYn("무");
@@ -57,7 +57,7 @@ export default function ReservationModal({ isOpen, onClose, onSubmit }) {
       time,
       options: {
         remove: removeYn === "유",
-        handFoot: handFootYn === "유",
+        handFoot: handFootYn === "손",
         extension: extYn === "유" ? Number(extCount || 0) : 0,
         wrapping: wrapYn === "유" ? Number(wrapCount || 0) : 0,
       },

@@ -1,5 +1,6 @@
 import React from "react";
 import OptionRow from "./OptionRow";
+import RadioHandFoot from "./RadioHandFoot";
 
 export default function StepOptions({
 	removeYn,
@@ -29,7 +30,7 @@ export default function StepOptions({
 	return (
 			<>
 				<OptionRow label="제거 유무" name="removeYn" value={removeYn} onChange={setRemoveYn} />
-				<OptionRow label="손 / 발" name="handFootYn" value={handFootYn} onChange={setHandFootYn} />
+				<RadioHandFoot label="손 / 발" name="handFootYn" value={handFootYn} onChange={setHandFootYn} />
 				<OptionRow
 					label="연장"
 					name="extYn"
