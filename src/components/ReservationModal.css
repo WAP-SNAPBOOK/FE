@@ -35,10 +35,10 @@
 
 .closeBtn { position: absolute; right: 12px; top: 10px; border: none; background: transparent; font-size: 20px; line-height: 1; cursor: pointer; }
 
-.title { font-size: 24px; font-weight: 600; text-align: center; margin: 8px 0 50px; display: inline-block; border-bottom: 3px solid var(--pink); padding-bottom: 4px; align-self: center; }
+.title { font-size: 24px; font-weight: bold; text-align: center; margin: 8px 0 50px; display: inline-block; border-bottom: 3px solid var(--pink); padding-bottom: 4px; align-self: center; }
 
 .fieldGroup { margin-bottom: 12px; }
-.label { font-size: 14px; color: var(--text); font-weight: 1000; margin: 7px 7px; }
+.label { font-size: 14px; color: var(--text); font-weight: bold; margin: 7px 7px; }
 .field { width: 100%; height: 43px; border-radius: 8px; border: 1px solid var(--border); padding: 4px 8px; outline: none; box-sizing: border-box; }
 
 .rule { height: 1px; background: #eee; border: 0; margin: 4px 0 14px; }
