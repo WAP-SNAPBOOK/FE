@@ -14,6 +14,7 @@ import { useAuth } from './context/AuthContext';
 import ChatListPage from './pages/chat/ChatListPage';
 import ChatRoomPage from './pages/chat/ChatRoomPage';
 import Mypage from './pages/profile/Mypage';
+import ReservationList from './pages/ReservationList/ReservationList';
 
 const queryClient = new QueryClient();
 
@@ -47,6 +48,7 @@ function AppRoutes() {
       <Route path="/signup/owner/shop-info" element={<ShopInfoPage />} />
       <Route path="/chat" element={<ChatListPage />} />
       <Route path="/chat/:chatRoomId" element={<ChatRoomPage />} />
+      <Route path="/reservations" element={<ReservationList />} />
       <Route path="/mypage" element={<Mypage />} />
     </Routes>
   );

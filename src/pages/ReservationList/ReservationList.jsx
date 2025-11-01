@@ -1,33 +1,79 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import Icon from '../../assets/icons/mainChat-icon.svg';
 
-export default function CustomerReservationList() {
-  const [reservations, setReservations] = useState([]);
-  const [loading, setLoading] = useState(true);
+export default function ReservationList() {
+  const [reservations, setReservations] = useState([
+    {
+      id: 1,
+      shopName: '스냅북 네일샵',
+      shopImageUrl: Icon,
+      status: '접수중',
+      customerName: '박진오',
+      date: '2025-11-01',
+      day: '토',
+      time: '14:30',
+      floor: '2층',
+    },
+    {
+      id: 2,
+      shopName: '뷰티라운지 Snap',
+      shopImageUrl: Icon,
+      status: '예약확정',
+      customerName: '홍길동',
+      date: '2025-11-05',
+      day: '수',
+      time: '16:00',
+      floor: '3층',
+    },
+    {
+      id: 2,
+      shopName: '뷰티라운지 Snap',
+      shopImageUrl: Icon,
+      status: '예약확정',
+      customerName: '홍길동',
+      date: '2025-11-05',
+      day: '수',
+      time: '16:00',
+      floor: '3층',
+    },
+    {
+      id: 2,
+      shopName: 'WAP 뷰티샵',
+      shopImageUrl: Icon,
+      status: '예약거절',
+      customerName: '홍길동',
+      date: '2025-11-05',
+      day: '수',
+      time: '16:00',
+      floor: '3층',
+    },
+  ]);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const STATUS_STYLES = {
-    접수중: { bg: "bg-blue-100", text: "text-blue-500", dot: "bg-blue-500" },
-    예약확정: { bg: "bg-green-100", text: "text-green-600", dot: "bg-green-600" },
-    예약거절: { bg: "bg-red-100", text: "text-red-500", dot: "bg-red-500" },
+    접수중: { bg: 'bg-blue-100', text: 'text-blue-500', dot: 'bg-blue-500' },
+    예약확정: { bg: 'bg-green-100', text: 'text-green-600', dot: 'bg-green-600' },
+    예약거절: { bg: 'bg-red-100', text: 'text-red-500', dot: 'bg-red-500' },
   };
 
   // 컴포넌트가 렌더링될 때 백엔드에서 데이터 불러오기
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await axios.get("http://localhost:8080/api/reservations"); // 🔗 실제 API 주소로 교체
-        setReservations(res.data);
-      } catch (err) {
-        console.error("예약 데이터 불러오기 실패:", err);
-        setError("예약 데이터를 불러오지 못했습니다.");
-      } finally {
-        setLoading(false);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const res = await axios.get('http://localhost:8080/api/reservations'); // 🔗 실제 API 주소로 교체
+  //       setReservations(res.data);
+  //     } catch (err) {
+  //       console.error('예약 데이터 불러오기 실패:', err);
+  //       setError('예약 데이터를 불러오지 못했습니다.');
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
 
-    fetchData();
-  }, []);
+  //   fetchData();
+  // }, []);
 
   // 로딩 상태
   if (loading)
@@ -40,9 +86,7 @@ export default function CustomerReservationList() {
   // 에러 상태
   if (error)
     return (
-      <div className="flex justify-center items-center min-h-screen text-red-500">
-        {error}
-      </div>
+      <div className="flex justify-center items-center min-h-screen text-red-500">{error}</div>
     );
 
   // 데이터 없음
@@ -56,9 +100,7 @@ export default function CustomerReservationList() {
   return (
     <div className="flex flex-col items-center min-h-screen bg-white pt-10">
       {/* 제목 */}
-      <h1 className="text-[24px] font-bold mb-[20px] self-start">
-        예약 내역
-      </h1>
+      <h1 className="text-[24px] font-bold mb-[20px] self-start">예약 내역</h1>
 
       {/* 회색 박스 */}
       <div
@@ -103,7 +145,7 @@ export default function CustomerReservationList() {
                       leading-[20px]
                       text-black
                     "
-                    style={{ letterSpacing: "-0.3px" }}
+                    style={{ letterSpacing: '-0.3px' }}
                   >
                     {r.shopName}
                   </h2>
@@ -117,15 +159,15 @@ export default function CustomerReservationList() {
                     rounded-[5px]
                     text-[9px] font-semibold
                     min-w-[49px]
-                    ${STATUS_STYLES[r.status]?.bg || "bg-gray-100"}
-                    ${STATUS_STYLES[r.status]?.text || "text-gray-500"}
+                    ${STATUS_STYLES[r.status]?.bg || 'bg-gray-100'}
+                    ${STATUS_STYLES[r.status]?.text || 'text-gray-500'}
                     mr-[13px]
                   `}
                 >
                   <span
                     className={`
                       w-[8px] h-[8px] rounded-full mr-[4px]
-                      ${STATUS_STYLES[r.status]?.dot || "bg-gray-400"}
+                      ${STATUS_STYLES[r.status]?.dot || 'bg-gray-400'}
                     `}
                   ></span>
                   {r.status}
@@ -138,7 +180,7 @@ export default function CustomerReservationList() {
               {/* 예약 상세 */}
               <div
                 className="flex flex-col gap-[1px] mt-[15px] ml-[52px] mr-[12px]"
-                style={{ fontSize: "13px", color: "#C0C0C0", lineHeight: "1.2" }}
+                style={{ fontSize: '13px', color: '#C0C0C0', lineHeight: '1.2' }}
               >
                 <div className="flex justify-between">
                   <span>고객명</span>

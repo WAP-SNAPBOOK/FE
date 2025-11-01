@@ -11,6 +11,7 @@ import sendIcon from '../../assets/icons/send-icon.svg';
 import addIcon from '../../assets/icons/add-icon.svg';
 import backIcon from '../../assets/icons/back-icon.svg';
 import { ChatRoomTitle } from '../../components/title/SignupTitle';
+import ReservationModal from '../../components/reservation/ReservationModal';
 import { authStorage } from '../../utils/auth/authStorage';
 import { useAuth } from '../../context/AuthContext';
 import { usePreserveScrollPosition } from '../../hooks/chat/usePreserveScrollPosition';
@@ -21,6 +22,11 @@ export default function ChatRoomPage() {
   const [input, setInput] = useState('');
   const [liveMessages, setLiveMessages] = useState([]);
   const [readyToObserve, setReadyToObserve] = useState(false);
+
+  //예약 모달 상태
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
 
   const { auth } = useAuth();
   const userId = auth?.userId;
@@ -153,7 +159,7 @@ export default function ChatRoomPage() {
             <img src={backIcon} alt="back" />
           </S.BackButton>
           <ChatRoomTitle>채팅방 #{chatRoomId}</ChatRoomTitle>
-          <S.BookButton>예약</S.BookButton>
+          <S.BookButton onClick={openModal}>예약</S.BookButton>
         </S.Header>
         <S.MessageList ref={messageListRef}>
           {/*상단 스크롤 감지용 */}
@@ -207,6 +213,14 @@ export default function ChatRoomPage() {
           </S.ChatButton>
         </S.InputBar>
       </S.PageWrapper>
+      {/*예약 모달 */}
+      <ReservationModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        onSubmit={() => {
+          console.log('form 전달');
+        }}
+      />
     </Container>
   );
 }
