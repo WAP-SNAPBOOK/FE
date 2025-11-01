@@ -16,12 +16,10 @@ export default function StepBasic({
 }) {
 	return (
 			<>
-			<label className="label">이름</label>
+				<label className="label">이름</label>
 				<InputField placeholder="이름을 입력해 주세요." value={name} onChange={(e) => setName(e.target.value)} />
 				<label className="label">전화번호</label>
 				<InputField placeholder="전화번호를 입력해 주세요." value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
-				
-				<hr className="rule" />
 				
 				<div className="grid2" style={{ marginBottom: 6 }}>
 					<label className="label">날짜</label>
