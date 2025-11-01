@@ -1,0 +1,87 @@
+:root {
+  --pink: #f08080;
+  --border: #e5e5e5;
+  --text: #333;
+}
+
+/* 전역 폰트 적용(모달 내부) */
+.modalCard, .modalCard * {
+  font-family: 'Pretendard', system-ui, -apple-system, 'Noto Sans KR', sans-serif;
+}
+
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex; justify-content: center; align-items: center;
+  z-index: 1000;
+}
+
+.modalCenter {
+  width: 100%; height: 100%;
+  display: flex; justify-content: center; align-items: center;
+  pointer-events: none;
+}
+
+.modalCard {
+  pointer-events: auto;
+  width: 322px; min-height: 600px;
+  background: #fff; border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.15);
+  padding: 60px 24px 28px; position: relative;
+  box-sizing: border-box; display: flex; flex-direction: column;
+}
+
+
+.closeBtn { position: absolute; right: 12px; top: 10px; border: none; background: transparent; font-size: 20px; line-height: 1; cursor: pointer; }
+
+.title { font-size: 24px; font-weight: bold; text-align: center; margin: 8px 0 50px; display: inline-block; border-bottom: 3px solid var(--pink); padding-bottom: 4px; align-self: center; }
+
+.fieldGroup { margin-bottom: 12px; }
+.label { font-size: 14px; color: var(--text); font-weight: bold; margin: 7px 7px; }
+.field { width: 100%; height: 43px; border-radius: 8px; border: 1px solid var(--border); padding: 4px 8px; outline: none; box-sizing: border-box; }
+
+.rule { height: 1px; background: #eee; border: 0; margin: 4px 0 14px; }
+
+/* === 날짜·시간 2열 레이아웃 오버라이드 (formCenter 없이도 동작) === */
+.grid2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr)); /* ✅ 1fr이 줄어들 수 있게 */
+  column-gap: 8px;
+  row-gap: 6px;
+  width: 100%;
+}
+
+/* ✅ 그리드 자식이 필요 시 폭을 0까지 줄일 수 있게 */
+.grid2 > * {
+  min-width: 0;
+}
+
+/* ✅ input이 셀 가로폭을 꽉 채우도록 */
+.grid2 input[type="date"],
+.grid2 input[type="time"] {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+
+/* 옵션 행 & 라디오 */
+.row { display: grid; grid-template-columns: 100px 1fr; column-gap: 1px; margin: 10px 0 10px 40px; }
+.radioGroup { display: flex; gap: 10px; margin-top: 5px; }
+.radioLabel { display: inline-flex; gap: 6px; cursor: pointer; font-weight: 50; }
+.smallField { height: 36px; width: 120px; margin-top: 8px; }
+
+/* 3단계: 사진 + 요구사항 (다중, 가로 스크롤) */
+.selectRow { display: grid; grid-template-columns: 100px 1fr; align-items: center; column-gap: 10px; margin-bottom: 12px; }
+.selectControl { display: block; width: 100%; height: 43px; border: 1px solid var(--border); border-radius: 8px; line-height: 43px; padding: 0 12px; color: #9e9e9e; cursor: pointer; }
+.previewRow { margin: 8px 0 16px; }
+.previewList { display: flex; gap: 8px; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 6px; }
+.previewItem { position: relative; flex: 0 0 auto; width: 88px; height: 88px; }
+.previewThumb { width: 100%; height: 100%; border-radius: 10px; object-fit: cover; border: 1px solid var(--border); }
+.thumbRemove { position: absolute; top: 6px; right: 6px; width: 20px; height: 20px; border: none; border-radius: 50%; background: rgba(0,0,0,0.45); color: #fff; font-size: 14px; line-height: 20px; cursor: pointer; }
+.textarea { width: 100%; min-height: 90px; border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; box-sizing: border-box; resize: vertical; }
+.muted { font-size: 12px; color: #999; margin-left: 6px; }
+
+.submitRow { margin-top: auto; }
+.submitBtn { width: 100%; height: 50px; border-radius: 10px; border: none; background: var(--pink); color: #fff; font-weight: 700; cursor: pointer; }
+.submitBtn:disabled { opacity: 0.5; cursor: not-allowed; }
