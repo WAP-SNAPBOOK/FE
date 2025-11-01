@@ -152,7 +152,7 @@ export default function ChatRoomPage() {
         setReadyToObserve(true); // 옵저버 켜질 수 있는 신호
       }, 50);
     });
-  }, [data?.pages?.length, isFetchingNextPage, readyToObserve]);
+  }, [data?.pages?.length]);
 
   useEffect(() => {
     //첫 페이지 마운트시 스크롤 하단 제어 후 옵저버 등록
