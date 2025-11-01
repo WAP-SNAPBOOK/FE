@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Container from "./common/Container"; // 경로는 프로젝트 구조에 맞게 조정
+import Container from "./common/Container";
 import ModalOverlay from "./ModalOverlay";
 import StepBasic from "./StepBasic";
 import StepOptions from "./StepOptions";
@@ -9,60 +9,60 @@ import "./ReservationModal.css";
 export default function ReservationModal({ isOpen, onClose, onSubmit }) {
   const [step, setStep] = useState(1);
 
-  // Step 1
-  const [name, setName] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [date, setDate] = useState("");
-  const [time, setTime] = useState("");
-
-  // Step 2
-  const [removeYn, setRemoveYn] = useState("유");
-  const [handFootYn, setHandFootYn] = useState("손");
-  const [extYn, setExtYn] = useState("무");
-  const [extCount, setExtCount] = useState("");
-  const [wrapYn, setWrapYn] = useState("무");
-  const [wrapCount, setWrapCount] = useState("");
-
-  // Step 3 (다중 파일)
-  const [files, setFiles] = useState([]); // File[]
-  const [notes, setNotes] = useState("");
-
-  const isStep1Valid = name && phoneNumber && date && time;
+  const [formData, setFormData] = useState({
+    basic: { name: "", phoneNumber: "", date: "", time: "" },
+    options: {
+      removeYn: "유",
+      handFootYn: "손",
+      extYn: "무",
+      extCount: "",
+      wrapYn: "무",
+      wrapCount: "",
+    },
+    photoNote: { files: [], notes: "" },
+  });
 
   const handleClose = () => {
     setStep(1);
-    setName("");
-    setPhoneNumber("");
-    setDate("");
-    setTime("");
-    setRemoveYn("유");
-    setHandFootYn("손");
-    setExtYn("무");
-    setExtCount("");
-    setWrapYn("무");
-    setWrapCount("");
-    setFiles([]);
-    setNotes("");
+    setFormData({
+      basic: { name: "", phoneNumber: "", date: "", time: "" },
+      options: {
+        removeYn: "유",
+        handFootYn: "손",
+        extYn: "무",
+        extCount: "",
+        wrapYn: "무",
+        wrapCount: "",
+      },
+      photoNote: { files: [], notes: "" },
+    });
     onClose?.();
   };
 
-  const goNextFromBasic = () => setStep(2);
-  const goNextFromOptions = () => setStep(3);
+  // Step1 -> Step2
+  const handleNextFromBasic = (basicValues) => { setFormData((prev) => ({ ...prev, basic: basicValues })); setStep(2); };
 
-  const handleSubmit = () => {
+  // Step2 -> Step3
+  const handleNextFromOptions = (optionsValues) => { setFormData((prev) => ({ ...prev, options: optionsValues })); setStep(3); };
+
+  // 최종 제출 (Step3에서 호출)
+  const handleSubmit = (photoNoteValues) => {
+    const merged = { ...formData, photoNote: photoNoteValues, };
+
+    const { basic, options, photoNote } = merged;
     const payload = {
-      name,
-      phoneNumber,
-      date,
-      time,
+      name: basic.name,
+      phoneNumber: basic.phoneNumber,
+      date: basic.date,
+      time: basic.time,
       options: {
-        remove: removeYn === "유",
-        handFoot: handFootYn === "손",
-        extension: extYn === "유" ? Number(extCount || 0) : 0,
-        wrapping: wrapYn === "유" ? Number(wrapCount || 0) : 0,
+        remove: options.removeYn === "유",
+        handFoot: options.handFootYn === "손",
+        extension: options.extYn === "유" ? Number(options.extCount || 0) : 0,
+        wrapping: options.wrapYn === "유" ? Number(options.wrapCount || 0) : 0,
       },
-      files,                  // File[] (선택)
-      notes: notes?.trim() || "", // 선택
+      files: photoNote.files,
+      notes: photoNote.notes?.trim() || "",
     };
     onSubmit ? onSubmit(payload) : console.log("payload:", payload);
     handleClose();
@@ -77,50 +77,18 @@ export default function ReservationModal({ isOpen, onClose, onSubmit }) {
           <button className="closeBtn" aria-label="닫기" onClick={handleClose}>x</button>
           <h2 id="modal-title" className="title">예약하기</h2>
 
-            {step === 1 && (
-            <StepBasic
-              name={name}
-              setName={setName}
-              phoneNumber={phoneNumber}
-              setPhoneNumber={setPhoneNumber}
-              date={date}
-              setDate={setDate}
-              time={time}
-              setTime={setTime}
-              onNext={goNextFromBasic}
-              isValid={isStep1Valid}
-            />
+          {step === 1 && (
+            <StepBasic initialData={formData.basic} onNext={handleNextFromBasic} />
           )}
 
           {step === 2 && (
-            <StepOptions
-              removeYn={removeYn}
-              setRemoveYn={setRemoveYn}
-              handFootYn={handFootYn}
-              setHandFootYn={setHandFootYn}
-              extYn={extYn}
-              setExtYn={setExtYn}
-              extCount={extCount}
-              setExtCount={setExtCount}
-              wrapYn={wrapYn}
-              setWrapYn={setWrapYn}
-              wrapCount={wrapCount}
-              setWrapCount={setWrapCount}
-              onNext={goNextFromOptions}
-            />
+            <StepOptions initialData={formData.options} onNext={handleNextFromOptions} />
           )}
 
           {step === 3 && (
-            <StepPhotoNote
-              files={files}
-              setFiles={setFiles}
-              notes={notes}
-              setNotes={setNotes}
-              onSubmit={handleSubmit}
-            />
+            <StepPhotoNote initialData={formData.photoNote} onSubmit={handleSubmit} />
           )}
-          </div>
-
+        </div>
       </ModalOverlay>
     </Container>
   );
