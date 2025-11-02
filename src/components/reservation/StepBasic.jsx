@@ -9,10 +9,17 @@ export default function StepBasic({ initialData, onNext }) {
     time: "",
   });
 
-  // 초기값 반영 (앞/뒤 이동 없이도 재진입 시 값 보존)
+  // 숫자만 남기고 11자리 제한
+  const sanitizePhone = (val) => String(val ?? "") .replace(/\D/g, "").slice(0, 11);
+
+  // 초기값 반영 시에도 전화번호 정규화
   useEffect(() => {
     if (initialData) {
-      setValues((v) => ({ ...v, ...initialData }));
+      setValues((v) => ({
+        ...v,
+        ...initialData,
+        phoneNumber: sanitizePhone(initialData.phoneNumber ?? v.phoneNumber),
+      }));
     }
   }, [initialData]);
 
@@ -26,6 +33,12 @@ export default function StepBasic({ initialData, onNext }) {
     e.preventDefault();
     if (!isValid) return;
     onNext?.(values);
+  };
+
+  // 전화번호 onChange 핸들러
+  const handlePhoneChange = (e) => {
+    const digitsOnly = sanitizePhone(e.target.value);
+    setValues((v) => ({ ...v, phoneNumber: digitsOnly }));
   };
 
   return (
@@ -43,9 +56,12 @@ export default function StepBasic({ initialData, onNext }) {
       <InputField
         placeholder="전화번호를 입력해 주세요."
         value={values.phoneNumber}
-        onChange={(e) =>
-          setValues((v) => ({ ...v, phoneNumber: e.target.value }))
-        }
+        onChange={handlePhoneChange}
+        type="tel"            // 모바일 숫자 키패드 유도
+        inputMode="numeric"   // 데스크톱 가상키패드 힌트
+        pattern="[0-9]*"      // 브라우저 유효성 힌트
+        maxLength={11}        // UI 상 제한
+        autoComplete="tel"
       />
 
       <div className="grid2" style={{ marginBottom: 6 }}>
