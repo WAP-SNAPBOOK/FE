@@ -11,8 +11,14 @@ function SignupPage({ userType }) {
   const location = useLocation();
   const isSignupRequired = location.state?.isSignupRequired;
 
+  // redirect 쿼리값 추출
+  const redirect = new URLSearchParams(location.search).get('redirect');
+
+  // redirect 있으면 무조건 CUSTOMER 로 고정 없다면 그대로 진행
+  const effectiveUserType = redirect ? 'CUSTOMER' : userType;
+
   // 타입별 고객, 점주 회원가입 훅 선택
-  const signup = userType === 'CUSTOMER' ? useSignupCustomer() : useSignupOwner();
+  const signup = effectiveUserType === 'CUSTOMER' ? useSignupCustomer() : useSignupOwner();
 
   // 입력폼 상태
   const [formData, setFormData] = useState({
@@ -44,7 +50,23 @@ function SignupPage({ userType }) {
       return;
     }
 
-    signup.mutate(formData);
+    // redirect 존재 + 점주 회원가입 시도 방지
+    if (redirect && userType !== 'CUSTOMER') {
+      alert('링크를 통한 회원가입은 고객만 가능합니다.');
+      navigate('/'); // 홈으로 이동
+      return;
+    }
+
+    signup.mutate(formData, {
+      onSuccess: () => {
+        // 회원가입 성공 시 redirect로 복귀
+        if (redirect) {
+          navigate(redirect, { replace: true });
+        } else {
+          navigate('/'); // 기본 홈으로
+        }
+      },
+    });
   };
 
   return (
