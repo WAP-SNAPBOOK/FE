@@ -1,7 +1,7 @@
 import React from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import AuthRedirectPage from './pages/AuthRedirectPage';
+import AuthRedirectPage from './pages/redirect/AuthRedirectPage';
 import SignupGatePage from './pages/signup/SignupGatePage';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { AuthProvider } from './context/AuthContext';
@@ -15,6 +15,7 @@ import ChatListPage from './pages/chat/ChatListPage';
 import ChatRoomPage from './pages/chat/ChatRoomPage';
 import Mypage from './pages/profile/Mypage';
 import ReservationList from './pages/ReservationList/ReservationList';
+import LinkRedirectPage from './pages/redirect/LinkRedirectPage';
 
 const queryClient = new QueryClient();
 
@@ -29,7 +30,7 @@ function App() {
           </BrowserRouter>
         </AuthProvider>
 
-        <ReactQueryDevtools initialIsOpen={false} position="bottom" />
+        <ReactQueryDevtools initialIsOpen={false} position="top right" />
       </QueryClientProvider>
     </>
   );
@@ -42,6 +43,8 @@ function AppRoutes() {
       {/* 로그인 여부에 따라 분기 */}
       <Route path="/" element={auth ? <HomePage /> : <LoginPage />} />
       <Route path="/auth" element={<AuthRedirectPage />} />
+      {/* 인스타 링크 리다이렉트 */}
+      <Route path="/s/:slugOrCode" element={<LinkRedirectPage />} />
       <Route path="/signup" element={<SignupGatePage />} />
       <Route path="/signup/customer" element={<SignupPage userType="CUSTOMER" />} />
       <Route path="/signup/owner" element={<SignupPage userType="OWNER" />} />
