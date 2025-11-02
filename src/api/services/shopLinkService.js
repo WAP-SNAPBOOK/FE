@@ -15,3 +15,16 @@ export const shopLinkService = {
     return res.data;
   },
 
+  /**
+   * 공개 링크로 채팅방 조회 or 생성
+   * @param {string} slugOrCode - 매장 식별 코드
+   */
+  getChatRoomByCode: async (slugOrCode) => {
+    const res = await axiosClient.get(`/link/chat/${slugOrCode}`, {
+      params: {
+        user: {},
+      },
+    });
+    return res.data;
+  },
+};
