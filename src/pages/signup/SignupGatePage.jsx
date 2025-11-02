@@ -11,12 +11,23 @@ function SignupGatePage() {
   const [selectedRole, setSelectedRole] = useState(null); //회원 유형
   const navigate = useNavigate();
   const location = useLocation();
+
   const isSignupRequired = location.state?.isSignupRequired;
+  const redirect = new URLSearchParams(location.search).get('redirect');
 
   const handleNext = () => {
     if (!selectedRole) return alert('회원 유형을 선택해주세요');
+
+    // redirect 값이 있을 땐 고객만 허용
+    if (redirect && selectedRole !== 'customer') {
+      return alert('링크를 통한 회원가입은 고객만 가능합니다.');
+    }
+
     //회원 분기에 따라 분기
-    navigate(`/signup/${selectedRole}`, { state: { isSignupRequired: true } });
+    //redirect 값을 다음 페이지로 그대로 전달
+    navigate(`/signup/${selectedRole}?redirect=${redirect || ''}`, {
+      state: { isSignupRequired: true },
+    });
   };
 
   useEffect(() => {
