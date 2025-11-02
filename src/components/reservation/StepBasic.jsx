@@ -9,6 +9,9 @@ export default function StepBasic({ initialData, onNext }) {
     time: "",
   });
 
+  const [isComposing, setIsComposing] = useState(false);
+  const MAX_NAME = 5;
+
   // 숫자만 남기고 11자리 제한
   const sanitizePhone = (val) => String(val ?? "") .replace(/\D/g, "").slice(0, 11);
 
@@ -18,10 +21,24 @@ export default function StepBasic({ initialData, onNext }) {
       setValues((v) => ({
         ...v,
         ...initialData,
+        name: (initialData.name ?? v.name ?? "").slice(0, MAX_NAME),
         phoneNumber: sanitizePhone(initialData.phoneNumber ?? v.phoneNumber),
       }));
     }
   }, [initialData]);
+
+  // ✅ 이름 onChange (조합 중엔 자르지 않고, 조합 끝나면 5자로 컷)
+  const handleNameChange = (e) => {
+    const raw = e.target.value;
+    setValues((v) => ({
+      ...v,
+      name: isComposing ? raw : raw.slice(0, MAX_NAME),
+    }));
+  };
+  const handleNameCompositionEnd = (e) => {
+    setIsComposing(false);
+    setValues((v) => ({ ...v, name: e.target.value.slice(0, MAX_NAME) }));
+  };
 
   // 간단 유효성
   const isValid = useMemo(() => {
@@ -47,9 +64,10 @@ export default function StepBasic({ initialData, onNext }) {
       <InputField
         placeholder="이름을 입력해 주세요."
         value={values.name}
-        onChange={(e) =>
-          setValues((v) => ({ ...v, name: e.target.value }))
-        }
+        onChange={handleNameChange}
+        onCompositionStart={() => setIsComposing(true)}
+        onCompositionEnd={handleNameCompositionEnd}
+        maxLength={MAX_NAME}
       />
 
       <label className="label">전화번호</label>
@@ -57,10 +75,10 @@ export default function StepBasic({ initialData, onNext }) {
         placeholder="전화번호를 입력해 주세요."
         value={values.phoneNumber}
         onChange={handlePhoneChange}
-        type="tel"            // 모바일 숫자 키패드 유도
-        inputMode="numeric"   // 데스크톱 가상키패드 힌트
-        pattern="[0-9]*"      // 브라우저 유효성 힌트
-        maxLength={11}        // UI 상 제한
+        type="tel"
+        inputMode="numeric"
+        pattern="[0-9]*"
+        maxLength={11}
         autoComplete="tel"
       />
 
@@ -77,7 +95,6 @@ export default function StepBasic({ initialData, onNext }) {
             setValues((v) => ({ ...v, date: e.target.value }))
           }
         />
-
         <input
           className="field"
           type="time"
