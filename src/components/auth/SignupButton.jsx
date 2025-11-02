@@ -6,6 +6,7 @@ import theme from '../../styles/theme';
 export const SignupButton = {
   Customer: styled(BaseButton).attrs({
     className: 'w-[143px] font-semibold',
+    $width: '143px',
     $height: '55px',
     $fontSize: '19px',
   })`
@@ -23,6 +24,7 @@ export const SignupButton = {
 
   Owner: styled(BaseButton).attrs({
     className: 'w-[143px] font-semibold',
+    $width: '143px',
     $height: '55px',
     $fontSize: '19px',
   })`
