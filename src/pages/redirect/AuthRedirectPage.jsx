@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { useHandleAuthCode } from '../query/authQueries';
+import { useHandleAuthCode } from '../../query/authQueries';
 
 function AuthRedirectPage() {
   const [searchParams] = useSearchParams();
