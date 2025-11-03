@@ -7,7 +7,6 @@ export const kakaoAuthService = {
   getAuthUrl: (redirect) => {
     // redirect 파라미터가 있을 경우 쿼리 형태로 추가
     const redirectParam = redirect ? `?redirect=${encodeURIComponent(redirect)}` : '';
-    console.log('kakaoAuthService: ', redirectParam);
     return (
       `https://kauth.kakao.com/oauth/authorize` +
       `?response_type=code` +

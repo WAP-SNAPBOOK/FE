@@ -7,7 +7,6 @@ import logoImg from '../../assets/icons/logo-icon.svg';
 export default function LoginPage() {
   const location = useLocation();
   const redirect = new URLSearchParams(location.search).get('redirect'); //링크 접속시 매장 식별코드
-  console.log('LoginPage: ', redirect);
   return (
     <Container>
       <div className="flex flex-col">
