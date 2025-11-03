@@ -9,6 +9,8 @@ import Container from '../../components/common/Container';
 import Header from '../../components/common/Header';
 import MainActionButton from '../../components/home/MainActionButton ';
 import BottomNav from '../../components/common/BottomNav';
+import { BaseButton } from '../../components/common/Button';
+import { NextButton } from '../../components/common/NextButton';
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -40,6 +42,10 @@ export default function HomePage() {
           <MainActionButton onClick={goToChat} icon={ChatIcon} label="채팅방 조회" />
           <MainActionButton onClick={goToReservationList} icon={BookIcon} label="예약 내역" />
         </S.ButtonGroup>
+        {/* 임시 회원탈퇴 버튼 */}
+        <div className="fixed bottom-24 left-1/2 -translate-x-1/2 w-[90%] flex justify-center">
+          <NextButton onClick={deleteUserHandler}>임시 회원 탈퇴</NextButton>
+        </div>
         <BottomNav />
       </S.CenterArea>
     </Container>

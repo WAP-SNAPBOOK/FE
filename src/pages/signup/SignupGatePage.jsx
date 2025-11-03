@@ -14,10 +14,8 @@ function SignupGatePage() {
 
   const isSignupRequired = location.state?.isSignupRequired;
   const redirect = new URLSearchParams(location.search).get('redirect');
-
   const handleNext = () => {
     if (!selectedRole) return alert('회원 유형을 선택해주세요');
-
     // redirect 값이 있을 땐 고객만 허용
     if (redirect && selectedRole !== 'customer') {
       return alert('링크를 통한 회원가입은 고객만 가능합니다.');

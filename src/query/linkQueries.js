@@ -10,10 +10,10 @@ export const useShopLink = () => {
 };
 
 //식별 코드를 통한  채팅방 생성 or 조회
-export const useLinkChat = (slugOrCode) => {
+export const useLinkChat = (slugOrCode, options = {}) => {
   return useQuery({
     queryKey: ['linkChat', slugOrCode],
     queryFn: () => shopLinkService.getChatRoomByCode(slugOrCode),
-    enabled: !!slugOrCode,
+    enabled: !!slugOrCode && (options.enabled ?? true),
   });
 };
