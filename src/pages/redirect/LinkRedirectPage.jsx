@@ -1,24 +1,26 @@
 import { useEffect } from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import Container from '../../components/common/Container';
 import { authStorage } from '../../utils/auth/authStorage';
 import { useLinkChat } from '../../query/linkQueries';
+
 export default function LinkRedirectPage() {
   const { slugOrCode } = useParams(); //가게 식별 코드
   const navigate = useNavigate();
-  const location = useLocation();
   const accessToken = authStorage.getAccessToken();
 
   // 1. 로그인 여부 확인
   useEffect(() => {
     if (!accessToken) {
       // 비회원이면 회원가입 페이지로 이동 + redirect 유지
-      navigate(`/signup?redirect=${location.pathname}`, { replace: true });
+      navigate(`/?redirect=${slugOrCode}`, { replace: true });
     }
-  }, [navigate, location.pathname]);
+  }, [navigate]);
 
   // 2️. 로그인된 상태라면 채팅방 조회 or 생성
-  const { data, isLoading, isError } = useLinkChat(slugOrCode);
+  const { data, isLoading, isError } = useLinkChat(slugOrCode, {
+    enabled: !!accessToken,
+  });
 
   useEffect(() => {
     if (data) {

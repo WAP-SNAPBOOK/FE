@@ -61,7 +61,8 @@ function SignupPage({ userType }) {
       onSuccess: () => {
         // 회원가입 성공 시 redirect로 복귀
         if (redirect) {
-          navigate(redirect, { replace: true });
+          //식별코드 관련 리다이렉트 페이지로 다시 이동
+          navigate(`/s/${redirect}`, { replace: true });
         } else {
           navigate('/'); // 기본 홈으로
         }
