@@ -4,8 +4,17 @@ import axiosClient from '../axiosClient';
 
 export const kakaoAuthService = {
   //카카오 로그인 URL 제공
-  getAuthUrl: () =>
-    `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}`,
+  getAuthUrl: (redirect) => {
+    // redirect 파라미터가 있을 경우 쿼리 형태로 추가
+    const redirectParam = redirect ? `?redirect=${encodeURIComponent(redirect)}` : '';
+    console.log('kakaoAuthService: ', redirectParam);
+    return (
+      `https://kauth.kakao.com/oauth/authorize` +
+      `?response_type=code` +
+      `&client_id=${REST_API_KEY}` +
+      `&redirect_uri=${REDIRECT_URI}${redirectParam}`
+    );
+  },
 
   // 인가 코드 교환 (로컬/배포 자동 선택)
   exchangeCodeForToken: async (code) => {
