@@ -12,10 +12,8 @@ export default function StepBasic({ initialData, onNext }) {
   const [isComposing, setIsComposing] = useState(false);
   const MAX_NAME = 5;
 
-  // 숫자만 남기고 11자리 제한
-  const sanitizePhone = (val) => String(val ?? "") .replace(/\D/g, "").slice(0, 11);
+  const sanitizePhone = (val) => String(val ?? "").replace(/\D/g, "").slice(0, 11);
 
-  // 초기값 반영 시에도 전화번호 정규화
   useEffect(() => {
     if (initialData) {
       setValues((v) => ({
@@ -27,7 +25,6 @@ export default function StepBasic({ initialData, onNext }) {
     }
   }, [initialData]);
 
-  // ✅ 이름 onChange (조합 중엔 자르지 않고, 조합 끝나면 5자로 컷)
   const handleNameChange = (e) => {
     const raw = e.target.value;
     setValues((v) => ({
@@ -40,22 +37,25 @@ export default function StepBasic({ initialData, onNext }) {
     setValues((v) => ({ ...v, name: e.target.value.slice(0, MAX_NAME) }));
   };
 
-  // 간단 유효성
-  const isValid = useMemo(() => {
-    const { name, phoneNumber, date, time } = values;
-    return name.trim() && phoneNumber.trim() && date && time;
-  }, [values]);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!isValid) return;
-    onNext?.(values);
-  };
-
-  // 전화번호 onChange 핸들러
+  // 전화번호 onChange
   const handlePhoneChange = (e) => {
     const digitsOnly = sanitizePhone(e.target.value);
     setValues((v) => ({ ...v, phoneNumber: digitsOnly }));
+  };
+
+  // 전화번호는 "정확히 11자리"여야 함
+  const isPhoneValid = values.phoneNumber.length === 11;
+
+  // 간단 유효성 (전화번호는 정확히 11자리)
+  const isValid = useMemo(() => {
+    const { name, date, time } = values;
+    return name.trim() && isPhoneValid && date && time;
+  }, [values, isPhoneValid]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!isValid) return; // 가드
+    onNext?.(values);
   };
 
   return (
@@ -81,6 +81,12 @@ export default function StepBasic({ initialData, onNext }) {
         maxLength={11}
         autoComplete="tel"
       />
+      {/* 선택: 안내 문구 */}
+      {!isPhoneValid && values.phoneNumber.length > 0 && (
+        <div className="muted">
+          전화번호는 숫자 11자리여야 합니다.
+        </div>
+      )}
 
       <div className="grid2" style={{ marginBottom: 6 }}>
         <label className="label">날짜</label>
