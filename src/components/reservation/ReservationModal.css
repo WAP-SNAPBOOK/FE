@@ -32,7 +32,6 @@
   box-sizing: border-box; display: flex; flex-direction: column;
 }
 
-
 .closeBtn { position: absolute; right: 12px; top: 10px; border: none; background: transparent; font-size: 20px; line-height: 1; cursor: pointer; }
 
 .title { font-size: 24px; font-weight: bold; text-align: center; margin: 8px 0 50px; display: inline-block; border-bottom: 3px solid var(--pink); padding-bottom: 4px; align-self: center; }
@@ -64,12 +63,36 @@
   box-sizing: border-box;
 }
 
-
 /* 옵션 행 & 라디오 */
-.row { display: grid; grid-template-columns: 100px 1fr; column-gap: 1px; margin: 10px 0 10px 40px; }
-.radioGroup { display: flex; gap: 10px; margin-top: 5px; }
-.radioLabel { display: inline-flex; gap: 6px; cursor: pointer; font-weight: 50; }
+.row {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  column-gap: 1px;
+  margin: 10px 0 10px 40px;
+}
+/* ✅ row의 그리드 자식도 축소 허용 */
+.row > * { min-width: 0; }
+
+.radioGroup {
+  display: flex;
+  gap: 10px;
+  margin-top: 5px;
+  align-items: center;
+  flex-wrap: wrap;                 /* ✅ 폭이 부족하면 줄바꿈 */
+}
+
+/* ✅ 라벨 텍스트 줄바꿈 방지로 레이아웃 깔끔하게 */
+.radioLabel { display: inline-flex; gap: 6px; cursor: pointer; font-weight: 50; white-space: nowrap; }
+
+/* 기본 크기 */
 .smallField { height: 36px; width: 120px; margin-top: 8px; }
+
+/* ✅ 라디오 아래로 자연스럽게 떨어지도록 */
+.radioGroup .smallField {
+  flex-basis: 100%;               /* 라디오 버튼 아래 줄에 배치 */
+  width: 120px;                   /* 필요 시 조정 */
+  box-sizing: border-box;
+}
 
 /* 3단계: 사진 + 요구사항 (다중, 가로 스크롤) */
 .selectRow { display: grid; grid-template-columns: 100px 1fr; align-items: center; column-gap: 10px; margin-bottom: 12px; }

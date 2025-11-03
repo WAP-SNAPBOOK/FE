@@ -12,15 +12,32 @@ export default function StepOptions({ initialData, onNext }) {
     wrapCount: "",
   });
 
+  // ✅ 숫자만 남기기(자릿수 제한 원하면 .slice(0, 2) 등 추가)
+  const sanitizeCount = (val) => String(val ?? "").replace(/\D/g, "");
+
   useEffect(() => {
-    if (initialData) setValues((v) => ({ ...v, ...initialData }));
+    if (initialData) {
+      setValues((v) => ({
+        ...v,
+        ...initialData,
+        // 초기값에도 숫자만 유지
+        extCount: sanitizeCount(initialData.extCount ?? v.extCount),
+        wrapCount: sanitizeCount(initialData.wrapCount ?? v.wrapCount),
+      }));
+    }
   }, [initialData]);
 
   const setField = (k, val) => setValues((p) => ({ ...p, [k]: val }));
+  
   const handleChangeExtYn = (v) =>
-    setValues((p) => ({ ...p, extYn: v, extCount: v === "무" ? "" : p.extCount }));
+    setValues((p) => ({ ...p, extYn: v, extCount: v === "무" ? "" : sanitizeCount(p.extCount), }));
+
   const handleChangeWrapYn = (v) =>
-    setValues((p) => ({ ...p, wrapYn: v, wrapCount: v === "무" ? "" : p.wrapCount }));
+    setValues((p) => ({ ...p, wrapYn: v, wrapCount: v === "무" ? "" : sanitizeCount(p.wrapCount), }));
+
+  // ✅ 개수 입력도 숫자만 반영
+  const handleExtCountChange = (cnt) => setField("extCount", sanitizeCount(cnt));
+  const handleWrapCountChange = (cnt) => setField("wrapCount", sanitizeCount(cnt));
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -48,7 +65,7 @@ export default function StepOptions({ initialData, onNext }) {
         onChange={handleChangeExtYn}
         showCount
         countValue={values.extCount}
-        onCountChange={(cnt) => setField("extCount", cnt)}
+        onCountChange={handleExtCountChange}
       />
       <OptionRow
         label="래핑"
@@ -57,7 +74,7 @@ export default function StepOptions({ initialData, onNext }) {
         onChange={handleChangeWrapYn}
         showCount
         countValue={values.wrapCount}
-        onCountChange={(cnt) => setField("wrapCount", cnt)}
+        onCountChange={handleWrapCountChange}
       />
 
       <form onSubmit={handleSubmit} className="submitRow">
