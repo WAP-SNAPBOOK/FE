@@ -12,8 +12,8 @@ export default function LinkRedirectPage() {
   // 1. 로그인 여부 확인
   useEffect(() => {
     if (!accessToken) {
-      // 비회원이면 회원가입 페이지로 이동 + redirect 유지
-      navigate(`/?redirect=${slugOrCode}`, { replace: true });
+      // 비회원이면 회원가입 페이지로 이동 + slug(매장식별코드) 유지
+      navigate(`/?slug=${slugOrCode}`, { replace: true });
     }
   }, [navigate]);
 
