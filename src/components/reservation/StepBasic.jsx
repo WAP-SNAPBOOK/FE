@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import InputField from "./InputField";
+import { sanitizeDigits, validateMobile010 } from "../../utils/phoneNumber";
 
 export default function StepBasic({ initialData, onNext }) {
   const [values, setValues] = useState({
@@ -12,7 +13,8 @@ export default function StepBasic({ initialData, onNext }) {
   const [isComposing, setIsComposing] = useState(false);
   const MAX_NAME = 5;
 
-  const sanitizePhone = (val) => String(val ?? "").replace(/\D/g, "").slice(0, 11);
+  // 숫자만 남기고 11자리로 자르기
+  const sanitizePhone = (val) => sanitizeDigits(val).slice(0, 11);
 
   useEffect(() => {
     if (initialData) {
@@ -37,16 +39,16 @@ export default function StepBasic({ initialData, onNext }) {
     setValues((v) => ({ ...v, name: e.target.value.slice(0, MAX_NAME) }));
   };
 
-  // 전화번호 onChange
   const handlePhoneChange = (e) => {
     const digitsOnly = sanitizePhone(e.target.value);
     setValues((v) => ({ ...v, phoneNumber: digitsOnly }));
   };
 
-  // 전화번호는 "정확히 11자리"여야 함
-  const isPhoneValid = values.phoneNumber.length === 11;
+  // utils의 검증 함수 사용: 010으로 시작 + 정확히 11자리 (동일 숫자 반복 허용)
+  const phoneCheck = validateMobile010(values.phoneNumber);
+  const isPhoneValid = phoneCheck.valid;
 
-  // 간단 유효성 (전화번호는 정확히 11자리)
+  // 전체 유효성
   const isValid = useMemo(() => {
     const { name, date, time } = values;
     return name.trim() && isPhoneValid && date && time;
@@ -54,7 +56,7 @@ export default function StepBasic({ initialData, onNext }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!isValid) return; // 가드
+    if (!isValid) return;
     onNext?.(values);
   };
 
@@ -81,11 +83,8 @@ export default function StepBasic({ initialData, onNext }) {
         maxLength={11}
         autoComplete="tel"
       />
-      {/* 선택: 안내 문구 */}
       {!isPhoneValid && values.phoneNumber.length > 0 && (
-        <div className="muted">
-          전화번호는 숫자 11자리여야 합니다.
-        </div>
+        <div className="muted">010으로 시작하는 숫자 11자리를 입력해 주세요.</div>
       )}
 
       <div className="grid2" style={{ marginBottom: 6 }}>
