@@ -28,6 +28,14 @@ export default function ChatRoomPage() {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
+  const handleBack = () => {
+    if (window.history.state && window.history.state.idx > 0) {
+      navigate(-1); // 이전 페이지가 존재할 경우 채팅 목록 이동
+    } else {
+      navigate('/'); // 외부 유입이라 이전 기록 없을 때 홈으로(링크 유입)
+    }
+  };
+
   const { auth } = useAuth();
   const userId = auth?.userId;
 
@@ -155,7 +163,7 @@ export default function ChatRoomPage() {
     <Container $start>
       <S.PageWrapper>
         <S.Header>
-          <S.BackButton onClick={() => navigate(-1)}>
+          <S.BackButton onClick={handleBack}>
             <img src={backIcon} alt="back" />
           </S.BackButton>
           <ChatRoomTitle>채팅방 #{chatRoomId}</ChatRoomTitle>
