@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import OptionRow from "./OptionRow";
 import RadioHandFoot from "./RadioHandFoot";
 
@@ -12,7 +12,12 @@ export default function StepOptions({ initialData, onNext }) {
     wrapCount: "",
   });
 
-  // ✅ 숫자만 남기기(자릿수 제한 원하면 .slice(0, 2) 등 추가)
+  // 1~10 선택지
+  const COUNT_OPTIONS = useMemo(
+    () => Array.from({ length: 10 }, (_, i) => String(i + 1)),
+    []
+  );
+
   const sanitizeCount = (val) => String(val ?? "").replace(/\D/g, "");
 
   useEffect(() => {
@@ -20,7 +25,6 @@ export default function StepOptions({ initialData, onNext }) {
       setValues((v) => ({
         ...v,
         ...initialData,
-        // 초기값에도 숫자만 유지
         extCount: sanitizeCount(initialData.extCount ?? v.extCount),
         wrapCount: sanitizeCount(initialData.wrapCount ?? v.wrapCount),
       }));
@@ -28,14 +32,21 @@ export default function StepOptions({ initialData, onNext }) {
   }, [initialData]);
 
   const setField = (k, val) => setValues((p) => ({ ...p, [k]: val }));
-  
+
   const handleChangeExtYn = (v) =>
-    setValues((p) => ({ ...p, extYn: v, extCount: v === "무" ? "" : sanitizeCount(p.extCount), }));
+    setValues((p) => ({
+      ...p,
+      extYn: v,
+      extCount: v === "무" ? "" : p.extCount, // 유일 때만 유지
+    }));
 
   const handleChangeWrapYn = (v) =>
-    setValues((p) => ({ ...p, wrapYn: v, wrapCount: v === "무" ? "" : sanitizeCount(p.wrapCount), }));
+    setValues((p) => ({
+      ...p,
+      wrapYn: v,
+      wrapCount: v === "무" ? "" : p.wrapCount,
+    }));
 
-  // ✅ 개수 입력도 숫자만 반영
   const handleExtCountChange = (cnt) => setField("extCount", sanitizeCount(cnt));
   const handleWrapCountChange = (cnt) => setField("wrapCount", sanitizeCount(cnt));
 
@@ -52,12 +63,14 @@ export default function StepOptions({ initialData, onNext }) {
         value={values.removeYn}
         onChange={(v) => setField("removeYn", v)}
       />
+
       <RadioHandFoot
         label="손 / 발"
         name="handFootYn"
         value={values.handFootYn}
         onChange={(v) => setField("handFootYn", v)}
       />
+
       <OptionRow
         label="연장"
         name="extYn"
@@ -66,7 +79,10 @@ export default function StepOptions({ initialData, onNext }) {
         showCount
         countValue={values.extCount}
         onCountChange={handleExtCountChange}
+        countAs="select"
+        countOptions={COUNT_OPTIONS}
       />
+
       <OptionRow
         label="래핑"
         name="wrapYn"
@@ -75,6 +91,8 @@ export default function StepOptions({ initialData, onNext }) {
         showCount
         countValue={values.wrapCount}
         onCountChange={handleWrapCountChange}
+        countAs="select"
+        countOptions={COUNT_OPTIONS}
       />
 
       <form onSubmit={handleSubmit} className="submitRow">
