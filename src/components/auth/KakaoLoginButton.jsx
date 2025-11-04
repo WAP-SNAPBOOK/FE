@@ -22,11 +22,11 @@ const KakaoButton = styled(BaseButton).attrs({
   }
 `;
 
-function KakaoLoginButton({ redirect }) {
+function KakaoLoginButton({ slug }) {
   //카카오 로그인 URL변경
   const handleLogin = () => {
-    // redirect가 있으면 카카오 인가 URL 뒤에 붙여 전달
-    window.location.href = kakaoAuthService.getAuthUrl(redirect);
+    // slug(매장 식별코드) 있으면 카카오 인가 URL 뒤에 붙여 전달
+    window.location.href = kakaoAuthService.getAuthUrl(slug);
   };
 
   return (

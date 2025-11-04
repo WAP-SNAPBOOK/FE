@@ -6,7 +6,7 @@ import logoImg from '../../assets/icons/logo-icon.svg';
 
 export default function LoginPage() {
   const location = useLocation();
-  const redirect = new URLSearchParams(location.search).get('redirect'); //링크 접속시 매장 식별코드
+  const slug = new URLSearchParams(location.search).get('slug'); //링크 접속시 매장 식별코드
   return (
     <Container>
       <div className="flex flex-col">
@@ -16,7 +16,7 @@ export default function LoginPage() {
           {/* 타이틀 */}
           <h1>SNAPBOOK</h1>
         </div>
-        <KakaoLoginButton redirect={redirect} /> {/*식별코드 전달*/}
+        <KakaoLoginButton slug={slug} /> {/*식별코드 전달*/}
       </div>
     </Container>
   );

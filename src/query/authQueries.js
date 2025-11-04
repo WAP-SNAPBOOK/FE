@@ -10,7 +10,7 @@ export const useHandleAuthCode = () => {
   const location = useLocation();
 
   //링크 접속 시 식별코드 읽기
-  const redirect = new URLSearchParams(location.search).get('redirect');
+  const slug = new URLSearchParams(location.search).get('state');
   return useMutation({
     mutationFn: (code) => kakaoAuthService.exchangeCodeForToken(code),
     onSuccess: (data) => {
@@ -20,10 +20,15 @@ export const useHandleAuthCode = () => {
       //회언가입 분기처리
       if (data.authStatus === 'SIGNUP_REQUIRED') {
         //신규 유저 -> 가입 선택 화면으로(링크 접속 사용자는 식별코드 가지고)
-        navigate(`/signup?redirect=${redirect || ''}`, { state: { isSignupRequired: true } });
+        navigate(`/signup?slug=${slug || ''}`, { state: { isSignupRequired: true } });
       } else {
-        // 로그인 성공
-        navigate('/');
+        //식별 코드 있다면 바로 채팅방 리다이렉트용 임시페이지 이동
+        if (slug) {
+          navigate(`/s/${slug}`, { replace: true });
+        } else {
+          // 일반 로그인시 홈으로
+          navigate('/');
+        }
       }
     },
     onError: (error) => {

@@ -4,9 +4,9 @@ import axiosClient from '../axiosClient';
 
 export const kakaoAuthService = {
   //카카오 로그인 URL 제공
-  getAuthUrl: (redirect) => {
-    // redirect 파라미터가 있을 경우 쿼리 형태로 추가
-    const redirectParam = redirect ? `?redirect=${encodeURIComponent(redirect)}` : '';
+  getAuthUrl: (slug) => {
+    // 매장 식별 코드가 있을 경우 경로에 추가
+    const redirectParam = slug ? `&state=${encodeURIComponent(slug)}` : '';
     return (
       `https://kauth.kakao.com/oauth/authorize` +
       `?response_type=code` +
