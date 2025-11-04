@@ -11,11 +11,11 @@ function SignupPage({ userType }) {
   const location = useLocation();
   const isSignupRequired = location.state?.isSignupRequired;
 
-  // redirect 쿼리값 추출
-  const redirect = new URLSearchParams(location.search).get('redirect');
+  // slug 쿼리값 추출
+  const slug = new URLSearchParams(location.search).get('slug');
 
-  // redirect 있으면 무조건 CUSTOMER 로 고정 없다면 그대로 진행
-  const effectiveUserType = redirect ? 'CUSTOMER' : userType;
+  // slug 있으면 무조건 CUSTOMER 로 고정 없다면 그대로 진행
+  const effectiveUserType = slug ? 'CUSTOMER' : userType;
 
   // 타입별 고객, 점주 회원가입 훅 선택
   const signup = effectiveUserType === 'CUSTOMER' ? useSignupCustomer() : useSignupOwner();
@@ -50,8 +50,8 @@ function SignupPage({ userType }) {
       return;
     }
 
-    // redirect 존재 + 점주 회원가입 시도 방지
-    if (redirect && userType !== 'CUSTOMER') {
+    // slug 존재 + 점주 회원가입 시도 방지
+    if (slug && userType !== 'CUSTOMER') {
       alert('링크를 통한 회원가입은 고객만 가능합니다.');
       navigate('/'); // 홈으로 이동
       return;
@@ -59,10 +59,10 @@ function SignupPage({ userType }) {
 
     signup.mutate(formData, {
       onSuccess: () => {
-        // 회원가입 성공 시 redirect로 복귀
-        if (redirect) {
+        // 회원가입 성공 시 slug로 복귀
+        if (slug) {
           //식별코드 관련 리다이렉트 페이지로 다시 이동
-          navigate(`/s/${redirect}`, { replace: true });
+          navigate(`/s/${slug}`, { replace: true });
         } else {
           navigate('/'); // 기본 홈으로
         }
