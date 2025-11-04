@@ -57,17 +57,8 @@ function SignupPage({ userType }) {
       return;
     }
 
-    signup.mutate(formData, {
-      onSuccess: () => {
-        // 회원가입 성공 시 slug로 복귀
-        if (slug) {
-          //식별코드 관련 리다이렉트 페이지로 다시 이동
-          navigate(`/s/${slug}`, { replace: true });
-        } else {
-          navigate('/'); // 기본 홈으로
-        }
-      },
-    });
+    //회원가입 폼 전달
+    signup.mutate(formData);
   };
 
   return (
