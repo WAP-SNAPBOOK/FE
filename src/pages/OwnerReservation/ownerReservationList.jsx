@@ -13,44 +13,55 @@ export default function OwnerReservationList({ reservations }) {
         fontFamily: 'Pretendard',
       }}
     >
+      {/* 제목 */}
       <h1
         style={{
           fontSize: '20px',
           fontWeight: 700,
           marginBottom: '30px',
           alignSelf: 'flex-start',
-          marginLeft: '20px',
+          marginLeft: '24px',
         }}
       >
         예약 내역
       </h1>
 
+      {/* 예약 카드 컨테이너 */}
       <div
         style={{
           width: '360px',
           display: 'flex',
           flexDirection: 'column',
-          gap: '25px',
+          gap: '20px',
         }}
       >
         {reservations?.map((res) => (
           <div
             key={res.id}
             style={{
-              background: '#fafafa',
-              border: '1px solid #f0f0f0',
+              background: '#fff',
+              border: '1px solid #eee',
               borderRadius: '16px',
-              padding: '18px 20px',
-              boxShadow: '0 2px 6px rgba(0,0,0,0.05)',
+              padding: '18px 20px 22px',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            {/* 상단 이름 + 프로필 */}
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+                marginBottom: '10px',
+              }}
+            >
               <div
                 style={{
-                  width: '38px',
-                  height: '38px',
+                  width: '40px',
+                  height: '40px',
                   borderRadius: '50%',
-                  background: '#eee',
+                  border: '1px solid #ddd',
+                  background: '#f9f9f9',
                   display: 'flex',
                   justifyContent: 'center',
                   alignItems: 'center',
@@ -59,12 +70,19 @@ export default function OwnerReservationList({ reservations }) {
               >
                 👤
               </div>
-              <span style={{ fontWeight: 600, fontSize: '16px' }}>
+              <span style={{ fontWeight: 600, fontSize: '16px', color: '#222' }}>
                 {res.name}
               </span>
             </div>
 
-            <div style={{ marginTop: '14px', fontSize: '14px' }}>
+            {/* 예약 정보 */}
+            <div
+              style={{
+                fontSize: '14px',
+                color: '#555',
+                marginBottom: '12px',
+              }}
+            >
               <div
                 style={{
                   display: 'flex',
@@ -102,36 +120,45 @@ export default function OwnerReservationList({ reservations }) {
               </div>
             </div>
 
-            <div style={{ marginTop: '10px', textAlign: 'center' }}>
+            {/* 사진 미리보기 */}
+            <div
+              style={{
+                marginTop: '10px',
+                textAlign: 'center',
+              }}
+            >
               <img
                 src={res.photoUrl}
                 alt="첨부사진"
                 style={{
-                  width: '120px',
-                  height: '120px',
+                  width: '140px',
+                  height: '140px',
                   borderRadius: '10px',
                   objectFit: 'cover',
+                  border: '1px solid #eee',
                 }}
               />
             </div>
 
+            {/* 버튼 */}
             <div
               style={{
                 display: 'flex',
                 justifyContent: 'center',
-                gap: '10px',
-                marginTop: '12px',
+                gap: '12px',
+                marginTop: '16px',
               }}
             >
               <button
                 style={{
-                  background: '#ededed',
-                  color: '#555',
+                  background: '#f2f2f2',
+                  color: '#444',
                   fontWeight: 600,
                   border: 'none',
                   borderRadius: '8px',
-                  width: '80px',
-                  height: '34px',
+                  width: '90px',
+                  height: '36px',
+                  boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
                 }}
               >
                 거절
@@ -143,8 +170,9 @@ export default function OwnerReservationList({ reservations }) {
                   fontWeight: 600,
                   border: 'none',
                   borderRadius: '8px',
-                  width: '80px',
-                  height: '34px',
+                  width: '90px',
+                  height: '36px',
+                  boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
                 }}
               >
                 수락
