@@ -1,14 +1,14 @@
-import React, { useEffect, useMemo, useState } from "react";
-import InputField from "./InputField";
-import { sanitizeDigits, validateMobile010 } from "../../utils/phoneNumber";
-import { todayYMD, validateReservationDateTime } from "../../utils/dateTime";
+import React, { useEffect, useMemo, useState } from 'react';
+import InputField from './InputField';
+import { sanitizeDigits, validateMobile010 } from '../../utils/phoneNumber';
+import { todayYMD, validateReservationDateTime } from '../../utils/dateTime';
 
-export default function StepBasic({ initialData, onNext }) {
+export default function StepBasic({ initialData, onNext, visibleFields }) {
   const [values, setValues] = useState({
-    name: "",
-    phoneNumber: "",
-    date: "",
-    time: "",
+    name: '',
+    phoneNumber: '',
+    date: '',
+    time: '',
   });
 
   const [isComposing, setIsComposing] = useState(false);
@@ -21,7 +21,7 @@ export default function StepBasic({ initialData, onNext }) {
       setValues((v) => ({
         ...v,
         ...initialData,
-        name: (initialData.name ?? v.name ?? "").slice(0, MAX_NAME),
+        name: (initialData.name ?? v.name ?? '').slice(0, MAX_NAME),
         phoneNumber: sanitizePhone(initialData.phoneNumber ?? v.phoneNumber),
       }));
     }
@@ -106,9 +106,9 @@ export default function StepBasic({ initialData, onNext }) {
       {/* 날짜/시간 에러 메시지 */}
       {!dateTimeCheck.valid && values.date && values.time && (
         <div className="muted">
-          {dateTimeCheck.reason === "format"
-            ? "날짜/시간 형식이 올바르지 않습니다."
-            : "현재 시각 이전으로는 예약할 수 없습니다."}
+          {dateTimeCheck.reason === 'format'
+            ? '날짜/시간 형식이 올바르지 않습니다.'
+            : '현재 시각 이전으로는 예약할 수 없습니다.'}
         </div>
       )}
 
