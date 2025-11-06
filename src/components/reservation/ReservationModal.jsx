@@ -5,10 +5,10 @@ import StepBasic from './StepBasic';
 import StepOptions from './StepOptions';
 import StepPhotoNote from './StepPhotoNote';
 import './ReservationModal.css';
-import { useReservationForm } from '../../query/reservationQueries';
+import { useCreateReservation, useReservationForm } from '../../query/reservationQueries';
 import { getVisibleFields } from '../../utils/form/formFieldVisibility';
 
-export default function ReservationModal({ isOpen, onClose, onSubmit, shopId }) {
+export default function ReservationModal({ isOpen, onClose, shopId }) {
   const [step, setStep] = useState(1);
 
   const { data: formConfig, isLoading, error } = useReservationForm(shopId, isOpen);
@@ -16,6 +16,9 @@ export default function ReservationModal({ isOpen, onClose, onSubmit, shopId }) 
 
   //필드 존재 여부 정보
   const visible = getVisibleFields(fields);
+
+  //예약 생성 query 훅
+  const { mutate: createReservation } = useCreateReservation();
 
   const [formData, setFormData] = useState({
     basic: { name: '', phoneNumber: '', date: '', time: '' },
@@ -95,20 +98,22 @@ export default function ReservationModal({ isOpen, onClose, onSubmit, shopId }) 
 
     const { basic, options, photoNote } = merged;
     const payload = {
-      name: basic.name,
-      phoneNumber: basic.phoneNumber,
-      date: basic.date,
-      time: basic.time,
-      options: {
-        remove: options.removeYn === '유',
-        handFoot: options.handFootYn === '손',
-        extension: options.extYn === '유' ? Number(options.extCount || 0) : 0,
-        wrapping: options.wrapYn === '유' ? Number(options.wrapCount || 0) : 0,
+      shopId,
+      formData: {
+        name: basic.name,
+        phone: basic.phoneNumber,
+        date: basic.date,
+        time: basic.time,
+        removal: options.removeYn === '유' ? '예' : '아니오',
+        part: String(options.handFootYn ?? ''),
+        wrapping: String(options.wrapCount || '0'),
+        photo: photoNote.files.length ? photoNote.files.map((f) => f.name || f) : [],
+        requests: photoNote.notes?.trim() || '',
       },
-      files: photoNote.files,
-      notes: photoNote.notes?.trim() || '',
     };
-    onSubmit ? onSubmit(payload) : console.log('payload:', payload);
+    console.log('payload:', payload);
+    //예약 생성
+    createReservation(payload);
     handleClose();
   };
 
