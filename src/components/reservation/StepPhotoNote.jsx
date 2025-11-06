@@ -1,17 +1,17 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from 'react';
 
-export default function StepPhotoNote({ initialData, onSubmit }) {
+export default function StepPhotoNote({ initialData, onSubmit, visibleFields }) {
   const MAX_FILES = 3;
   const MAX_NOTES = 250;
 
-  const [values, setValues] = useState({ files: [], notes: "" });
+  const [values, setValues] = useState({ files: [], notes: '' });
 
   useEffect(() => {
     if (initialData) {
       setValues((v) => ({
         ...v,
         files: Array.isArray(initialData.files) ? initialData.files.slice(0, MAX_FILES) : [],
-        notes: String(initialData.notes ?? "").slice(0, MAX_NOTES),
+        notes: String(initialData.notes ?? '').slice(0, MAX_NOTES),
       }));
     }
   }, [initialData]);
@@ -45,7 +45,7 @@ export default function StepPhotoNote({ initialData, onSubmit }) {
     // ✅ 최대 3개로 제한 (기존 선택을 우선하여 보존)
     const limited = deduped.slice(0, MAX_FILES);
     setValues((prev) => ({ ...prev, files: limited }));
-    e.target.value = "";
+    e.target.value = '';
   };
 
   const removeAt = (idx) => {
@@ -57,7 +57,7 @@ export default function StepPhotoNote({ initialData, onSubmit }) {
 
   const fileLabelText = useMemo(() => {
     const arr = values.files || [];
-    if (arr.length === 0) return "사진을 선택해 주세요. 🖼️";
+    if (arr.length === 0) return '사진을 선택해 주세요. 🖼️';
     if (arr.length === 1) return arr[0].name;
     return `${arr.length}개 선택됨`;
   }, [values.files]);
@@ -78,7 +78,9 @@ export default function StepPhotoNote({ initialData, onSubmit }) {
     <>
       {/* 파일 선택 */}
       <div className="fieldGroup">
-        <label className="label" style={{ marginBottom: 6 }}>사진</label>
+        <label className="label" style={{ marginBottom: 6 }}>
+          사진
+        </label>
         <label className="selectControl">
           {fileLabelText}
           <input
@@ -86,7 +88,7 @@ export default function StepPhotoNote({ initialData, onSubmit }) {
             accept="image/*"
             multiple
             onChange={onFileChange}
-            style={{ display: "none" }}
+            style={{ display: 'none' }}
           />
         </label>
         <div className="muted" style={{ marginTop: 6 }}>
@@ -125,15 +127,17 @@ export default function StepPhotoNote({ initialData, onSubmit }) {
           placeholder="요구사항을 입력해 주세요."
           value={values.notes}
           onChange={handleNotesChange}
-          maxLength={MAX_NOTES}   // UI 단에서도 제한
+          maxLength={MAX_NOTES} // UI 단에서도 제한
         />
-        <div className="muted" style={{ textAlign: "right" }}>
+        <div className="muted" style={{ textAlign: 'right' }}>
           {values.notes.length}/{MAX_NOTES}
         </div>
       </div>
 
       <form onSubmit={submit} className="submitRow">
-        <button type="submit" className="submitBtn">예약 신청</button>
+        <button type="submit" className="submitBtn">
+          예약 신청
+        </button>
       </form>
     </>
   );
