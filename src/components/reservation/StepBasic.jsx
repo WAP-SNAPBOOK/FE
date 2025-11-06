@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import InputField from "./InputField";
 import { sanitizeDigits, validateMobile010 } from "../../utils/phoneNumber";
+import { todayYMD, validateReservationDateTime } from "../../utils/dateTime";
 
 export default function StepBasic({ initialData, onNext }) {
   const [values, setValues] = useState({
@@ -13,7 +14,6 @@ export default function StepBasic({ initialData, onNext }) {
   const [isComposing, setIsComposing] = useState(false);
   const MAX_NAME = 5;
 
-  // 숫자만 남기고 11자리로 자르기
   const sanitizePhone = (val) => sanitizeDigits(val).slice(0, 11);
 
   useEffect(() => {
@@ -40,19 +40,16 @@ export default function StepBasic({ initialData, onNext }) {
   };
 
   const handlePhoneChange = (e) => {
-    const digitsOnly = sanitizePhone(e.target.value);
-    setValues((v) => ({ ...v, phoneNumber: digitsOnly }));
+    setValues((v) => ({ ...v, phoneNumber: sanitizePhone(e.target.value) }));
   };
 
-  // utils의 검증 함수 사용: 010으로 시작 + 정확히 11자리 (동일 숫자 반복 허용)
-  const phoneCheck = validateMobile010(values.phoneNumber);
-  const isPhoneValid = phoneCheck.valid;
-
-  // 전체 유효성
+  // 검증들
+  const phoneValid = validateMobile010(values.phoneNumber).valid;
+  const dateTimeCheck = validateReservationDateTime(values.date, values.time);
   const isValid = useMemo(() => {
-    const { name, date, time } = values;
-    return name.trim() && isPhoneValid && date && time;
-  }, [values, isPhoneValid]);
+    const { name } = values;
+    return name.trim() && phoneValid && dateTimeCheck.valid;
+  }, [values, phoneValid, dateTimeCheck.valid]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -83,7 +80,7 @@ export default function StepBasic({ initialData, onNext }) {
         maxLength={11}
         autoComplete="tel"
       />
-      {!isPhoneValid && values.phoneNumber.length > 0 && (
+      {!phoneValid && values.phoneNumber.length > 0 && (
         <div className="muted">010으로 시작하는 숫자 11자리를 입력해 주세요.</div>
       )}
 
@@ -95,20 +92,25 @@ export default function StepBasic({ initialData, onNext }) {
           className="field"
           type="date"
           value={values.date}
-          min={new Date().toISOString().slice(0, 10)}
-          onChange={(e) =>
-            setValues((v) => ({ ...v, date: e.target.value }))
-          }
+          min={todayYMD()}
+          onChange={(e) => setValues((v) => ({ ...v, date: e.target.value }))}
         />
         <input
           className="field"
           type="time"
           value={values.time}
-          onChange={(e) =>
-            setValues((v) => ({ ...v, time: e.target.value }))
-          }
+          onChange={(e) => setValues((v) => ({ ...v, time: e.target.value }))}
         />
       </div>
+
+      {/* 날짜/시간 에러 메시지 */}
+      {!dateTimeCheck.valid && values.date && values.time && (
+        <div className="muted">
+          {dateTimeCheck.reason === "format"
+            ? "날짜/시간 형식이 올바르지 않습니다."
+            : "현재 시각 이전으로는 예약할 수 없습니다."}
+        </div>
+      )}
 
       <form onSubmit={handleSubmit} className="submitRow">
         <button type="submit" className="submitBtn" disabled={!isValid}>
