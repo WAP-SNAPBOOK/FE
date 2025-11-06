@@ -1,24 +1,21 @@
-import React, { useEffect, useState, useMemo } from "react";
-import OptionRow from "./OptionRow";
-import RadioHandFoot from "./RadioHandFoot";
+import React, { useEffect, useState, useMemo } from 'react';
+import OptionRow from './OptionRow';
+import RadioHandFoot from './RadioHandFoot';
 
-export default function StepOptions({ initialData, onNext }) {
+export default function StepOptions({ initialData, onNext, visibleFields }) {
   const [values, setValues] = useState({
-    removeYn: "유",
-    handFootYn: "손",
-    extYn: "무",
-    extCount: "",
-    wrapYn: "무",
-    wrapCount: "",
+    removeYn: '유',
+    handFootYn: '손',
+    extYn: '무',
+    extCount: '',
+    wrapYn: '무',
+    wrapCount: '',
   });
 
   // 1~10 선택지
-  const COUNT_OPTIONS = useMemo(
-    () => Array.from({ length: 10 }, (_, i) => String(i + 1)),
-    []
-  );
+  const COUNT_OPTIONS = useMemo(() => Array.from({ length: 10 }, (_, i) => String(i + 1)), []);
 
-  const sanitizeCount = (val) => String(val ?? "").replace(/\D/g, "");
+  const sanitizeCount = (val) => String(val ?? '').replace(/\D/g, '');
 
   useEffect(() => {
     if (initialData) {
@@ -37,18 +34,18 @@ export default function StepOptions({ initialData, onNext }) {
     setValues((p) => ({
       ...p,
       extYn: v,
-      extCount: v === "무" ? "" : p.extCount, // 유일 때만 유지
+      extCount: v === '무' ? '' : p.extCount, // 유일 때만 유지
     }));
 
   const handleChangeWrapYn = (v) =>
     setValues((p) => ({
       ...p,
       wrapYn: v,
-      wrapCount: v === "무" ? "" : p.wrapCount,
+      wrapCount: v === '무' ? '' : p.wrapCount,
     }));
 
-  const handleExtCountChange = (cnt) => setField("extCount", sanitizeCount(cnt));
-  const handleWrapCountChange = (cnt) => setField("wrapCount", sanitizeCount(cnt));
+  const handleExtCountChange = (cnt) => setField('extCount', sanitizeCount(cnt));
+  const handleWrapCountChange = (cnt) => setField('wrapCount', sanitizeCount(cnt));
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -61,14 +58,14 @@ export default function StepOptions({ initialData, onNext }) {
         label="제거 유무"
         name="removeYn"
         value={values.removeYn}
-        onChange={(v) => setField("removeYn", v)}
+        onChange={(v) => setField('removeYn', v)}
       />
 
       <RadioHandFoot
         label="손 / 발"
         name="handFootYn"
         value={values.handFootYn}
-        onChange={(v) => setField("handFootYn", v)}
+        onChange={(v) => setField('handFootYn', v)}
       />
 
       <OptionRow
@@ -96,7 +93,9 @@ export default function StepOptions({ initialData, onNext }) {
       />
 
       <form onSubmit={handleSubmit} className="submitRow">
-        <button type="submit" className="submitBtn">다음</button>
+        <button type="submit" className="submitBtn">
+          다음
+        </button>
       </form>
     </>
   );
