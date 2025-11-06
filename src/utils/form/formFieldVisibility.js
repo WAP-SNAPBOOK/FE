@@ -22,6 +22,7 @@ export function getVisibleFields(fields = []) {
     removal: has('removal'),
     part: has('part'),
     wrapping: has('wrapping'),
+    extend: has('extend'),
     photo: has('photo'),
     requests: has('requests'),
   };
