@@ -4,12 +4,12 @@ export default function OwnerReservationList({ reservations }) {
   return (
     <div
       style={{
-        backgroundColor: '#fff',
+        backgroundColor: '#f8f8f8',
         minHeight: '100vh',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        padding: '40px 0',
+        justifyContent: 'center',
         fontFamily: 'Pretendard',
       }}
     >
@@ -18,168 +18,192 @@ export default function OwnerReservationList({ reservations }) {
         style={{
           fontSize: '20px',
           fontWeight: 700,
-          marginBottom: '30px',
+          marginBottom: '24px',
           alignSelf: 'flex-start',
-          marginLeft: '24px',
+          marginLeft: 'calc(50% - 170px)',
         }}
       >
         예약 내역
       </h1>
 
-      {/* 예약 카드 컨테이너 */}
+      {/* 회색 박스 */}
       <div
         style={{
-          width: '360px',
+          backgroundColor: '#e9e9e9',
+          width: '341px',
+          height: '652px',
+          borderRadius: '16px',
+          padding: '26px',
           display: 'flex',
           flexDirection: 'column',
-          gap: '20px',
+          alignItems: 'center',
+          overflowY: 'auto',
+          boxShadow: '0 4px 10px rgba(0,0,0,0.05)',
+          margin: '26px',
         }}
       >
-        {reservations?.map((res) => (
-          <div
-            key={res.id}
-            style={{
-              background: '#fff',
-              border: '1px solid #eee',
-              borderRadius: '16px',
-              padding: '18px 20px 22px',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
-            }}
-          >
-            {/* 상단 이름 + 프로필 */}
+        {/* 카드 리스트 */}
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '28px',
+          }}
+        >
+          {reservations?.map((res) => (
             <div
+              key={res.id}
               style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '10px',
-                marginBottom: '10px',
+                background: '#fff',
+                borderRadius: '16px',
+                border: '1px solid #eee',
+                width: '298px',
+                height: '337px',
+                padding: '20px',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+                boxSizing: 'border-box',
               }}
             >
+              {/* 이름 */}
               <div
                 style={{
-                  width: '40px',
-                  height: '40px',
-                  borderRadius: '50%',
-                  border: '1px solid #ddd',
-                  background: '#f9f9f9',
                   display: 'flex',
-                  justifyContent: 'center',
                   alignItems: 'center',
-                  fontSize: '18px',
+                  gap: '10px',
+                  marginBottom: '14px',
                 }}
               >
-                👤
+                <div
+                  style={{
+                    width: '38px',
+                    height: '38px',
+                    borderRadius: '50%',
+                    border: '1px solid #ddd',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    fontSize: '18px',
+                    color: '#aaa',
+                  }}
+                >
+                  👤
+                </div>
+                <span
+                  style={{
+                    fontWeight: 600,
+                    fontSize: '15px',
+                    color: '#222',
+                  }}
+                >
+                  {res.name}
+                </span>
               </div>
-              <span style={{ fontWeight: 600, fontSize: '16px', color: '#222' }}>
-                {res.name}
-              </span>
-            </div>
 
-            {/* 예약 정보 */}
-            <div
-              style={{
-                fontSize: '14px',
-                color: '#555',
-                marginBottom: '12px',
-              }}
-            >
+              {/* 예약 정보 */}
+              <div
+                style={{
+                  fontSize: '13.5px',
+                  color: '#999',
+                  marginLeft: '48px',
+                  marginBottom: '12px',
+                }}
+              >
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    marginBottom: '4px',
+                  }}
+                >
+                  <span>예약 날짜</span>
+                  <span style={{ color: '#fb808a', fontWeight: 600 }}>
+                    {res.date}
+                  </span>
+                </div>
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    marginBottom: '4px',
+                  }}
+                >
+                  <span>예약 시간</span>
+                  <span style={{ color: '#fb808a', fontWeight: 600 }}>
+                    {res.time}
+                  </span>
+                </div>
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                  }}
+                >
+                  <span>첨부 사진</span>
+                  <span style={{ color: '#333', fontWeight: 600 }}>
+                    {res.photoCount}장
+                  </span>
+                </div>
+              </div>
+
+              {/* 사진 */}
+              <div
+                style={{
+                  marginLeft: '48px',
+                  marginBottom: '18px',
+                }}
+              >
+                <img
+                  src={res.photoUrl}
+                  alt="첨부사진"
+                  style={{
+                    width: '130px',
+                    height: '130px',
+                    borderRadius: '10px',
+                    objectFit: 'cover',
+                  }}
+                />
+              </div>
+
+              {/* 버튼 */}
               <div
                 style={{
                   display: 'flex',
-                  justifyContent: 'space-between',
-                  marginBottom: '4px',
+                  gap: '10px',
+                  marginLeft: '48px',
+                  marginTop: '-28px',
+                  justifyContent: 'flex-start',
                 }}
               >
-                <span style={{ color: '#999' }}>예약 날짜</span>
-                <span style={{ color: '#fb808a', fontWeight: 600 }}>
-                  {res.date}
-                </span>
-              </div>
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  marginBottom: '4px',
-                }}
-              >
-                <span style={{ color: '#999' }}>예약 시간</span>
-                <span style={{ color: '#fb808a', fontWeight: 600 }}>
-                  {res.time}
-                </span>
-              </div>
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                }}
-              >
-                <span style={{ color: '#999' }}>첨부 사진</span>
-                <span style={{ color: '#333', fontWeight: 600 }}>
-                  {res.photoCount}장
-                </span>
+                <button
+                  style={{
+                    background: '#ededed',
+                    color: '#555',
+                    fontWeight: 600,
+                    border: 'none',
+                    borderRadius: '8px',
+                    width: '97px',
+                    height: '37px',
+                  }}
+                >
+                  거절
+                </button>
+                <button
+                  style={{
+                    background: '#fb808a',
+                    color: '#fff',
+                    fontWeight: 600,
+                    border: 'none',
+                    borderRadius: '8px',
+                    width: '97px',
+                    height: '37px',
+                  }}
+                >
+                  수락
+                </button>
               </div>
             </div>
-
-            {/* 사진 미리보기 */}
-            <div
-              style={{
-                marginTop: '10px',
-                textAlign: 'center',
-              }}
-            >
-              <img
-                src={res.photoUrl}
-                alt="첨부사진"
-                style={{
-                  width: '140px',
-                  height: '140px',
-                  borderRadius: '10px',
-                  objectFit: 'cover',
-                  border: '1px solid #eee',
-                }}
-              />
-            </div>
-
-            {/* 버튼 */}
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'center',
-                gap: '12px',
-                marginTop: '16px',
-              }}
-            >
-              <button
-                style={{
-                  background: '#f2f2f2',
-                  color: '#444',
-                  fontWeight: 600,
-                  border: 'none',
-                  borderRadius: '8px',
-                  width: '90px',
-                  height: '36px',
-                  boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
-                }}
-              >
-                거절
-              </button>
-              <button
-                style={{
-                  background: '#fb808a',
-                  color: '#fff',
-                  fontWeight: 600,
-                  border: 'none',
-                  borderRadius: '8px',
-                  width: '90px',
-                  height: '36px',
-                  boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
-                }}
-              >
-                수락
-              </button>
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );
