@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { useSendMessage, useChatMessages } from '../../query/chatQueries';
 import { chatSocketService } from '../../api/services/chatSocketService';
 import DateDivider from '../../components/chat/DateDivider';
@@ -17,11 +17,17 @@ import { useAuth } from '../../context/AuthContext';
 import { usePreserveScrollPosition } from '../../hooks/chat/usePreserveScrollPosition';
 import { useInitScrollToBottom } from '../../hooks/chat/useInitScrollToBottom';
 import { useTopObserver } from '../../hooks/chat/useTopObserver';
+import { useShopInfoByCode } from '../../query/linkQueries';
 
 export default function ChatRoomPage() {
   const [input, setInput] = useState('');
   const [liveMessages, setLiveMessages] = useState([]);
   const [readyToObserve, setReadyToObserve] = useState(false);
+
+  //링크 유입시 가게 정보 조회
+  const [searchParams] = useSearchParams();
+  const slugOrCode = searchParams.get('slug');
+  const { data: shopInfo } = useShopInfoByCode(slugOrCode);
 
   //예약 모달 상태
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -166,7 +172,10 @@ export default function ChatRoomPage() {
           <S.BackButton onClick={handleBack}>
             <img src={backIcon} alt="back" />
           </S.BackButton>
-          <ChatRoomTitle>채팅방 #{chatRoomId}</ChatRoomTitle>
+          {/*현재 링크 유입시만 가게이름 조회 가능*/}
+          <ChatRoomTitle>
+            {shopInfo?.shopName ? shopInfo.shopName : `채팅방 #${chatRoomId}`}
+          </ChatRoomTitle>
           <S.BookButton onClick={openModal}>예약</S.BookButton>
         </S.Header>
         <S.MessageList ref={messageListRef}>
@@ -222,7 +231,7 @@ export default function ChatRoomPage() {
         </S.InputBar>
       </S.PageWrapper>
       {/*예약 모달 */}
-      <ReservationModal isOpen={isModalOpen} onClose={closeModal} shopId={8} />
+      <ReservationModal isOpen={isModalOpen} onClose={closeModal} shopId={shopInfo?.shopId} />
     </Container>
   );
 }

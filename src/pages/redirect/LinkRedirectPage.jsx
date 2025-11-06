@@ -26,7 +26,7 @@ export default function LinkRedirectPage() {
     if (data) {
       const { roomId, shopId, isNewRoom } = data;
       //해당 채팅방 이동
-      navigate(`/chat/${roomId}`, {
+      navigate(`/chat/${roomId}?slug=${slugOrCode}`, {
         state: { shopId, isNewRoom },
         replace: true, //브라우저 히스토리 덮어쓰기
       });
