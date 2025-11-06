@@ -54,43 +54,52 @@ export default function StepOptions({ initialData, onNext, visibleFields }) {
 
   return (
     <>
-      <OptionRow
-        label="제거 유무"
-        name="removeYn"
-        value={values.removeYn}
-        onChange={(v) => setField('removeYn', v)}
-      />
+      {/* 제거 유무 */}
+      {visibleFields?.removal && (
+        <OptionRow
+          label="제거 유무"
+          name="removeYn"
+          value={values.removeYn}
+          onChange={(v) => setField('removeYn', v)}
+        />
+      )}
 
-      <RadioHandFoot
-        label="손 / 발"
-        name="handFootYn"
-        value={values.handFootYn}
-        onChange={(v) => setField('handFootYn', v)}
-      />
+      {/* 손/발 */}
+      {visibleFields?.part && (
+        <RadioHandFoot
+          label="손 / 발"
+          name="handFootYn"
+          value={values.handFootYn}
+          onChange={(v) => setField('handFootYn', v)}
+        />
+      )}
 
-      <OptionRow
-        label="연장"
-        name="extYn"
-        value={values.extYn}
-        onChange={handleChangeExtYn}
-        showCount
-        countValue={values.extCount}
-        onCountChange={handleExtCountChange}
-        countAs="select"
-        countOptions={COUNT_OPTIONS}
-      />
-
-      <OptionRow
-        label="래핑"
-        name="wrapYn"
-        value={values.wrapYn}
-        onChange={handleChangeWrapYn}
-        showCount
-        countValue={values.wrapCount}
-        onCountChange={handleWrapCountChange}
-        countAs="select"
-        countOptions={COUNT_OPTIONS}
-      />
+      {visibleFields?.wrapping && (
+        <>
+          <OptionRow
+            label="연장"
+            name="extYn"
+            value={values.extYn}
+            onChange={handleChangeExtYn}
+            showCount
+            countValue={values.extCount}
+            onCountChange={handleExtCountChange}
+            countAs="select"
+            countOptions={COUNT_OPTIONS}
+          />
+          <OptionRow
+            label="래핑"
+            name="wrapYn"
+            value={values.wrapYn}
+            onChange={handleChangeWrapYn}
+            showCount
+            countValue={values.wrapCount}
+            onCountChange={handleWrapCountChange}
+            countAs="select"
+            countOptions={COUNT_OPTIONS}
+          />
+        </>
+      )}
 
       <form onSubmit={handleSubmit} className="submitRow">
         <button type="submit" className="submitBtn">
