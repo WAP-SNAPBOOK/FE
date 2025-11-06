@@ -19,9 +19,6 @@ export function getVisibleFields(fields = []) {
   const has = (id) => fields.some((f) => f.fieldId === id);
 
   return {
-    name: has('name'),
-    phone: has('phone'),
-    date: has('date'),
     removal: has('removal'),
     part: has('part'),
     wrapping: has('wrapping'),
