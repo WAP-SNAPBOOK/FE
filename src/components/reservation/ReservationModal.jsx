@@ -106,12 +106,14 @@ export default function ReservationModal({ isOpen, onClose, shopId }) {
         time: basic.time,
         removal: options.removeYn === '유' ? '예' : '아니오',
         part: String(options.handFootYn ?? ''),
-        wrapping: String(options.wrapCount || '0'),
-        photo: photoNote.files.length ? photoNote.files.map((f) => f.name || f) : [],
+        wrapping: options.wrapCount,
+        extend: Number(options.extCount) > 0 ? Number(options.extCount) : 0,
+        photo: photoNote.files.length
+          ? JSON.stringify(photoNote.files.map((f) => f.name || f))
+          : '[]',
         requests: photoNote.notes?.trim() || '',
       },
     };
-    console.log('payload:', payload);
     //예약 생성
     createReservation(payload);
     handleClose();
