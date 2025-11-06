@@ -76,25 +76,27 @@ export default function StepPhotoNote({ initialData, onSubmit, visibleFields }) 
 
   return (
     <>
-      {/* 파일 선택 */}
-      <div className="fieldGroup">
-        <label className="label" style={{ marginBottom: 6 }}>
-          사진
-        </label>
-        <label className="selectControl">
-          {fileLabelText}
-          <input
-            type="file"
-            accept="image/*"
-            multiple
-            onChange={onFileChange}
-            style={{ display: 'none' }}
-          />
-        </label>
-        <div className="muted" style={{ marginTop: 6 }}>
-          최대 {MAX_FILES}장까지 첨부 가능합니다.
+      {/*예약 폼 양식 존재 여부에 따라 렌더링*/}
+      {visibleFields?.photo && (
+        <div className="fieldGroup">
+          <label className="label" style={{ marginBottom: 6 }}>
+            사진
+          </label>
+          <label className="selectControl">
+            {fileLabelText}
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={onFileChange}
+              style={{ display: 'none' }}
+            />
+          </label>
+          <div className="muted" style={{ marginTop: 6 }}>
+            최대 {MAX_FILES}장까지 첨부 가능합니다.
+          </div>
         </div>
-      </div>
+      )}
 
       {/* 미리보기: 가로 스크롤 */}
       {previews.length > 0 && (
@@ -117,22 +119,24 @@ export default function StepPhotoNote({ initialData, onSubmit, visibleFields }) 
         </div>
       )}
 
-      {/* 요구사항(선택) */}
-      <div className="fieldGroup">
-        <label className="label">
-          요구사항 <span className="muted">(선택)</span>
-        </label>
-        <textarea
-          className="textarea"
-          placeholder="요구사항을 입력해 주세요."
-          value={values.notes}
-          onChange={handleNotesChange}
-          maxLength={MAX_NOTES} // UI 단에서도 제한
-        />
-        <div className="muted" style={{ textAlign: 'right' }}>
-          {values.notes.length}/{MAX_NOTES}
+      {visibleFields?.requests && (
+        // 요구사항(선택)
+        <div className="fieldGroup">
+          <label className="label">
+            요구사항 <span className="muted">(선택)</span>
+          </label>
+          <textarea
+            className="textarea"
+            placeholder="요구사항을 입력해 주세요."
+            value={values.notes}
+            onChange={handleNotesChange}
+            maxLength={MAX_NOTES} // UI 단에서도 제한
+          />
+          <div className="muted" style={{ textAlign: 'right' }}>
+            {values.notes.length}/{MAX_NOTES}
+          </div>
         </div>
-      </div>
+      )}
 
       <form onSubmit={submit} className="submitRow">
         <button type="submit" className="submitBtn">
