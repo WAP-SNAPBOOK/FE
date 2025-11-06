@@ -14,4 +14,14 @@ export const reservationService = {
     });
     return res.data;
   },
+
+  /**
+   * 예약 생성 API
+   * @param {Object} payload - 예약 데이터 (shopId, formData)
+   * @returns {Promise<Object>} 생성된 예약 정보
+   */
+  createReservation: async (payload) => {
+    const res = await axiosClient.post(`/api/reservations`, payload);
+    return res.data;
+  },
 };
