@@ -27,4 +27,14 @@ export const shopLinkService = {
     });
     return res.data;
   },
+
+  /**
+   * 매장 정보 조회 (공개 링크로 접근 시)
+   * @param {string} slugOrCode - 매장 식별 코드
+   * @returns {Promise<{shopId:number, shopName:string}>}
+   */
+  getShopInfoByCode: async (slugOrCode) => {
+    const res = await axiosClient.get(`/shop/${slugOrCode}`);
+    return res.data;
+  },
 };

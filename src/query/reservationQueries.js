@@ -14,8 +14,7 @@ export const useReservationForm = (shopId, enabled) => {
 export const useCreateReservation = () => {
   return useMutation({
     mutationFn: (payload) => reservationService.createReservation(payload),
-    onSuccess: (data) => {
-      console.log('예약 성공:', data);
+    onSuccess: () => {
       alert('예약이 완료되었습니다!');
     },
 

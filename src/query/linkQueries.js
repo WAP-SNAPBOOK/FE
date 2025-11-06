@@ -17,3 +17,12 @@ export const useLinkChat = (slugOrCode, options = {}) => {
     enabled: !!slugOrCode && (options.enabled ?? true),
   });
 };
+
+// 매장 정보 조회 (공개 링크 접근 시)
+export const useShopInfoByCode = (slugOrCode) => {
+  return useQuery({
+    queryKey: ['shopInfo', slugOrCode],
+    queryFn: () => shopLinkService.getShopInfoByCode(slugOrCode),
+    enabled: !!slugOrCode,
+  });
+};
