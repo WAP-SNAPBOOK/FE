@@ -222,13 +222,7 @@ export default function ChatRoomPage() {
         </S.InputBar>
       </S.PageWrapper>
       {/*예약 모달 */}
-      <ReservationModal
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        onSubmit={() => {
-          console.log('form 전달');
-        }}
-      />
+      <ReservationModal isOpen={isModalOpen} onClose={closeModal} shopId={8} />
     </Container>
   );
 }
