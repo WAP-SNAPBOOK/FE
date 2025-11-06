@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Container from "../common/Container";
 import ModalOverlay from "./ModalOverlay";
 import StepBasic from "./StepBasic";
@@ -38,6 +38,39 @@ export default function ReservationModal({ isOpen, onClose, onSubmit }) {
     });
     onClose?.();
   };
+  // ✅ 모달 열리는 동안 배경 스크롤 완전 잠금 (iOS 포함 안정적인 fixed-lock)
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const scrollY =
+      window.scrollY ||
+      document.documentElement.scrollTop ||
+      document.body.scrollTop ||
+      0;
+
+    // 기존 인라인 스타일 백업
+    const prev = {
+      position: document.body.style.position,
+      top: document.body.style.top,
+      width: document.body.style.width,
+      overflow: document.body.style.overflow,
+    };
+
+    // 배경 고정 & 스크롤 차단
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.width = "100%";
+    document.body.style.overflow = "hidden";
+
+    // 클린업: 스타일 복원 + 원래 위치로 스크롤 이동
+    return () => {
+      document.body.style.position = prev.position;
+      document.body.style.top = prev.top;
+      document.body.style.width = prev.width;
+      document.body.style.overflow = prev.overflow;
+      window.scrollTo(0, scrollY);
+    };
+  }, [isOpen]);
 
   // Step1 -> Step2
   const handleNextFromBasic = (basicValues) => { setFormData((prev) => ({ ...prev, basic: basicValues })); setStep(2); };

@@ -1,14 +1,17 @@
 import React, { useEffect, useMemo, useState } from "react";
 
 export default function StepPhotoNote({ initialData, onSubmit }) {
+  const MAX_FILES = 3;
+  const MAX_NOTES = 250;
+
   const [values, setValues] = useState({ files: [], notes: "" });
 
   useEffect(() => {
     if (initialData) {
       setValues((v) => ({
         ...v,
-        files: Array.isArray(initialData.files) ? initialData.files : [],
-        notes: initialData.notes ?? "",
+        files: Array.isArray(initialData.files) ? initialData.files.slice(0, MAX_FILES) : [],
+        notes: String(initialData.notes ?? "").slice(0, MAX_NOTES),
       }));
     }
   }, [initialData]);
@@ -38,7 +41,10 @@ export default function StepPhotoNote({ initialData, onSubmit }) {
         deduped.push(f);
       }
     }
-    setValues((prev) => ({ ...prev, files: deduped }));
+
+    // ✅ 최대 3개로 제한 (기존 선택을 우선하여 보존)
+    const limited = deduped.slice(0, MAX_FILES);
+    setValues((prev) => ({ ...prev, files: limited }));
     e.target.value = "";
   };
 
@@ -56,7 +62,13 @@ export default function StepPhotoNote({ initialData, onSubmit }) {
     return `${arr.length}개 선택됨`;
   }, [values.files]);
 
-  // 제출: 현재 values를 부모로 전달
+  // ✅ 요청사항 250자 제한 (붙여넣기 포함)
+  const handleNotesChange = (e) => {
+    const val = e.target.value.slice(0, MAX_NOTES);
+    setValues((prev) => ({ ...prev, notes: val }));
+  };
+
+  // 제출
   const submit = (e) => {
     e.preventDefault();
     onSubmit?.(values);
@@ -77,6 +89,9 @@ export default function StepPhotoNote({ initialData, onSubmit }) {
             style={{ display: "none" }}
           />
         </label>
+        <div className="muted" style={{ marginTop: 6 }}>
+          최대 {MAX_FILES}장까지 첨부 가능합니다.
+        </div>
       </div>
 
       {/* 미리보기: 가로 스크롤 */}
@@ -109,10 +124,12 @@ export default function StepPhotoNote({ initialData, onSubmit }) {
           className="textarea"
           placeholder="요구사항을 입력해 주세요."
           value={values.notes}
-          onChange={(e) =>
-            setValues((prev) => ({ ...prev, notes: e.target.value }))
-          }
+          onChange={handleNotesChange}
+          maxLength={MAX_NOTES}   // UI 단에서도 제한
         />
+        <div className="muted" style={{ textAlign: "right" }}>
+          {values.notes.length}/{MAX_NOTES}
+        </div>
       </div>
 
       <form onSubmit={submit} className="submitRow">

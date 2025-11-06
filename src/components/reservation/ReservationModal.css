@@ -32,7 +32,6 @@
   box-sizing: border-box; display: flex; flex-direction: column;
 }
 
-
 .closeBtn { position: absolute; right: 12px; top: 10px; border: none; background: transparent; font-size: 20px; line-height: 1; cursor: pointer; }
 
 .title { font-size: 24px; font-weight: bold; text-align: center; margin: 8px 0 50px; display: inline-block; border-bottom: 3px solid var(--pink); padding-bottom: 4px; align-self: center; }
@@ -46,30 +45,75 @@
 /* === 날짜·시간 2열 레이아웃 오버라이드 (formCenter 없이도 동작) === */
 .grid2 {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr)); /* ✅ 1fr이 줄어들 수 있게 */
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   column-gap: 8px;
   row-gap: 6px;
   width: 100%;
 }
-
-/* ✅ 그리드 자식이 필요 시 폭을 0까지 줄일 수 있게 */
-.grid2 > * {
-  min-width: 0;
-}
-
-/* ✅ input이 셀 가로폭을 꽉 채우도록 */
+.grid2 > * { min-width: 0; }
 .grid2 input[type="date"],
 .grid2 input[type="time"] {
   width: 100%;
   box-sizing: border-box;
 }
 
-
 /* 옵션 행 & 라디오 */
-.row { display: grid; grid-template-columns: 100px 1fr; column-gap: 1px; margin: 10px 0 10px 40px; }
-.radioGroup { display: flex; gap: 10px; margin-top: 5px; }
-.radioLabel { display: inline-flex; gap: 6px; cursor: pointer; font-weight: 50; }
+.row {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  column-gap: 1px;
+  margin: 10px 0 10px 40px;
+}
+.row > * { min-width: 0; }
+
+.radioGroup {
+  display: flex;
+  gap: 10px;
+  margin-top: 5px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.radioLabel { display: inline-flex; gap: 6px; cursor: pointer; font-weight: 50; white-space: nowrap; }
+
+/* 기본 크기 (텍스트 input용) */
 .smallField { height: 36px; width: 120px; margin-top: 8px; }
+
+/* ✅ 갯수 선택 드롭다운(1~10) */
+.countSelect {
+  height: 36px;
+  width: 120px;
+  margin-top: 8px;
+  padding: 0 32px 0 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fff;
+
+  /* 드롭다운 커스텀 화살표 */
+  appearance: none;
+  -webkit-appearance: none;
+  background-image:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 -3 24 24'><path d='M7 7l5 5 5-5' fill='none' stroke='%239e9e9e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+
+  outline: none;
+  box-sizing: border-box;
+  font: inherit;
+  color: var(--text);
+}
+.countSelect:focus {
+  border-color: var(--pink);
+  box-shadow: 0 0 0 3px rgba(240,128,128,0.15);
+}
+
+/* ✅ 라디오 아래로 자연스럽게 떨어지도록 (input/ select 공통) */
+.radioGroup .smallField,
+.radioGroup .countSelect {
+  flex-basis: 100%;
+  width: 120px;
+  box-sizing: border-box;
+}
 
 /* 3단계: 사진 + 요구사항 (다중, 가로 스크롤) */
 .selectRow { display: grid; grid-template-columns: 100px 1fr; align-items: center; column-gap: 10px; margin-bottom: 12px; }
