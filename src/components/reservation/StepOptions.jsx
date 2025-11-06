@@ -74,7 +74,7 @@ export default function StepOptions({ initialData, onNext, visibleFields }) {
         />
       )}
 
-      {visibleFields?.wrapping && (
+      {visibleFields?.extend && (
         <>
           <OptionRow
             label="연장"
@@ -87,6 +87,11 @@ export default function StepOptions({ initialData, onNext, visibleFields }) {
             countAs="select"
             countOptions={COUNT_OPTIONS}
           />
+        </>
+      )}
+
+      {visibleFields?.wrapping && (
+        <>
           <OptionRow
             label="래핑"
             name="wrapYn"
