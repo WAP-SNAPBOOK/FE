@@ -11,11 +11,25 @@ export const useReservationForm = (shopId, enabled) => {
 };
 
 //예약 생성 훅
-export const useCreateReservation = () => {
+export const useCreateReservation = (onReservationComplete, handleClose, formDataRef) => {
   return useMutation({
     mutationFn: (payload) => reservationService.createReservation(payload),
     onSuccess: () => {
       alert('예약이 완료되었습니다!');
+
+      //예약 완료 메시지 생성
+      const current = formDataRef?.current;
+      if (current) {
+        onReservationComplete?.({
+          name: current.basic?.name || '',
+          date: current.basic?.date || '',
+          time: current.basic?.time || '',
+          photoCount: current.photoNote?.files?.length || 0,
+        });
+      }
+
+      //모달 닫기까지 훅 내부에서 처리
+      handleClose?.();
     },
 
     onError: (error) => {
