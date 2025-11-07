@@ -56,9 +56,6 @@ export const Time = styled.span`
 export const LastMessage = styled.span`
   flex: 1;
   font-size: 13px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
   color: ${theme.colors.gray.dark.DEFAULT};
 `;
 
