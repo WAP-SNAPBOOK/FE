@@ -18,6 +18,7 @@ import { usePreserveScrollPosition } from '../../hooks/chat/usePreserveScrollPos
 import { useInitScrollToBottom } from '../../hooks/chat/useInitScrollToBottom';
 import { useTopObserver } from '../../hooks/chat/useTopObserver';
 import { useShopInfoByCode } from '../../query/linkQueries';
+import { ReservationCompleteMessage } from '../../components/message/ReservationCompleteMessage';
 
 export default function ChatRoomPage() {
   const [input, setInput] = useState('');
@@ -162,6 +163,20 @@ export default function ChatRoomPage() {
     setInput('');
   };
 
+  //예약 전송 완료 메시지 처리 함수
+  const onReservationComplete = (data) => {
+    setLiveMessages((prev) => [
+      ...prev,
+      {
+        messageId: `complete-${Date.now()}`,
+        type: 'RESERVATION_COMPLETE',
+        isReservationCard: true, //예약 완료 메시지임을 명시
+        payload: data, // { name, date, time, photoCount }
+        sentAt: new Date().toISOString(),
+      },
+    ]);
+  };
+
   // 모든 메시지 병합 (기존 + 실시간, 중복 제거)
   const merged = [...(oldMessages ?? []), ...liveMessages];
   const allMessages = Array.from(new Map(merged.map((m) => [m.messageId, m])).values());
@@ -183,6 +198,7 @@ export default function ChatRoomPage() {
           <div ref={topObserverRef} />
           {allMessages.map((msg, index) => {
             const isMine = msg.senderId === userId; //사용자 본인 Id를 통한 메시지 판별
+            const isReservationCard = msg.isReservationCard; // 예약 전송 완료 메시지 여부
 
             const currentDate = dayjs(msg.sentAt).format('YYYY-MM-DD'); //현재 날짜
             const prevDate =
@@ -194,20 +210,35 @@ export default function ChatRoomPage() {
               <React.Fragment key={`${index}-${msg.messageId}`}>
                 {/*이전 날짜와 현재 날짜과 다르다면 구분선 추가*/}
                 {showDateDivider && <DateDivider date={msg.sentAt} />}
-                {/*상대방, 본인 메시지에 따른 정렬*/}
-                <S.MessageRow $isMine={isMine}>
-                  {isMine ? (
-                    <>
-                      <S.Time>{formatTime(msg.sentAt)}</S.Time>
-                      <S.Bubble $isMine>{msg.message}</S.Bubble>
-                    </>
-                  ) : (
-                    <>
-                      <S.Bubble $isMine={false}>{msg.message}</S.Bubble>
-                      <S.Time>{formatTime(msg.sentAt)}</S.Time>
-                    </>
-                  )}
-                </S.MessageRow>
+                {/*예약 완료 메시지*/}
+                {isReservationCard ? (
+                  <S.MessageRow $isMine={false}>
+                    <S.Bubble $isMine={false}>
+                      <ReservationCompleteMessage
+                        name={msg.payload.name}
+                        date={msg.payload.date}
+                        time={msg.payload.time}
+                        photoCount={msg.payload.photoCount}
+                      />
+                    </S.Bubble>
+                  </S.MessageRow>
+                ) : (
+                  //일반 메시지 렌더링, 상대방, 본인 메시지에 따른 정렬
+
+                  <S.MessageRow $isMine={isMine}>
+                    {isMine ? (
+                      <>
+                        <S.Time>{formatTime(msg.sentAt)}</S.Time>
+                        <S.Bubble $isMine>{msg.message}</S.Bubble>
+                      </>
+                    ) : (
+                      <>
+                        <S.Bubble $isMine={false}>{msg.message}</S.Bubble>
+                        <S.Time>{formatTime(msg.sentAt)}</S.Time>
+                      </>
+                    )}
+                  </S.MessageRow>
+                )}
               </React.Fragment>
             );
           })}
@@ -231,7 +262,12 @@ export default function ChatRoomPage() {
         </S.InputBar>
       </S.PageWrapper>
       {/*예약 모달 */}
-      <ReservationModal isOpen={isModalOpen} onClose={closeModal} shopId={shopInfo?.shopId} />
+      <ReservationModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        shopId={shopInfo?.shopId}
+        onReservationComplete={onReservationComplete}
+      />
     </Container>
   );
 }

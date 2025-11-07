@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Container from '../common/Container';
 import ModalOverlay from './ModalOverlay';
 import StepBasic from './StepBasic';
@@ -8,7 +8,7 @@ import './ReservationModal.css';
 import { useCreateReservation, useReservationForm } from '../../query/reservationQueries';
 import { getVisibleFields } from '../../utils/form/formFieldVisibility';
 
-export default function ReservationModal({ isOpen, onClose, shopId }) {
+export default function ReservationModal({ isOpen, onClose, shopId, onReservationComplete }) {
   const [step, setStep] = useState(1);
 
   const { data: formConfig, isLoading, error } = useReservationForm(shopId, isOpen);
@@ -16,9 +16,6 @@ export default function ReservationModal({ isOpen, onClose, shopId }) {
 
   //필드 존재 여부 정보
   const visible = getVisibleFields(fields);
-
-  //예약 생성 query 훅
-  const { mutate: createReservation } = useCreateReservation();
 
   const [formData, setFormData] = useState({
     basic: { name: '', phoneNumber: '', date: '', time: '' },
@@ -32,6 +29,12 @@ export default function ReservationModal({ isOpen, onClose, shopId }) {
     },
     photoNote: { files: [], notes: '' },
   });
+
+  //formData를 ref로 보관해서 훅에 넘기기
+  const formDataRef = useRef(formData);
+  useEffect(() => {
+    formDataRef.current = formData;
+  }, [formData]);
 
   const handleClose = () => {
     setStep(1);
@@ -49,6 +52,14 @@ export default function ReservationModal({ isOpen, onClose, shopId }) {
     });
     onClose?.();
   };
+
+  //예약 생성 query 훅
+  const { mutate: createReservation } = useCreateReservation(
+    onReservationComplete,
+    handleClose,
+    formDataRef
+  );
+
   // ✅ 모달 열리는 동안 배경 스크롤 완전 잠금 (iOS 포함 안정적인 fixed-lock)
   useEffect(() => {
     if (!isOpen) return;
@@ -116,7 +127,6 @@ export default function ReservationModal({ isOpen, onClose, shopId }) {
     };
     //예약 생성
     createReservation(payload);
-    handleClose();
   };
 
   if (!isOpen) return null;
