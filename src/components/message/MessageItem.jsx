@@ -1,0 +1,39 @@
+import React from 'react';
+import * as S from './MessageItem.style';
+import { formatTime } from '../../utils/formatTime';
+import { ReservationCompleteMessage } from '../message/ReservationCompleteMessage';
+
+export default function MessageItem({ msg, isMine }) {
+  //예약 폼 메시지 처리
+  if (msg.isReservationCard) {
+    return (
+      <S.MessageRow $isMine={false}>
+        <S.Bubble $isMine={false}>
+          <ReservationCompleteMessage
+            name={msg.payload.name}
+            date={msg.payload.date}
+            time={msg.payload.time}
+            photoCount={msg.payload.photoCount}
+          />
+        </S.Bubble>
+      </S.MessageRow>
+    );
+  }
+
+  return (
+    <S.MessageRow $isMine={isMine}>
+      {/* 일반 메시지 렌더링, 상대방, 본인 메시지에 따른 정렬 */}
+      {isMine ? (
+        <>
+          <S.Time>{formatTime(msg.sentAt)}</S.Time>
+          <S.Bubble $isMine>{msg.message}</S.Bubble>
+        </>
+      ) : (
+        <>
+          <S.Bubble $isMine={false}>{msg.message}</S.Bubble>
+          <S.Time>{formatTime(msg.sentAt)}</S.Time>
+        </>
+      )}
+    </S.MessageRow>
+  );
+}
