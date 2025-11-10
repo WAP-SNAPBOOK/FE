@@ -19,21 +19,27 @@ import { useInitScrollToBottom } from '../../hooks/chat/useInitScrollToBottom';
 import { useTopObserver } from '../../hooks/chat/useTopObserver';
 import { useShopInfoByCode } from '../../query/linkQueries';
 import { ReservationCompleteMessage } from '../../components/message/ReservationCompleteMessage';
+import AddMenuButton from '../../components/chat/AddMenuButton';
+import ChatMenuPanel from '../../components/chat/ChatMenuPanel';
+import ChatSumbitButton from '../../components/chat/chatSumbitButton';
 
 export default function ChatRoomPage() {
   const [input, setInput] = useState('');
   const [liveMessages, setLiveMessages] = useState([]);
   const [readyToObserve, setReadyToObserve] = useState(false);
 
-  //링크 유입시 가게 정보 조회
-  const [searchParams] = useSearchParams();
-  const slugOrCode = searchParams.get('slug');
-  const { data: shopInfo } = useShopInfoByCode(slugOrCode);
-
   //예약 모달 상태
   const [isModalOpen, setIsModalOpen] = useState(false);
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
+
+  //메뉴 표시 여부 상태
+  const [showMenu, setShowMenu] = useState(false);
+
+  //링크 유입시 가게 정보 조회
+  const [searchParams] = useSearchParams();
+  const slugOrCode = searchParams.get('slug');
+  const { data: shopInfo } = useShopInfoByCode(slugOrCode);
 
   const handleBack = () => {
     if (window.history.state && window.history.state.idx > 0) {
@@ -41,6 +47,14 @@ export default function ChatRoomPage() {
     } else {
       navigate('/'); // 외부 유입이라 이전 기록 없을 때 홈으로(링크 유입)
     }
+  };
+
+  //버튼 토글 핸들러
+  const handleToggleMenu = () => {
+    // 메뉴 표시/숨김 토글
+    setTimeout(() => {
+      setShowMenu((prev) => !prev);
+    }, 150);
   };
 
   const { auth } = useAuth();
@@ -245,20 +259,22 @@ export default function ChatRoomPage() {
           {/* 하단 스크롤 고정용 */}
           <div ref={bottomRef} />
         </S.MessageList>
+        {/* 채팅 메뉴 패널 */}
+        <ChatMenuPanel visible={showMenu} />
 
         <S.InputBar>
-          <S.AddButton>
-            <img src={addIcon} alt="addMenu" />
-          </S.AddButton>
+          {/* 채팅 메뉴 목록 버튼 */}
+          <AddMenuButton onToggleMenu={handleToggleMenu} />
+          {/* 채팅 입력 바 */}
           <S.ChatInput
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSend()}
             maxLength={300}
+            onFocus={() => setShowMenu(false)} //키보드 열릴때 메뉴 닫기
           />
-          <S.ChatButton onClick={handleSend}>
-            <img src={sendIcon} alt="send" />
-          </S.ChatButton>
+          {/*채팅 전송 버튼*/}
+          <ChatSumbitButton onClick={handleSend} />
         </S.InputBar>
       </S.PageWrapper>
       {/*예약 모달 */}

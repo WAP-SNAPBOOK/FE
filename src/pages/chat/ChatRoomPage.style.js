@@ -71,24 +71,6 @@ export const ChatInput = styled(BaseInput).attrs({
   flex: 1;
 `;
 
-export const ChatIconButton = styled(BaseButton).attrs({
-  $height: '31px',
-  $radius: '9999px',
-})`
-  width: 31px;
-  padding: 0px;
-  background-color: ${theme.colors.primary};
-  color: white;
-`;
-
-export const AddButton = styled(ChatIconButton)`
-  margin-right: 10px;
-`;
-
-export const ChatButton = styled(ChatIconButton)`
-  margin-left: 10px;
-`;
-
 export const MessageRow = styled.div`
   display: flex;
   justify-content: ${({ $isMine }) => ($isMine ? 'flex-end' : 'flex-start')};
