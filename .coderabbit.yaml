@@ -1,10 +1,11 @@
 reviews:
-  enabled: true
-  auto_review: true
+  enabled: true # 리뷰 기능 활성화
 
-  auto_review_branches:
-    - main
-    - develop
+  auto_review:
+    enabled: true
+    branches:
+      - main
+      - develop
 
   rules:
     - path: 'src/**/*.js'
@@ -19,3 +20,6 @@ reviews:
   summary:
     enabled: true
     style: friendly
+
+  # ✅ (선택) 리뷰 언어
+  language: ko
