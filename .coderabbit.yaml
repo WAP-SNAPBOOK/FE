@@ -1,3 +1,4 @@
+language: ko
 reviews:
   enabled: true # 리뷰 기능 활성화
 
@@ -20,6 +21,3 @@ reviews:
   summary:
     enabled: true
     style: friendly
-
-  # ✅ (선택) 리뷰 언어
-  language: ko
