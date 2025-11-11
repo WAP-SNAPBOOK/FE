@@ -123,7 +123,7 @@ export default function ChatRoomPage() {
   // 실시간(내가 보낸 메시지 or 상대방 메시지 수신)일 때만 하단 이동
   useEffect(() => {
     if (liveMessages.length > 0) {
-      scrollToBottom();
+      scrollToBottom(true);
     }
   }, [liveMessages]);
 
