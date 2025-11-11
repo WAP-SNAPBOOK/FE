@@ -19,6 +19,8 @@ import ChatSumbitButton from '../../components/chat/chatSumbitButton';
 import MessageList from '../../components/message/MessageList';
 import { useOptimisticMessage } from '../../hooks/chat/useOptimisticMessage';
 import { useQueryClient } from '@tanstack/react-query';
+import { useNewMessageNotice } from '../../hooks/chat/useNewMessageNotice';
+import NewMessageCard from '../../components/notification/NewMessageCard';
 
 export default function ChatRoomPage() {
   const [input, setInput] = useState('');
@@ -33,6 +35,8 @@ export default function ChatRoomPage() {
   //메뉴 표시 여부 상태
   const [showMenu, setShowMenu] = useState(false);
 
+  const navigate = useNavigate();
+
   //전역 상태 사용자 ID
   const { auth } = useAuth();
   const userId = auth?.userId;
@@ -43,7 +47,6 @@ export default function ChatRoomPage() {
   const { chatRoomId } = useParams();
 
   const queryClient = useQueryClient();
-
   //링크 유입시 가게 정보 조회
   const [searchParams] = useSearchParams();
   const slugOrCode = searchParams.get('slug');
@@ -78,8 +81,6 @@ export default function ChatRoomPage() {
   const topObserverRef = useRef(null);
   //스크롤 제어 ref
   const bottomRef = useRef(null);
-
-  const navigate = useNavigate();
 
   // 기존 메시지, cursor (HTTP GET 기반)
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isSuccess } =
@@ -116,17 +117,26 @@ export default function ChatRoomPage() {
   }, [chatRoomId, replaceWithServerMessage]);
 
   //스크롤 제어(새로운 메시지 추가시 추가된 매시지 보기)
-  // 메시지 전송 후 호출
-  const scrollToBottom = () => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+  // 메시지 전송 후 호출, behavior를 선택 가능
+  const scrollToBottom = (smooth = false) => {
+    bottomRef.current?.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto' });
   };
 
-  // 실시간(내가 보낸 메시지 or 상대방 메시지 수신)일 때만 하단 이동
+  // 실시간(내가 보낸 메시지)일 때만 하단 이동
   useEffect(() => {
-    if (liveMessages.length > 0) {
-      scrollToBottom();
+    if (liveMessages.length === 0) return;
+
+    const latest = liveMessages[liveMessages.length - 1];
+
+    //내가 보낸 메시지일 때만 스크롤
+    if (latest.senderId === userId) {
+      scrollToBottom(true);
     }
   }, [liveMessages]);
+
+  // 새 메시지 관련 스크롤 동기화 훅
+  const { showNewMessageCard, newMessagePreview, handleScroll, handleClickCard } =
+    useNewMessageNotice(liveMessages, messageListRef, scrollToBottom, userId);
 
   //메시지 prepend시 스크롤 제어
   usePreserveScrollPosition(messageListRef, isFetchingNextPage);
@@ -188,7 +198,7 @@ export default function ChatRoomPage() {
           </ChatRoomTitle>
           <S.BookButton onClick={openModal}>예약</S.BookButton>
         </S.Header>
-        <S.Messages ref={messageListRef}>
+        <S.Messages ref={messageListRef} onScroll={handleScroll}>
           {/*상단 스크롤 감지용 */}
           <div ref={topObserverRef} />
           <MessageList messages={allMessages} userId={userId} />
@@ -197,6 +207,14 @@ export default function ChatRoomPage() {
         </S.Messages>
         {/* 채팅 메뉴 패널 */}
         <ChatMenuPanel visible={showMenu} />
+        {/*새 메시지 알림 카드 */}
+        {
+          <NewMessageCard
+            preview={newMessagePreview}
+            onClick={handleClickCard}
+            visible={showNewMessageCard}
+          />
+        }
 
         <S.InputBar>
           {/* 채팅 메뉴 목록 버튼 */}

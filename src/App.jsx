@@ -30,7 +30,7 @@ function App() {
           </BrowserRouter>
         </AuthProvider>
 
-        <ReactQueryDevtools initialIsOpen={false} position="top right" />
+        <ReactQueryDevtools initialIsOpen={false} position="bottom" />
       </QueryClientProvider>
     </>
   );

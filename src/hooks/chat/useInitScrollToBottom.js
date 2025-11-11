@@ -22,7 +22,7 @@ export function useInitScrollToBottom(
     // DOM 렌더 완료 이후로 확실히 미루기
     requestAnimationFrame(() => {
       setTimeout(() => {
-        scrollToBottom();
+        scrollToBottom(false);
         setReadyToObserve(true); // 옵저버 켜질 수 있는 신호
       }, 50);
     });
