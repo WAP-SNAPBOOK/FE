@@ -122,7 +122,7 @@ export default function ChatRoomPage() {
     bottomRef.current?.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto' });
   };
 
-  // 실시간(내가 보낸 메시지 or 상대방 메시지 수신)일 때만 하단 이동
+  // 실시간(내가 보낸 메시지)일 때만 하단 이동
   useEffect(() => {
     if (liveMessages.length === 0) return;
 
