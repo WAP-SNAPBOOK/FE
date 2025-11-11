@@ -1,4 +1,8 @@
 review:
+  review_status: true
+  auto_review_branches:
+    - develop
+    - main
   enabled: true
   auto_review: true
   reviewers:
