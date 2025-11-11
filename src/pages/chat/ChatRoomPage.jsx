@@ -43,7 +43,6 @@ export default function ChatRoomPage() {
   const { chatRoomId } = useParams();
 
   const queryClient = useQueryClient();
-
   //링크 유입시 가게 정보 조회
   const [searchParams] = useSearchParams();
   const slugOrCode = searchParams.get('slug');
@@ -116,9 +115,9 @@ export default function ChatRoomPage() {
   }, [chatRoomId, replaceWithServerMessage]);
 
   //스크롤 제어(새로운 메시지 추가시 추가된 매시지 보기)
-  // 메시지 전송 후 호출
-  const scrollToBottom = () => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+  // 메시지 전송 후 호출, behavior를 선택 가능
+  const scrollToBottom = (smooth = false) => {
+    bottomRef.current?.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto' });
   };
 
   // 실시간(내가 보낸 메시지 or 상대방 메시지 수신)일 때만 하단 이동
