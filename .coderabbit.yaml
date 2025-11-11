@@ -1,0 +1,27 @@
+review:
+  enabled: true
+  auto_review: true
+  reviewers:
+    - name: 'CodeRabbit'
+
+  # 규칙 세분화
+  rules:
+    - path: 'src/**/*.js'
+      level: low
+      comment: true
+      suggestions: false
+
+    - path: 'src/**/*.jsx'
+      level: medium
+      comment: true
+      suggestions: true
+
+    - path: '**/*.java'
+      level: high
+      comment: true
+      suggestions: false
+
+  summary:
+    enabled: true
+    tone: friendly
+    include_metrics: false
