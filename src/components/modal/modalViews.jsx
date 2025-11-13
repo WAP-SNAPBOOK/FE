@@ -3,7 +3,7 @@ import androidGuideImg_2 from '../../assets/info/android_chrome_pwa_2.png';
 import iosGuideImg_1 from '../../assets/info/ios_safari_pwa_1.png';
 import iosGuideImg_2 from '../../assets/info/ios_safari_pwa_2.png';
 
-export const modalViews = (setShowModal) => ({
+export const modalViews = (setShowModal, openIntent) => ({
   android: {
     title: 'Android 안내',
     content: (
@@ -30,7 +30,7 @@ export const modalViews = (setShowModal) => ({
         />
       </>
     ),
-    buttons: [{ label: '크롬으로 열기', onClick: () => console.log('안드로이드 크롬') }],
+    buttons: [{ label: '크롬으로 열기', onClick: () => openIntent() }],
   },
 
   ios: {
