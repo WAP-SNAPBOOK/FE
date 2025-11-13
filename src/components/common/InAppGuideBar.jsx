@@ -34,6 +34,7 @@ export default function InAppGuideBar() {
     setIsInApp(inApp);
   }, []);
 
+  //운영체체별 선택된 PWA 안내사항
   const activeView = view[selectedOS];
 
   //인앱이 아니거나 X버튼 누를시 언로딩
