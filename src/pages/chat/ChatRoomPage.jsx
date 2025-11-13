@@ -21,6 +21,7 @@ import { useOptimisticMessage } from '../../hooks/chat/useOptimisticMessage';
 import { useQueryClient } from '@tanstack/react-query';
 import { useNewMessageNotice } from '../../hooks/chat/useNewMessageNotice';
 import NewMessageCard from '../../components/notification/NewMessageCard';
+import InAppGuideBar from '../../components/common/InAppGuideBar';
 
 export default function ChatRoomPage() {
   const [input, setInput] = useState('');
@@ -188,6 +189,9 @@ export default function ChatRoomPage() {
   return (
     <Container $start>
       <S.PageWrapper>
+        <div className="absolute bottom-[80px] left-3 z-20">
+          <InAppGuideBar />
+        </div>
         <S.Header>
           <S.BackButton onClick={handleBack}>
             <img src={backIcon} alt="back" />
