@@ -1,0 +1,23 @@
+language: ko
+reviews:
+  enabled: true # 리뷰 기능 활성화
+
+  auto_review:
+    enabled: true
+    branches:
+      - main
+      - develop
+
+  rules:
+    - path: 'src/**/*.js'
+      level: medium
+      comment: true
+      suggestions: false
+    - path: 'src/**/*.jsx'
+      level: medium
+      comment: true
+      suggestions: true
+
+  summary:
+    enabled: true
+    style: friendly
