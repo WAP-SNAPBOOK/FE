@@ -92,6 +92,6 @@ export const TabButton = styled.button`
   font-weight: 600;
   border: none;
   cursor: pointer;
-  background: ${(props) => (props.active ? theme.colors.primary : '#eee')};
-  color: ${(props) => (props.active ? '#fff' : '#333')};
+  background: ${({ $active }) => ($active ? theme.colors.primary : '#eee')};
+  color: ${({ $active }) => ($active ? '#fff' : '#333')};
 `;
