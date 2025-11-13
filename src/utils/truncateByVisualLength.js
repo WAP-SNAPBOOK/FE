@@ -1,5 +1,7 @@
 //채팅 마지막 메시지 길이 제어 함수
 export function truncateByVisualLength(str, maxLength) {
+  str = str ?? ''; // null, undefined이면 ''으로 대체
+
   let visualLen = 0; // 화면상 누적 폭
   let result = ''; // 잘라낸 문자열 결과
 
