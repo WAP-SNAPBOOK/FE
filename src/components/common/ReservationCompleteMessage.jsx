@@ -32,7 +32,7 @@ export default function ReservationCompleteMessage({ name, date, time, selectedO
         <CheckIcon />
       </div>
 
-      <h2 className="title">예약 접수 완료</h2>
+      <h2 className="title-complete">예약 접수 완료</h2>
 
       <div className="info-section">
         <div className="info-row">

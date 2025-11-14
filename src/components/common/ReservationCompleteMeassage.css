@@ -2,7 +2,6 @@
   background: #fff;
   border-radius: 20px;
   width: 240px;
-  height: 212px;
   padding: 22px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
   font-family: 'Pretendard';
@@ -17,10 +16,10 @@
 .icon-wrapper {
   display: flex;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: 6px;
 }
 
-.title {
+.title-complete {
   font-size: 20px;
   font-weight: 800;
   color: #111;
@@ -35,7 +34,9 @@
 
 .info-row {
   display: flex;
+  height: 21px;
   justify-content: space-between;
+  align-items: center;
   margin-bottom: 4px;
 }
 
@@ -85,7 +86,9 @@
   margin-top: 6px;
   font-size: 9px;
   color: #444;
-  transition: opacity 0.4s ease, transform 0.4s ease;
+  transition:
+    opacity 0.4s ease,
+    transform 0.4s ease;
 }
 
 .option-row {
