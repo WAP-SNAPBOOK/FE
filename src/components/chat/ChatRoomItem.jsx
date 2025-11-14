@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { truncateByVisualLength } from '../../utils/truncateByVisualLength';
 import * as S from './ChatRoomItem.styles';
+import { useAuth } from '../../context/AuthContext';
 
 //메시지 최대 길이
 const MAX_LENGTH = 30;
@@ -8,6 +9,8 @@ const MAX_LENGTH = 30;
 export default function ChatRoomItem({ room }) {
   const navigate = useNavigate();
   const { shopBusinessName, otherUserName, lastMessageContent, lastMessageAt, unreadCount } = room;
+  //현재 유저 정보 전역 상태
+  const { auth } = useAuth();
 
   //해당 채팅방 이동 헨들러
   const handleClick = () => {
@@ -22,7 +25,7 @@ export default function ChatRoomItem({ room }) {
       <S.Avatar>{otherUserName[0]}</S.Avatar>
       <S.InfoWrapper onClick={handleClick}>
         <S.TopRow>
-          <S.ShopName>{shopBusinessName}</S.ShopName>
+          <S.ShopName>{auth.userType === 'OWNER' ? otherUserName : shopBusinessName}</S.ShopName>
           <S.Time>
             {new Date(lastMessageAt).toLocaleTimeString('ko-KR', {
               hour: '2-digit',
