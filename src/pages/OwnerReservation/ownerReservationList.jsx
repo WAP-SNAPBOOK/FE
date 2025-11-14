@@ -45,10 +45,25 @@ export default function OwnerReservationList({ reservations }) {
 }
 
 function ReservationCard({ res }) {
-  const [status, setStatus] = useState('접수 중'); // 접수 중 / 예약 확정 / 예약 거절
+  const [status, setStatus] = useState('접수 중'); // 상태
   const [isOpen, setIsOpen] = useState(false); // 상세 보기 토글
   const [mode, setMode] = useState(null); // confirm / reject
   const [message, setMessage] = useState(''); // 전달사항 or 거절사유
+  const [selectedTime, setSelectedTime] = useState(''); // ✅ 예상 소요 시간
+  const [totalMinutes, setTotalMinutes] = useState(60); // ✅ 초기값: 1시간
+
+  // ✅ 시간 조절 함수
+  const adjustTime = (delta) => {
+    setTotalMinutes((prev) => Math.max(30, Math.min(prev + delta, 180))); 
+    // 최소 30분, 최대 180분(3시간)
+  };
+
+  // ✅ 시간 표시 포맷 (예: 01:00)
+  const formatTime = (mins) => {
+    const h = Math.floor(mins / 60);
+    const m = mins % 60;
+    return `${h.toString().padStart(2, '0')}:${m === 0 ? '00' : m}`;
+  };
 
   const handleConfirm = () => setMode('confirm');
   const handleReject = () => setMode('reject');
@@ -58,6 +73,7 @@ function ReservationCard({ res }) {
     if (mode === 'reject') setStatus('예약 거절');
     setMode(null);
   };
+
 
   return (
     <div
@@ -180,13 +196,10 @@ function ReservationCard({ res }) {
             animation: 'fadeIn 0.3s ease',
           }}
         >
-          {/* 손/발, 제거, 연장, 램핑 */}
-          {[
-            { label: '손/발', left: '손', right: '발' },
+          {[{ label: '손/발', left: '손', right: '발' },
             { label: '제거', left: '유', right: '무' },
             { label: '연장', left: '유', right: '무' },
-            { label: '램핑', left: '유', right: '무' },
-          ].map((item) => (
+            { label: '램핑', left: '유', right: '무' }].map((item) => (
             <div
               key={item.label}
               style={{
@@ -232,9 +245,7 @@ function ReservationCard({ res }) {
 
           {/* 요구사항 */}
           <div style={{ marginTop: '14px' }}>
-            <span style={{ color: '#2b2b2b', display: 'block', marginBottom: '6px' }}>
-              요구사항
-            </span>
+            <span style={{ color: '#2b2b2b', display: 'block', marginBottom: '6px' }}>요구사항</span>
             <div
               style={{
                 background: '#fff',
@@ -297,128 +308,240 @@ function ReservationCard({ res }) {
         </div>
       )}
 
-
-      {/* 수락 시 전달사항 */}
+      {/* ✅ 수락 시 전달사항 */}
       {mode === 'confirm' && (
-        <div style={{ marginTop: '10px', paddingLeft: '48px', }}>
-          <textarea
-            placeholder="전달 사항을 입력해주세요."
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
+        <>
+          <div
             style={{
-              width: '100%',
-              height: '66px',
-              border: '1px solid #ddd',
-              borderRadius: '10px',
-              padding: '10px',
-              fontSize: '11px',
-              fontFamily: 'Pretendard',
-              resize: 'none',
-              padding: '12px 13px',
+              height: '1px',
+              background: '#eee',
+              margin: '10px 0 10px 48px',
             }}
           />
-          <div
+
+          <div style={{ marginTop: '10px', paddingLeft: '48px' }}>
+
+            {/* ✅ 예상 소요 시간 선택 (버튼 + 증감식 타이머) */}
+            <div
               style={{
-              display: 'flex',
-              justifyContent: 'flex-end',
-              marginTop: '10px',
-            }}
-          >
-          <button
-              onClick={handleSubmit}
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'flex-start',
+                gap: '10px',
+                marginBottom: '16px',
+              }}
+            >
+              {/* 시간 버튼 그룹 */}
+              <div
+                style={{
+                  display: 'flex',
+                  gap: '4px',
+                }}
+              >
+                {['30분', '1시간', '1시간 30분', '2시간'].map((time) => (
+                  <button
+                    key={time}
+                    onClick={() => setSelectedTime(time)}
+                    style={{
+                      background:
+                        selectedTime === time ? '#f0f0f0' : '#fff',
+                      border: selectedTime === time ? '1px solid #555' : '1px solid #ddd',
+                      borderRadius: '25px',
+                      padding: '5px 6px',
+                      fontSize: '8px',
+                      fontWeight: selectedTime === time ? 700 : 500,
+                      cursor: 'pointer',
+                      transition: '0.2s',
+                    }}
+                  >
+                    {time}
+                  </button>
+                ))}
+              </div>
+
+              {/* 증감 타이머 */}
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '16px',
+                  border: '1px solid #ddd',
+                  borderRadius: '30px',
+                  padding: '10px 20px',
+                  width: '197px',
+                  height: '39px',
+                  background: '#fff',
+                }}
+              >
+                <button
+                  onClick={() => adjustTime(-30)}
+                  style={{
+                    width: '23px',
+                    height: '23px',
+                    borderRadius: '50%',
+                    background: '#d3d3d3',
+                    border: 'none',
+                    fontSize: '12px',
+                    cursor: 'pointer',
+                  }}
+                >
+                  −
+                </button>
+
+                <div style={{ textAlign: 'center' }}>
+                  <div style={{ fontSize: '12px', fontWeight: 700 }}>
+                    {formatTime(totalMinutes)}
+                  </div>
+                  <div style={{ fontSize: '8px', color: '#777' }}>
+                    {selectedTime || '시간 선택'}
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => adjustTime(30)}
+                  style={{
+                    width: '23px',
+                    height: '23px',
+                    borderRadius: '50%',
+                    background: '#d3d3d3',
+                    border: 'none',
+                    fontSize: '16px',
+                    cursor: 'pointer',
+                  }}
+                >
+                  +
+                </button>
+              </div>
+            </div>
+
+
+            <textarea
+              placeholder="전달 사항을 입력해주세요."
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
               style={{
-                background: '#ec6060',
-                color: '#fff',
-                fontWeight: 700,
-                border: 'none',
-                borderRadius: '8px',
-                width: '56px',
-                height: '24px',
-                fontSize: '9px',
-                cursor: 'pointer',
-            }}
-          >
-            확인
-          </button>
-        </div>
-        </div>
+                width: '100%',
+                height: '66px',
+                border: '1px solid #ddd',
+                borderRadius: '10px',
+                padding: '12px 13px',
+                fontSize: '11px',
+                fontFamily: 'Pretendard',
+                resize: 'none',
+              }}
+            />
+
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '10px' }}>
+              <button
+                onClick={handleSubmit}
+                style={{
+                  background: '#ec6060',
+                  color: '#fff',
+                  fontWeight: 700,
+                  border: 'none',
+                  borderRadius: '8px',
+                  width: '56px',
+                  height: '24px',
+                  fontSize: '9px',
+                  cursor: 'pointer',
+                }}
+              >
+                확인
+              </button>
+            </div>
+          </div>
+        </>
       )}
 
-      {/* 거절 시 사유 입력 */}
+      {/* ✅ 거절 시 사유 입력 */}
       {mode === 'reject' && (
-        <div style={{ marginTop: '16px',paddingLeft: '48px', }}>
-          <textarea
-            placeholder="거절 사유를 입력해주세요."
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
+        <>
+          <div
             style={{
-              width: '100%',
-              height: '66px',
-              border: '1px solid #ddd',
-              borderRadius: '10px',
-              padding: '12px 13px',
-              fontSize: '11px',
-              fontFamily: 'Pretendard',
-              resize: 'none',
+              height: '1px',
+              background: '#eee',
+              margin: '10px 0 10px 48px',
             }}
           />
-          <div
-          style={{
-            display: 'flex', 
-            justifyContent: 'flex-end', 
-            marginTop: '10px',
-          }}
-        >
-          <button
-            onClick={handleSubmit}
-            style={{
-              background: '#ec6060',
-              color: '#fff',
-              fontWeight: 700,
-              border: 'none',
-              borderRadius: '8px',
-              width: '56px',
-              height: '24px',
-              fontSize: '9px',
-              cursor: 'pointer',
-            }}
-          >
-            확인
-          </button>
-        </div>
-        </div>
+          <div style={{ marginTop: '16px', paddingLeft: '48px' }}>
+            <textarea
+              placeholder="거절 사유를 입력해주세요."
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              style={{
+                width: '100%',
+                height: '66px',
+                border: '1px solid #ddd',
+                borderRadius: '10px',
+                padding: '12px 13px',
+                fontSize: '11px',
+                fontFamily: 'Pretendard',
+                resize: 'none',
+              }}
+            />
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '10px' }}>
+              <button
+                onClick={handleSubmit}
+                style={{
+                  background: '#ec6060',
+                  color: '#fff',
+                  fontWeight: 700,
+                  border: 'none',
+                  borderRadius: '8px',
+                  width: '56px',
+                  height: '24px',
+                  fontSize: '9px',
+                  cursor: 'pointer',
+                }}
+              >
+                확인
+              </button>
+            </div>
+          </div>
+        </>
       )}
 
-      {/* 전달사항 / 거절사유 최종 박스 */}
+      {/* ✅ 전달사항 / 거절사유 최종 박스 */}
       {status === '예약 확정' && (
         <div
           style={{
             background: '#fff5f5',
             borderRadius: '12px',
             padding: '14px',
+            paddngTop: '10px',
             marginTop: '12px',
             color: '#222',
             fontSize: '12px',
             lineHeight: 1.5,
+            marginLeft: '48px',
           }}
         >
           <strong style={{ display: 'block', marginBottom: '6px' }}>전달 사항</strong>
+          {selectedTime && (
+            <div style={{ color: '#666', marginBottom: '4px', fontSize: '11px' }}>
+              소요시간: {selectedTime}
+            </div>
+          )}
           {message || '전달사항이 없습니다.'}
         </div>
       )}
+
       {status === '예약 거절' && (
         <div
           style={{
-            background: '#f9f9f9',
+            background: '#e5e7ec',
             borderRadius: '12px',
+            width: '198px',
             padding: '14px',
             marginTop: '12px',
             color: '#555',
             fontSize: '12px',
             lineHeight: 1.5,
+            marginLeft: '48px',
           }}
         >
-          <strong style={{ display: 'block', marginBottom: '6px' }}>거절 사유</strong>
+          <strong style={{ display: 'block', marginBottom: '6px', paddingleft: '13px' }}>거절 사유</strong>
           {message || '사유 없음'}
         </div>
       )}
