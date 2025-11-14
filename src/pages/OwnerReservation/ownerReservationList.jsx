@@ -1,210 +1,427 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 export default function OwnerReservationList({ reservations }) {
   return (
     <div
       style={{
-        backgroundColor: '#f8f8f8',
+        backgroundColor: '#f4f4f4',
         minHeight: '100vh',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: 'center',
         fontFamily: 'Pretendard',
+        padding: '40px 0',
       }}
     >
-      {/* 제목 */}
       <h1
         style={{
-          fontSize: '20px',
+          fontSize: '22px',
           fontWeight: 700,
-          marginBottom: '24px',
+          color: '#111',
           alignSelf: 'flex-start',
           marginLeft: 'calc(50% - 170px)',
+          marginBottom: '24px',
         }}
       >
         예약 내역
       </h1>
 
-      {/* 회색 박스 */}
       <div
         style={{
-          backgroundColor: '#e9e9e9',
+          backgroundColor: '#f1f1f1',
           width: '341px',
           height: '652px',
           borderRadius: '16px',
           padding: '26px',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
           overflowY: 'auto',
-          boxShadow: '0 4px 10px rgba(0,0,0,0.05)',
-          margin: '26px',
         }}
       >
-        {/* 카드 리스트 */}
+        {reservations?.map((res) => (
+          <ReservationCard key={res.id} res={res} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ReservationCard({ res }) {
+  const [status, setStatus] = useState('접수 중'); // 접수 중 / 예약 확정 / 예약 거절
+  const [isOpen, setIsOpen] = useState(false); // 상세 보기 토글
+  const [mode, setMode] = useState(null); // confirm / reject
+  const [message, setMessage] = useState(''); // 전달사항 or 거절사유
+
+  const handleConfirm = () => setMode('confirm');
+  const handleReject = () => setMode('reject');
+
+  const handleSubmit = () => {
+    if (mode === 'confirm') setStatus('예약 확정');
+    if (mode === 'reject') setStatus('예약 거절');
+    setMode(null);
+  };
+
+  return (
+    <div
+      style={{
+        background: '#fff',
+        borderRadius: '16px',
+        border: '1px solid #eee',
+        padding: '20px',
+        marginBottom: '24px',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+      }}
+    >
+      {/* 상단: 이름 + 상태 */}
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: '12px',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <div
+            style={{
+              width: '38px',
+              height: '38px',
+              borderRadius: '50%',
+              border: '1px solid #ddd',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              color: '#bbb',
+              fontSize: '18px',
+            }}
+          >
+            👤
+          </div>
+          <span style={{ fontWeight: 600, fontSize: '15px', color: '#111' }}>{res.name}</span>
+        </div>
+
         <div
           style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '28px',
+            background:
+              status === '예약 확정'
+                ? '#FFE8E8'
+                : status === '예약 거절'
+                ? '#F5F5F5'
+                : '#ECE6FF',
+            color:
+              status === '예약 확정'
+                ? '#EC6060'
+                : status === '예약 거절'
+                ? '#999'
+                : '#6A45FF',
+            fontWeight: 600,
+            fontSize: '11px',
+            padding: '4px 10px',
+            borderRadius: '10px',
           }}
         >
-          {reservations?.map((res) => (
+          {status}
+        </div>
+      </div>
+
+      {/* 기본 예약 정보 */}
+      <div style={{ marginLeft: '48px', fontSize: '13px', color: '#999' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <span>예약 날짜</span>
+          <span style={{ color: '#fb808a', fontWeight: 600 }}>{res.date}</span>
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <span>예약 시간</span>
+          <span style={{ color: '#fb808a', fontWeight: 600 }}>{res.time}</span>
+        </div>
+      </div>
+
+      {/* 구분선 */}
+      <div
+        style={{
+          height: '1px',
+          background: '#eee',
+          margin: '10px 0 10px 48px',
+        }}
+      />
+
+      {/* 상세 보기 토글 */}
+      <div
+        onClick={() => setIsOpen(!isOpen)}
+        style={{
+          cursor: 'pointer',
+          color: '#aaa',
+          fontWeight: 600,
+          fontSize: '9px',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginTop: '10px',
+          paddingLeft: '48px',
+        }}
+      >
+        <span>상세 보기</span>
+        <span
+          style={{
+            transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+            transition: '0.2s',
+          }}
+        >
+          ▼
+        </span>
+      </div>
+
+      {/* 상세 내용 */}
+      {isOpen && (
+        <div
+          style={{
+            marginTop: '12px',
+            fontSize: '9px',
+            color: '#444',
+            paddingLeft: '48px',
+            animation: 'fadeIn 0.3s ease',
+          }}
+        >
+          {/* 손/발, 제거, 연장, 램핑 */}
+          {[
+            { label: '손/발', left: '손', right: '발' },
+            { label: '제거', left: '유', right: '무' },
+            { label: '연장', left: '유', right: '무' },
+            { label: '램핑', left: '유', right: '무' },
+          ].map((item) => (
             <div
-              key={res.id}
+              key={item.label}
               style={{
-                background: '#fff',
-                borderRadius: '16px',
-                border: '1px solid #eee',
-                width: '298px',
-                height: '337px',
-                padding: '20px',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
-                boxSizing: 'border-box',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginBottom: '6px',
               }}
             >
-              {/* 이름 */}
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '10px',
-                  marginBottom: '14px',
-                }}
-              >
-                <div
-                  style={{
-                    width: '38px',
-                    height: '38px',
-                    borderRadius: '50%',
-                    border: '1px solid #ddd',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    fontSize: '18px',
-                    color: '#aaa',
-                  }}
-                >
-                  👤
-                </div>
-                <span
-                  style={{
-                    fontWeight: 600,
-                    fontSize: '15px',
-                    color: '#222',
-                  }}
-                >
-                  {res.name}
-                </span>
-              </div>
-
-              {/* 예약 정보 */}
-              <div
-                style={{
-                  fontSize: '13.5px',
-                  color: '#999',
-                  marginLeft: '48px',
-                  marginBottom: '12px',
-                }}
-              >
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    marginBottom: '4px',
-                  }}
-                >
-                  <span>예약 날짜</span>
-                  <span style={{ color: '#fb808a', fontWeight: 600 }}>
-                    {res.date}
-                  </span>
-                </div>
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    marginBottom: '4px',
-                  }}
-                >
-                  <span>예약 시간</span>
-                  <span style={{ color: '#fb808a', fontWeight: 600 }}>
-                    {res.time}
-                  </span>
-                </div>
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                  }}
-                >
-                  <span>첨부 사진</span>
-                  <span style={{ color: '#333', fontWeight: 600 }}>
-                    {res.photoCount}장
-                  </span>
-                </div>
-              </div>
-
-              {/* 사진 */}
-              <div
-                style={{
-                  marginLeft: '48px',
-                  marginBottom: '18px',
-                }}
-              >
-                <img
-                  src={res.photoUrl}
-                  alt="첨부사진"
-                  style={{
-                    width: '130px',
-                    height: '130px',
-                    borderRadius: '10px',
-                    objectFit: 'cover',
-                  }}
-                />
-              </div>
-
-              {/* 버튼 */}
-              <div
-                style={{
-                  display: 'flex',
-                  gap: '10px',
-                  marginLeft: '48px',
-                  marginTop: '-28px',
-                  justifyContent: 'flex-start',
-                }}
-              >
-                <button
-                  style={{
-                    background: '#ededed',
-                    color: '#555',
-                    fontWeight: 600,
-                    border: 'none',
-                    borderRadius: '8px',
-                    width: '97px',
-                    height: '37px',
-                  }}
-                >
-                  거절
-                </button>
-                <button
-                  style={{
-                    background: '#fb808a',
-                    color: '#fff',
-                    fontWeight: 600,
-                    border: 'none',
-                    borderRadius: '8px',
-                    width: '97px',
-                    height: '37px',
-                  }}
-                >
-                  수락
-                </button>
+              <span style={{ color: '#272727ff', fontWeight: 500 }}>{item.label}</span>
+              <div style={{ display: 'flex', gap: '10px', color: '#bbb' }}>
+                <span style={{ color: '#222' }}>{item.left}</span>
+                <span>{item.right}</span>
               </div>
             </div>
           ))}
+
+          {/* 사진 */}
+          <div style={{ marginTop: '10px' }}>
+            <span style={{ color: '#515151', display: 'block', marginBottom: '6px' }}>사진</span>
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <img
+                src={res.photoUrl}
+                alt="첨부사진"
+                style={{
+                  width: '58px',
+                  height: '58px',
+                  borderRadius: '10px',
+                  objectFit: 'cover',
+                  border: '1px solid #ddd',
+                }}
+              />
+              <div
+                style={{
+                  width: '58px',
+                  height: '58px',
+                  borderRadius: '10px',
+                  border: '1px dashed #ddd',
+                }}
+              ></div>
+            </div>
+          </div>
+
+          {/* 요구사항 */}
+          <div style={{ marginTop: '14px' }}>
+            <span style={{ color: '#2b2b2b', display: 'block', marginBottom: '6px' }}>
+              요구사항
+            </span>
+            <div
+              style={{
+                background: '#fff',
+                border: '1px solid #D3D3D3',
+                borderRadius: '10px',
+                padding: '10px',
+                lineHeight: 1.5,
+                marginBottom: '12px',
+              }}
+            >
+              {res.requestText}
+            </div>
+          </div>
         </div>
-      </div>
+      )}
+
+      {/* 버튼 영역 */}
+      {status === '접수 중' && !mode && (
+        <div
+          style={{
+            display: 'flex',
+            gap: '10px',
+            marginTop: '16px',
+            justifyContent: 'center',
+            paddingLeft: '48px',
+          }}
+        >
+          <button
+            onClick={handleReject}
+            style={{
+              background: '#ededed',
+              color: '#555',
+              fontWeight: 700,
+              border: 'none',
+              borderRadius: '8px',
+              width: '95px',
+              height: '37px',
+              fontSize: '13px',
+              cursor: 'pointer',
+            }}
+          >
+            거절
+          </button>
+          <button
+            onClick={handleConfirm}
+            style={{
+              background: '#ec6060',
+              color: '#fff',
+              fontWeight: 700,
+              border: 'none',
+              borderRadius: '8px',
+              width: '95px',
+              height: '37px',
+              fontSize: '13px',
+              cursor: 'pointer',
+            }}
+          >
+            수락
+          </button>
+        </div>
+      )}
+
+
+      {/* 수락 시 전달사항 */}
+      {mode === 'confirm' && (
+        <div style={{ marginTop: '10px', paddingLeft: '48px', }}>
+          <textarea
+            placeholder="전달 사항을 입력해주세요."
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            style={{
+              width: '100%',
+              height: '66px',
+              border: '1px solid #ddd',
+              borderRadius: '10px',
+              padding: '10px',
+              fontSize: '11px',
+              fontFamily: 'Pretendard',
+              resize: 'none',
+              padding: '12px 13px',
+            }}
+          />
+          <div
+              style={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              marginTop: '10px',
+            }}
+          >
+          <button
+              onClick={handleSubmit}
+              style={{
+                background: '#ec6060',
+                color: '#fff',
+                fontWeight: 700,
+                border: 'none',
+                borderRadius: '8px',
+                width: '56px',
+                height: '24px',
+                fontSize: '9px',
+                cursor: 'pointer',
+            }}
+          >
+            확인
+          </button>
+        </div>
+        </div>
+      )}
+
+      {/* 거절 시 사유 입력 */}
+      {mode === 'reject' && (
+        <div style={{ marginTop: '16px',paddingLeft: '48px', }}>
+          <textarea
+            placeholder="거절 사유를 입력해주세요."
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            style={{
+              width: '100%',
+              height: '66px',
+              border: '1px solid #ddd',
+              borderRadius: '10px',
+              padding: '12px 13px',
+              fontSize: '11px',
+              fontFamily: 'Pretendard',
+              resize: 'none',
+            }}
+          />
+          <div
+          style={{
+            display: 'flex', 
+            justifyContent: 'flex-end', 
+            marginTop: '10px',
+          }}
+        >
+          <button
+            onClick={handleSubmit}
+            style={{
+              background: '#ec6060',
+              color: '#fff',
+              fontWeight: 700,
+              border: 'none',
+              borderRadius: '8px',
+              width: '56px',
+              height: '24px',
+              fontSize: '9px',
+              cursor: 'pointer',
+            }}
+          >
+            확인
+          </button>
+        </div>
+        </div>
+      )}
+
+      {/* 전달사항 / 거절사유 최종 박스 */}
+      {status === '예약 확정' && (
+        <div
+          style={{
+            background: '#fff5f5',
+            borderRadius: '12px',
+            padding: '14px',
+            marginTop: '12px',
+            color: '#222',
+            fontSize: '12px',
+            lineHeight: 1.5,
+          }}
+        >
+          <strong style={{ display: 'block', marginBottom: '6px' }}>전달 사항</strong>
+          {message || '전달사항이 없습니다.'}
+        </div>
+      )}
+      {status === '예약 거절' && (
+        <div
+          style={{
+            background: '#f9f9f9',
+            borderRadius: '12px',
+            padding: '14px',
+            marginTop: '12px',
+            color: '#555',
+            fontSize: '12px',
+            lineHeight: 1.5,
+          }}
+        >
+          <strong style={{ display: 'block', marginBottom: '6px' }}>거절 사유</strong>
+          {message || '사유 없음'}
+        </div>
+      )}
     </div>
   );
 }
