@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import { fileService } from '../services/fileService';
+import { fileService } from '../api/services/fileService';
 
 /**
  * 단일 파일 업로드 쿼리
