@@ -1,27 +1,6 @@
 import React, { useState } from 'react';
-import './ReservationCompleteMessage.css';
-
-function CheckIcon() {
-  return (
-    <svg
-      width="26"
-      height="26"
-      viewBox="0 0 30 30"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className="check-icon"
-    >
-      <circle cx="15" cy="15" r="15" fill="#FB808A" />
-      <path
-        d="M21 11.5L12.75 19.75L9 16"
-        stroke="#fff"
-        strokeWidth="3"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
+import './ReservationCompleteMeassage.css';
+import CheckIcon from '../../assets/icons/check-icon.svg';
 
 export default function ReservationCompleteMessage({ name, date, time, selectedOptions }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -29,7 +8,7 @@ export default function ReservationCompleteMessage({ name, date, time, selectedO
   return (
     <div className={`reservation-card ${isOpen ? 'open' : ''}`}>
       <div className="icon-wrapper">
-        <CheckIcon />
+        <img src={CheckIcon} alt="checkIcon" />
       </div>
 
       <h2 className="title-complete">예약 접수 완료</h2>
@@ -51,10 +30,7 @@ export default function ReservationCompleteMessage({ name, date, time, selectedO
 
       <div className="divider" />
 
-      <div
-        className="toggle-button"
-        onClick={() => setIsOpen(!isOpen)}
-      >
+      <div className="toggle-button" onClick={() => setIsOpen(!isOpen)}>
         <span>상세 보기</span>
         <span className={`arrow ${isOpen ? 'open' : ''}`}>▼</span>
       </div>
@@ -75,10 +51,7 @@ export default function ReservationCompleteMessage({ name, date, time, selectedO
                     item.selected === option ||
                     (item.label === '손/발' && item.selected === '손발');
                   return (
-                    <span
-                      key={option}
-                      className={`option ${isSelected ? 'selected' : ''}`}
-                    >
+                    <span key={option} className={`option ${isSelected ? 'selected' : ''}`}>
                       {option}
                     </span>
                   );
@@ -92,11 +65,7 @@ export default function ReservationCompleteMessage({ name, date, time, selectedO
               <span className="photo-title">사진</span>
               <div className="photo-list">
                 {selectedOptions.photos.map((url, i) => (
-                  <div
-                    key={i}
-                    className="photo-thumb"
-                    style={{ backgroundImage: `url(${url})` }}
-                  />
+                  <div key={i} className="photo-thumb" style={{ backgroundImage: `url(${url})` }} />
                 ))}
               </div>
             </div>
