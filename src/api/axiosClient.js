@@ -33,8 +33,6 @@ axiosClient.interceptors.response.use(
 
       // 이미 refresh 진행 중이면 큐에 적재
       if (isRefreshing) {
-        console.log('already refreshing → queue push');
-
         return new Promise((resolve) => {
           refreshQueue.push((newAccessToken) => {
             original.headers['Authorization'] = `Bearer ${newAccessToken}`;
@@ -46,7 +44,6 @@ axiosClient.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        console.log('refresh API 호출');
         // refresh API 호출
         const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/auth/refresh`, {
           token: refreshToken,
