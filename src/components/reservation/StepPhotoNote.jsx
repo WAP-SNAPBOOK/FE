@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 
-export default function StepPhotoNote({ initialData, onSubmit, visibleFields }) {
+export default function StepPhotoNote({ initialData, onSubmit, visibleFields, isUploading }) {
   const MAX_FILES = 3;
   const MAX_NOTES = 250;
 
@@ -139,8 +139,8 @@ export default function StepPhotoNote({ initialData, onSubmit, visibleFields }) 
       )}
 
       <form onSubmit={submit} className="submitRow">
-        <button type="submit" className="submitBtn">
-          예약 신청
+        <button type="submit" className="submitBtn" disabled={isUploading}>
+          {isUploading ? '예약 중...' : '예약 신청'}
         </button>
       </form>
     </>
