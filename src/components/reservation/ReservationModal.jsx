@@ -6,6 +6,7 @@ import StepOptions from './StepOptions';
 import StepPhotoNote from './StepPhotoNote';
 import './ReservationModal.css';
 import { useCreateReservation, useReservationForm } from '../../query/reservationQueries';
+import { useUploadMultipleFiles } from '../../query/fileQueries';
 import { getVisibleFields } from '../../utils/form/formFieldVisibility';
 
 export default function ReservationModal({ isOpen, onClose, shopId, onReservationComplete }) {
@@ -60,6 +61,9 @@ export default function ReservationModal({ isOpen, onClose, shopId, onReservatio
     formDataRef
   );
 
+  //파일(사진) 전송 query 훅
+  const { mutateAsync: uploadMultiple, isPending } = useUploadMultipleFiles();
+
   // ✅ 모달 열리는 동안 배경 스크롤 완전 잠금 (iOS 포함 안정적인 fixed-lock)
   useEffect(() => {
     if (!isOpen) return;
@@ -104,10 +108,18 @@ export default function ReservationModal({ isOpen, onClose, shopId, onReservatio
   };
 
   // 최종 제출 (Step3에서 호출)
-  const handleSubmit = (photoNoteValues) => {
+  const handleSubmit = async (photoNoteValues) => {
     const merged = { ...formData, photoNote: photoNoteValues };
 
     const { basic, options, photoNote } = merged;
+
+    let uploadedUrls = [];
+    console.log(photoNote);
+    // 파일 존재하면 먼저 업로드
+    if (photoNote.files.length > 0) {
+      uploadedUrls = await uploadMultiple(photoNote.files);
+      uploadedUrls = uploadedUrls.map((item) => item.fileUrl);
+    }
     const payload = {
       shopId,
       formData: {
@@ -117,11 +129,9 @@ export default function ReservationModal({ isOpen, onClose, shopId, onReservatio
         time: basic.time,
         removal: options.removeYn === '유' ? '예' : '아니오',
         part: String(options.handFootYn ?? ''),
-        wrapping: options.wrapCount,
+        wrapping: Number(options.wrapCount),
         extend: Number(options.extCount) > 0 ? Number(options.extCount) : 0,
-        photo: photoNote.files.length
-          ? JSON.stringify(photoNote.files.map((f) => f.name || f))
-          : '[]',
+        photo: uploadedUrls.length ? JSON.stringify(uploadedUrls) : '[]',
         requests: photoNote.notes?.trim() || '',
       },
     };
@@ -157,6 +167,7 @@ export default function ReservationModal({ isOpen, onClose, shopId, onReservatio
               initialData={formData.photoNote}
               onSubmit={handleSubmit}
               visibleFields={visible}
+              isUploading={isPending}
             />
           )}
         </div>
