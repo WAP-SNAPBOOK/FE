@@ -1,41 +1,12 @@
 import React, { useState } from 'react';
+import './ownerReservation.css';
 
-export default function OwnerReservationList({ reservations }) {
+export default function OwnerReservation({ reservations }) {
   return (
-    <div
-      style={{
-        backgroundColor: '#f4f4f4',
-        minHeight: '100vh',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        fontFamily: 'Pretendard',
-        padding: '40px 0',
-      }}
-    >
-      <h1
-        style={{
-          fontSize: '22px',
-          fontWeight: 700,
-          color: '#111',
-          alignSelf: 'flex-start',
-          marginLeft: 'calc(50% - 170px)',
-          marginBottom: '24px',
-        }}
-      >
-        예약 내역
-      </h1>
+    <div className="owner-container">
+      <h1 className="owner-title">예약 내역</h1>
 
-      <div
-        style={{
-          backgroundColor: '#f1f1f1',
-          width: '341px',
-          height: '652px',
-          borderRadius: '16px',
-          padding: '26px',
-          overflowY: 'auto',
-        }}
-      >
+      <div className="owner-box">
         {reservations?.map((res) => (
           <ReservationCard key={res.id} res={res} />
         ))}
@@ -47,12 +18,11 @@ export default function OwnerReservationList({ reservations }) {
 function ReservationCard({ res }) {
   const [status, setStatus] = useState('접수 중');
   const [isOpen, setIsOpen] = useState(false);
-  const [mode, setMode] = useState(null); // confirm / reject
+  const [mode, setMode] = useState(null);
   const [message, setMessage] = useState('');
   const [selectedTime, setSelectedTime] = useState('');
   const [totalMinutes, setTotalMinutes] = useState(60);
 
-  // 시간 조절 버튼
   const adjustTime = (delta) => {
     setTotalMinutes((prev) => Math.max(30, Math.min(prev + delta, 180)));
   };
@@ -73,401 +43,137 @@ function ReservationCard({ res }) {
   };
 
   return (
-    <div
-      style={{
-        background: '#fff',
-        borderRadius: '16px',
-        border: '1px solid #eee',
-        padding: '20px',
-        marginBottom: '24px',
-        boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
-      }}
-    >
-      {/* 상단: 이름 + 상태 */}
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginBottom: '12px',
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <div
-            style={{
-              width: '38px',
-              height: '38px',
-              borderRadius: '50%',
-              border: '1px solid #ddd',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              color: '#bbb',
-              fontSize: '18px',
-            }}
-          >
-            👤
-          </div>
-          <span style={{ fontWeight: 600, fontSize: '15px', color: '#111' }}>
-            {res.name}
-          </span>
+    <div className="card">
+      {/* 이름 + 상태 */}
+      <div className="card-header">
+        <div className="user-wrap">
+          <div className="user-icon">👤</div>
+          <span className="user-name">{res.name}</span>
         </div>
 
         <div
-          style={{
-            display: 'flex',
-            alignitems: 'center',
-            gap: '4px',
-            background:
-              status === '예약 확정'
-                ? '#b8d3b8ff'
-                : status === '예약 거절'
-                ? '#ffd0d0ff'
-                : '#b1b1f9ff',
-            color:
-              status === '예약 확정'
-                ? '#008000'
-                : status === '예약 거절'
-                ? '#ff0000'
-                : '#0000FF',
-            fontWeight: 600,
-            fontSize: '11px',
-            padding: '3.5px 6px',
-            borderRadius: '5px',
-          }}
+          className={`status-chip ${
+            status === '예약 확정'
+              ? 'status-confirm'
+              : status === '예약 거절'
+              ? 'status-reject'
+              : 'status-pending'
+          }`}
         >
-          <span
-            style={{
-              width: '9px',
-              height: '9px',
-              borderRadius: '50%',
-              background:
-                status === '예약 확정'
-                  ? '#008000'
-                  : status === '예약 거절'
-                  ? '#FF0000'
-                  : '#0000FF',
-              display: 'inline-block',
-              position: 'relative',
-              top: '4px',
-            }}
-          />
-
+          <span className="status-dot" />
           {status}
         </div>
       </div>
 
-      {/* 구분선 */}
-      <div
-        style={{
-          height: '1px',
-          background: '#eee',
-          margin: '10px 0 10px 48px',
-        }}
-      />
+      <div className="divider indented" />
 
-      {/* 기본 예약 정보 */}
-      <div style={{ marginLeft: '48px', fontSize: '13px', color: '#999' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+      {/* 날짜/시간 */}
+      <div className="basic-info">
+        <div className="info-row">
           <span>예약 날짜</span>
-          <span style={{ color: '#fb808a', fontWeight: 600 }}>{res.date}</span>
+          <span className="pink">{res.date}</span>
         </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <div className="info-row">
           <span>예약 시간</span>
-          <span style={{ color: '#fb808a', fontWeight: 600 }}>{res.time}</span>
+          <span className="pink">{res.time}</span>
         </div>
       </div>
 
-      {/* 구분선 */}
-      <div
-        style={{
-          height: '1px',
-          background: '#eee',
-          margin: '10px 0 10px 48px',
-        }}
-      />
+      <div className="divider indented" />
 
-      {/* 상세 보기 토글 */}
+      {/* 상세 보기 */}
       <div
+        className="toggle"
         onClick={() => setIsOpen(!isOpen)}
-        style={{
-          cursor: 'pointer',
-          color: '#aaa',
-          fontWeight: 600,
-          fontSize: '9px',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginTop: '10px',
-          paddingLeft: '48px',
-        }}
       >
         <span>상세 보기</span>
-        <span
-          style={{
-            transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-            transition: '0.2s',
-          }}
-        >
-          ▼
-        </span>
+        <span className={`toggle-arrow ${isOpen ? 'open' : ''}`}>▼</span>
       </div>
 
-      {/* 상세 내용 */}
       {isOpen && (
-        <div
-          style={{
-            marginTop: '12px',
-            fontSize: '9px',
-            color: '#444',
-            paddingLeft: '48px',
-          }}
-        >
+        <div className="detail-section">
           {['손/발', '제거', '연장', '램핑'].map((label) => (
-            <div
-              key={label}
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                marginBottom: '6px',
-              }}
-            >
-              <span style={{ color: '#272727ff', fontWeight: 500 }}>
-                {label}
-              </span>
-              <div style={{ display: 'flex', gap: '10px', color: '#bbb' }}>
-                <span style={{ color: '#222' }}>유</span>
-                <span>무</span>
+            <div className="detail-row" key={label}>
+              <span className="detail-key">{label}</span>
+              <div className="detail-values">
+                <span className="yes">유</span>
+                <span className="no">무</span>
               </div>
             </div>
           ))}
 
           {/* 사진 */}
-          <div style={{ marginTop: '10px' }}>
-            <span
-              style={{
-                color: '#515151',
-                display: 'block',
-                marginBottom: '6px',
-              }}
-            >
-              사진
-            </span>
-            <div style={{ display: 'flex', gap: '8px' }}>
-              <img
-                src={res.photoUrl}
-                alt="첨부사진"
-                style={{
-                  width: '58px',
-                  height: '58px',
-                  borderRadius: '10px',
-                  objectFit: 'cover',
-                  border: '1px solid #ddd',
-                }}
-              />
+          <div className="photo-wrap">
+            <span className="photo-label">사진</span>
+            <div className="photo-list">
+              <img src={res.photoUrl} alt="첨부" className="photo" />
             </div>
           </div>
 
           {/* 요구사항 */}
-          <div style={{ marginTop: '14px' }}>
-            <span
-              style={{
-                color: '#2b2b2b',
-                display: 'block',
-                marginBottom: '6px',
-              }}
-            >
-              요구사항
-            </span>
-            <div
-              style={{
-                background: '#fff',
-                border: '1px solid #D3D3D3',
-                borderRadius: '10px',
-                padding: '10px',
-                lineHeight: 1.5,
-                marginBottom: '12px',
-              }}
-            >
-              {res.requestText}
-            </div>
+          <div className="request-wrap">
+            <span className="request-label">요구사항</span>
+            <div className="request-box">{res.requestText}</div>
           </div>
         </div>
       )}
 
       {/* 버튼 영역 */}
       {status === '접수 중' && !mode && (
-        <div
-          style={{
-            display: 'flex',
-            gap: '10px',
-            marginTop: '16px',
-            justifyContent: 'center',
-            paddingLeft: '48px',
-          }}
-        >
-          <button
-            onClick={handleReject}
-            style={{
-              background: '#ededed',
-              color: '#555',
-              fontWeight: 700,
-              border: 'none',
-              borderRadius: '8px',
-              width: '95px',
-              height: '37px',
-              fontSize: '13px',
-            }}
-          >
+        <div className="action-btns">
+          <button className="btn reject-btn" onClick={handleReject}>
             거절
           </button>
-          <button
-            onClick={handleConfirm}
-            style={{
-              background: '#ec6060',
-              color: '#fff',
-              fontWeight: 700,
-              border: 'none',
-              borderRadius: '8px',
-              width: '95px',
-              height: '37px',
-              fontSize: '13px',
-            }}
-          >
+          <button className="btn confirm-btn" onClick={handleConfirm}>
             수락
           </button>
         </div>
       )}
 
-      {/* 수락(확인 전) UI */}
+      {/* 수락 UI */}
       {mode === 'confirm' && (
         <>
-          <div
-            style={{
-              height: '1px',
-              background: '#eee',
-              margin: '10px 0 10px 48px',
-            }}
-          />
+          <div className="divider indented" />
 
-          <div style={{ marginTop: '10px', paddingLeft: '48px' }}>
-            {/* 시간 선택 버튼 */}
-            <div
-              style={{
-                display: 'flex',
-                gap: '4px',
-                marginBottom: '10px',
-              }}
-            >
+          <div className="confirm-section">
+            {/* 시간 선택 */}
+            <div className="time-buttons">
               {['30분', '1시간', '1시간 30분', '2시간'].map((time) => (
                 <button
                   key={time}
+                  className={`time-btn ${selectedTime === time ? 'active' : ''}`}
                   onClick={() => setSelectedTime(time)}
-                  style={{
-                    background: selectedTime === time ? '#f0f0f0' : '#fff',
-                    border:
-                      selectedTime === time
-                        ? '1px solid #555'
-                        : '1px solid #ddd',
-                    borderRadius: '25px',
-                    padding: '5px 6px',
-                    fontSize: '8px',
-                    fontWeight: selectedTime === time ? 700 : 500,
-                    cursor: 'pointer',
-                    transition: '0.2s',
-                  }}
                 >
                   {time}
                 </button>
               ))}
             </div>
 
-            {/* 시간 조절 UI */}
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '50px',
-                border: '1px solid #ddd',
-                borderRadius: '30px',
-                padding: '10px 0px',
-                width: '193px',
-                height: '39px',
-                background: '#fff',
-              }}
-            >
-              <button
-                onClick={() => adjustTime(-30)}
-                style={{
-                  width: '23px',
-                  height: '23px',
-                  borderRadius: '50%',
-                  background: '#d3d3d3',
-                  border: 'none',
-                  fontSize: '12px',
-                }}
-              >
+            {/* 시간 조절 */}
+            <div className="time-adjust-box">
+              <button className="circle-btn" onClick={() => adjustTime(-30)}>
                 −
               </button>
 
-              <div style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: '12px', fontWeight: 700 }}>
-                  {formatTime(totalMinutes)}
-                </div>
-                <div style={{ fontSize: '8px', color: '#777' }}>
-                  {selectedTime || '시간 선택'}
-                </div>
+              <div className="time-display">
+                <div className="main-time">{formatTime(totalMinutes)}</div>
+                <div className="sub-time">{selectedTime || '시간 선택'}</div>
               </div>
 
-              <button
-                onClick={() => adjustTime(30)}
-                style={{
-                  width: '23px',
-                  height: '23px',
-                  borderRadius: '50%',
-                  background: '#d3d3d3',
-                  border: 'none',
-                  fontSize: '16px',
-                }}
-              >
+              <button className="circle-btn plus" onClick={() => adjustTime(30)}>
                 +
               </button>
             </div>
 
-            {/* 전달 사항 */}
             <textarea
+              className="textarea"
               placeholder="전달 사항을 입력해주세요."
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              style={{
-                width: '100%',
-                height: '66px',
-                border: '1px solid #ddd',
-                borderRadius: '10px',
-                padding: '12px 13px',
-                fontSize: '11px',
-                resize: 'none',
-                marginTop: '10px',
-              }}
             />
 
-            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '10px' }}>
-              <button
-                onClick={handleSubmit}
-                style={{
-                  background: '#ec6060',
-                  color: '#fff',
-                  fontWeight: 700,
-                  border: 'none',
-                  borderRadius: '8px',
-                  width: '56px',
-                  height: '24px',
-                  fontSize: '9px',
-                  cursor: 'pointer',
-                }}
-              >
+            <div className="submit-wrap">
+              <button className="small-confirm-btn" onClick={handleSubmit}>
                 확인
               </button>
             </div>
@@ -475,47 +181,21 @@ function ReservationCard({ res }) {
         </>
       )}
 
-      {/* 거절 입력창 */}
+      {/* 거절 입력 */}
       {mode === 'reject' && (
         <>
-          <div
-            style={{
-              height: '1px',
-              background: '#eee',
-              margin: '10px 0 10px 48px',
-            }}
-          />
+          <div className="divider indented" />
 
-          <div style={{ marginTop: '16px', paddingLeft: '48px' }}>
+          <div className="reject-section">
             <textarea
+              className="textarea"
               placeholder="거절 사유를 입력해주세요."
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              style={{
-                width: '100%',
-                height: '66px',
-                border: '1px solid #ddd',
-                borderRadius: '10px',
-                padding: '12px 13px',
-                fontSize: '11px',
-                resize: 'none',
-              }}
             />
 
-            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '10px' }}>
-              <button
-                onClick={handleSubmit}
-                style={{
-                  background: '#ec6060',
-                  color: '#fff',
-                  fontWeight: 700,
-                  border: 'none',
-                  borderRadius: '8px',
-                  width: '56px',
-                  height: '24px',
-                  fontSize: '9px',
-                }}
-              >
+            <div className="submit-wrap">
+              <button className="small-confirm-btn" onClick={handleSubmit}>
                 확인
               </button>
             </div>
@@ -523,85 +203,32 @@ function ReservationCard({ res }) {
         </>
       )}
 
-      {/* 최종 출력 — 예약 확정 */}
+      {/* 예약 확정 출력 */}
       {status === '예약 확정' && (
-
         <>
-        {/* 구분선 */}
-        <div
-           style={{
-            height: '1px',
-            background: '#eee',
-            margin: '10px 0 10px 48px',
-          }}
-        />
+          <div className="divider indented" />
 
-        <div
-          style={{
-            background: '#e5e7ec',
-            border: '1px solid #d3d3d3',
-            borderRadius: '12px',
-            padding: '14px',
-            marginTop: '12px',
-            color: '#222',
-            fontSize: '8px',
-            lineHeight: 1.5,
-            marginLeft: '48px',
-          }}
-        >
-          <strong
-            style={{
-              display: 'block',
-              marginBottom: '6px',
-              fontSize: '11px',
-            }}
-          >
-            전달 사항
-          </strong>
+          <div className="final-box">
+            <strong className="final-title">전달 사항</strong>
 
-          {selectedTime && (
-            <div style={{ fontSize: '11px', marginBottom: '4px', color: '#666' }}>
-              소요시간: {selectedTime}
-            </div>
-          )}
+            {selectedTime && (
+              <div className="final-time">소요시간: {selectedTime}</div>
+            )}
 
-          {message || '전달사항이 없습니다.'}
-        </div>
+            {message || '전달사항이 없습니다.'}
+          </div>
         </>
       )}
 
-      
-
-      {/* 최종 출력 — 예약 거절 */}
+      {/* 예약 거절 출력 */}
       {status === '예약 거절' && (
+        <>
+          <div className="divider indented" />
 
-      <>
-        {/* 구분선 */}
-        <div
-           style={{
-            height: '1px',
-            background: '#eee',
-            margin: '10px 0 10px 48px',
-          }}
-        />
-
-        <div
-          style={{
-            background: '#e5e7ec',
-            borderRadius: '12px',
-            padding: '14px',
-            marginTop: '12px',
-            color: '#000',
-            fontSize: '8px',
-            lineHeight: 1.5,
-            marginLeft: '48px',
-          }}
-        >
-          <strong style={{ display: 'block', marginBottom: '6px', fontSize: '11px' }}>
-            거절 사유
-          </strong>
-          {message || '사유 없음'}
-        </div>
+          <div className="final-box">
+            <strong className="final-title">거절 사유</strong>
+            {message || '사유 없음'}
+          </div>
         </>
       )}
     </div>
