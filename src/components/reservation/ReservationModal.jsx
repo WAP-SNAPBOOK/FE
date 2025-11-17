@@ -30,11 +30,12 @@ export default function ReservationModal({ isOpen, onClose, shopId, onReservatio
     },
     photoNote: { files: [], notes: '' },
   });
-
   //formData를 ref로 보관해서 훅에 넘기기
   const formDataRef = useRef(formData);
+  const photoCountRef = useRef(0);
   useEffect(() => {
     formDataRef.current = formData;
+    photoCountRef.current = formData.photoNote.files.length;
   }, [formData]);
 
   const handleClose = () => {
@@ -58,7 +59,8 @@ export default function ReservationModal({ isOpen, onClose, shopId, onReservatio
   const { mutate: createReservation } = useCreateReservation(
     onReservationComplete,
     handleClose,
-    formDataRef
+    formDataRef,
+    photoCountRef
   );
 
   //파일(사진) 전송 query 훅
@@ -112,14 +114,14 @@ export default function ReservationModal({ isOpen, onClose, shopId, onReservatio
     const merged = { ...formData, photoNote: photoNoteValues };
 
     const { basic, options, photoNote } = merged;
-
+    photoCountRef.current = photoNote.files.length;
     let uploadedUrls = [];
-    console.log(photoNote);
     // 파일 존재하면 먼저 업로드
     if (photoNote.files.length > 0) {
       uploadedUrls = await uploadMultiple(photoNote.files);
       uploadedUrls = uploadedUrls.map((item) => item.fileUrl);
     }
+
     const payload = {
       shopId,
       formData: {
