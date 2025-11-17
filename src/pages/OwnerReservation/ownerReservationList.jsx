@@ -1,0 +1,236 @@
+import React, { useState } from 'react';
+import './ownerReservation.css';
+
+export default function OwnerReservation({ reservations }) {
+  return (
+    <div className="owner-container">
+      <h1 className="owner-title">예약 내역</h1>
+
+      <div className="owner-box">
+        {reservations?.map((res) => (
+          <ReservationCard key={res.id} res={res} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ReservationCard({ res }) {
+  const [status, setStatus] = useState('접수 중');
+  const [isOpen, setIsOpen] = useState(false);
+  const [mode, setMode] = useState(null);
+  const [message, setMessage] = useState('');
+  const [selectedTime, setSelectedTime] = useState('');
+  const [totalMinutes, setTotalMinutes] = useState(60);
+
+  const adjustTime = (delta) => {
+    setTotalMinutes((prev) => Math.max(30, Math.min(prev + delta, 180)));
+  };
+
+  const formatTime = (mins) => {
+    const h = Math.floor(mins / 60);
+    const m = mins % 60;
+    return `${h.toString().padStart(2, '0')}:${m === 0 ? '00' : m}`;
+  };
+
+  const handleConfirm = () => setMode('confirm');
+  const handleReject = () => setMode('reject');
+
+  const handleSubmit = () => {
+    if (mode === 'confirm') setStatus('예약 확정');
+    if (mode === 'reject') setStatus('예약 거절');
+    setMode(null);
+  };
+
+  return (
+    <div className="card">
+      {/* 이름 + 상태 */}
+      <div className="card-header">
+        <div className="user-wrap">
+          <div className="user-icon">👤</div>
+          <span className="user-name">{res.name}</span>
+        </div>
+
+        <div
+          className={`status-chip ${
+            status === '예약 확정'
+              ? 'status-confirm'
+              : status === '예약 거절'
+              ? 'status-reject'
+              : 'status-pending'
+          }`}
+        >
+          <span className="status-dot" />
+          {status}
+        </div>
+      </div>
+
+      <div className="divider indented" />
+
+      {/* 날짜/시간 */}
+      <div className="basic-info">
+        <div className="info-row">
+          <span>예약 날짜</span>
+          <span className="pink">{res.date}</span>
+        </div>
+        <div className="info-row">
+          <span>예약 시간</span>
+          <span className="pink">{res.time}</span>
+        </div>
+      </div>
+
+      <div className="divider indented" />
+
+      {/* 상세 보기 */}
+      <div
+        className="toggle"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <span>상세 보기</span>
+        <span className={`toggle-arrow ${isOpen ? 'open' : ''}`}>▼</span>
+      </div>
+
+      {isOpen && (
+        <div className="detail-section">
+          {['손/발', '제거', '연장', '램핑'].map((label) => (
+            <div className="detail-row" key={label}>
+              <span className="detail-key">{label}</span>
+              <div className="detail-values">
+                <span className="yes">유</span>
+                <span className="no">무</span>
+              </div>
+            </div>
+          ))}
+
+          {/* 사진 */}
+          <div className="photo-wrap">
+            <span className="photo-label">사진</span>
+            <div className="photo-list">
+              <img src={res.photoUrl} alt="첨부" className="photo" />
+            </div>
+          </div>
+
+          {/* 요구사항 */}
+          <div className="request-wrap">
+            <span className="request-label">요구사항</span>
+            <div className="request-box">{res.requestText}</div>
+          </div>
+        </div>
+      )}
+
+      {/* 버튼 영역 */}
+      {status === '접수 중' && !mode && (
+        <div className="action-btns">
+          <button className="btn reject-btn" onClick={handleReject}>
+            거절
+          </button>
+          <button className="btn confirm-btn" onClick={handleConfirm}>
+            수락
+          </button>
+        </div>
+      )}
+
+      {/* 수락 UI */}
+      {mode === 'confirm' && (
+        <>
+          <div className="divider indented" />
+
+          <div className="confirm-section">
+            {/* 시간 선택 */}
+            <div className="time-buttons">
+              {['30분', '1시간', '1시간 30분', '2시간'].map((time) => (
+                <button
+                  key={time}
+                  className={`time-btn ${selectedTime === time ? 'active' : ''}`}
+                  onClick={() => setSelectedTime(time)}
+                >
+                  {time}
+                </button>
+              ))}
+            </div>
+
+            {/* 시간 조절 */}
+            <div className="time-adjust-box">
+              <button className="circle-btn" onClick={() => adjustTime(-30)}>
+                −
+              </button>
+
+              <div className="time-display">
+                <div className="main-time">{formatTime(totalMinutes)}</div>
+                <div className="sub-time">{selectedTime || '시간 선택'}</div>
+              </div>
+
+              <button className="circle-btn plus" onClick={() => adjustTime(30)}>
+                +
+              </button>
+            </div>
+
+            <textarea
+              className="textarea"
+              placeholder="전달 사항을 입력해주세요."
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+            />
+
+            <div className="submit-wrap">
+              <button className="small-confirm-btn" onClick={handleSubmit}>
+                확인
+              </button>
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* 거절 입력 */}
+      {mode === 'reject' && (
+        <>
+          <div className="divider indented" />
+
+          <div className="reject-section">
+            <textarea
+              className="textarea"
+              placeholder="거절 사유를 입력해주세요."
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+            />
+
+            <div className="submit-wrap">
+              <button className="small-confirm-btn" onClick={handleSubmit}>
+                확인
+              </button>
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* 예약 확정 출력 */}
+      {status === '예약 확정' && (
+        <>
+          <div className="divider indented" />
+
+          <div className="final-box">
+            <strong className="final-title">전달 사항</strong>
+
+            {selectedTime && (
+              <div className="final-time">소요시간: {selectedTime}</div>
+            )}
+
+            {message || '전달사항이 없습니다.'}
+          </div>
+        </>
+      )}
+
+      {/* 예약 거절 출력 */}
+      {status === '예약 거절' && (
+        <>
+          <div className="divider indented" />
+
+          <div className="final-box">
+            <strong className="final-title">거절 사유</strong>
+            {message || '사유 없음'}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
