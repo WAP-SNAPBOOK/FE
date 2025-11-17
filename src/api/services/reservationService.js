@@ -27,8 +27,6 @@ export const reservationService = {
 
   /**
    * 특정 점주의 고객 예약 조회 (고객이 보는 채팅 예약 목록)
-   * GET /api/reservations/chat/customer?shopId={id}
-   *
    * @param {number} shopId - 상점 ID (query)
    * @returns {Promise<Array>} 예약 목록
    */
