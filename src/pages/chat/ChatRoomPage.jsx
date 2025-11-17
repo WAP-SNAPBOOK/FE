@@ -22,6 +22,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useNewMessageNotice } from '../../hooks/chat/useNewMessageNotice';
 import NewMessageCard from '../../components/notification/NewMessageCard';
 import InAppGuideBar from '../../components/common/InAppGuideBar';
+import { useCustomerChatReservations } from '../../query/reservationQueries';
 
 export default function ChatRoomPage() {
   const [input, setInput] = useState('');
@@ -60,6 +61,10 @@ export default function ChatRoomPage() {
     chatRoomId
   );
 
+  // 기존 메시지, cursor (HTTP GET 기반)
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isSuccess } =
+    useChatMessages(chatRoomId);
+
   const handleBack = () => {
     if (window.history.state && window.history.state.idx > 0) {
       navigate(-1); // 이전 페이지가 존재할 경우 채팅 목록 이동
@@ -82,10 +87,6 @@ export default function ChatRoomPage() {
   const topObserverRef = useRef(null);
   //스크롤 제어 ref
   const bottomRef = useRef(null);
-
-  // 기존 메시지, cursor (HTTP GET 기반)
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isSuccess } =
-    useChatMessages(chatRoomId);
 
   // 모든 페이지 메시지(기존) 합치기
   const oldMessages = data?.pages.flatMap((page) => page.messages).reverse() ?? [];
