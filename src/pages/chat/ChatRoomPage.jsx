@@ -23,6 +23,7 @@ import { useNewMessageNotice } from '../../hooks/chat/useNewMessageNotice';
 import NewMessageCard from '../../components/notification/NewMessageCard';
 import InAppGuideBar from '../../components/common/InAppGuideBar';
 import { useCustomerChatReservations } from '../../query/reservationQueries';
+import { useInjectReservationMessages } from '../../hooks/chat/useInjectReservationMessages';
 
 export default function ChatRoomPage() {
   const [input, setInput] = useState('');
@@ -64,6 +65,11 @@ export default function ChatRoomPage() {
   // 기존 메시지, cursor (HTTP GET 기반)
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isSuccess } =
     useChatMessages(chatRoomId);
+
+  // shopId를 통한 예약 내역(상태) 조회 훅
+  const { data: reservations } = useCustomerChatReservations(shopInfo?.shopId);
+  //메시지에 예약 상태 메시지 반영
+  useInjectReservationMessages(reservations, setLiveMessages, userId);
 
   const handleBack = () => {
     if (window.history.state && window.history.state.idx > 0) {
