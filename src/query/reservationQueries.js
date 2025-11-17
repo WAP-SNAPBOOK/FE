@@ -38,3 +38,12 @@ export const useCreateReservation = (onReservationComplete, handleClose, formDat
     },
   });
 };
+
+//채팅방 내 고객 예약 조회 훅
+export const useCustomerChatReservations = (shopId) => {
+  return useQuery({
+    queryKey: ['customerChatReservations', shopId],
+    queryFn: () => reservationService.getCustomerChatReservations(shopId),
+    enabled: !!shopId, // shopId 있을 때만 요청
+  });
+};
