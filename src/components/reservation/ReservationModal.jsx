@@ -114,7 +114,6 @@ export default function ReservationModal({ isOpen, onClose, shopId, onReservatio
     const { basic, options, photoNote } = merged;
 
     let uploadedUrls = [];
-    console.log(photoNote);
     // 파일 존재하면 먼저 업로드
     if (photoNote.files.length > 0) {
       uploadedUrls = await uploadMultiple(photoNote.files);
