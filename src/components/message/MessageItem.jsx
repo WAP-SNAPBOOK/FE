@@ -1,7 +1,7 @@
 import React from 'react';
 import * as S from './MessageItem.style';
 import { formatTime } from '../../utils/formatTime';
-import { ReservationCompleteMessage } from '../message/ReservationCompleteMessage';
+import ReservationCompleteMessage from '../common/ReservationCompleteMessage';
 
 export default function MessageItem({ msg, isMine }) {
   //예약 폼 메시지 처리
@@ -13,7 +13,7 @@ export default function MessageItem({ msg, isMine }) {
             name={msg.payload.name}
             date={msg.payload.date}
             time={msg.payload.time}
-            photoCount={msg.payload.photoCount}
+            selectedOptions={msg.payload.selectedOptions}
           />
         </S.Bubble>
       </S.MessageRow>
