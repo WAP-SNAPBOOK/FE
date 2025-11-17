@@ -13,7 +13,7 @@
   text-align: left;
 }
 
-.title {
+.title-header {
   font-size: 20px;
   font-weight: 700;
   color: #000;
@@ -37,7 +37,7 @@
   width: 298px;
   background: #fff;
   border-radius: 14px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
   padding: 17px 26px 26px 17px;
   box-sizing: border-box;
 }
@@ -115,7 +115,7 @@
   color: #fb808a;
 }
 
-.toggle {
+.toggle-customer {
   cursor: pointer;
   color: #aaa;
   font-weight: 600;

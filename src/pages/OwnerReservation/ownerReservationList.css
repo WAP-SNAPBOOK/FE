@@ -9,7 +9,7 @@
   font-family: Pretendard;
 }
 
-.owner-title {
+.title-main {
   font-size: 22px;
   font-weight: 700;
   color: #111;
@@ -18,7 +18,7 @@
   margin-bottom: 24px;
 }
 
-.owner-box {
+.owner-box-1 {
   background-color: #f1f1f1;
   width: 341px;
   height: 652px;
@@ -43,7 +43,7 @@
   padding: 20px;
   width: 298px;
   margin: 0 auto 26px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 /* ---- 카드 상단 ---- */
@@ -88,9 +88,18 @@
   border-radius: 6px;
 }
 
-.status-pending { background: #b1b1f9; color: #0000ff; }
-.status-confirm { background: #b8d3b8; color: #008000; }
-.status-reject { background: #ffd0d0; color: #ff0000; }
+.status-pending {
+  background: #b1b1f9;
+  color: #0000ff;
+}
+.status-confirm {
+  background: #b8d3b8;
+  color: #008000;
+}
+.status-reject {
+  background: #ffd0d0;
+  color: #ff0000;
+}
 
 .status-dot {
   width: 9px;
@@ -98,9 +107,15 @@
   border-radius: 50%;
 }
 
-.status-pending .status-dot { background: #0000ff; }
-.status-confirm .status-dot { background: #008000; }
-.status-reject .status-dot { background: #ff0000; }
+.status-pending .status-dot {
+  background: #0000ff;
+}
+.status-confirm .status-dot {
+  background: #008000;
+}
+.status-reject .status-dot {
+  background: #ff0000;
+}
 
 /* ---- 구분선 ---- */
 .divider {
@@ -108,7 +123,9 @@
   background: #eee;
   margin: 12px 0;
 }
-.indented { margin-left: 48px; }
+.indented {
+  margin-left: 48px;
+}
 
 /* ---- 기본 정보 ---- */
 .basic-info {
@@ -177,8 +194,13 @@
 }
 
 /* ---- 사진 ---- */
-.photo-wrap { margin-top: 10px; }
-.photo-label { margin-bottom: 6px; display: block; }
+.photo-wrap {
+  margin-top: 10px;
+}
+.photo-label {
+  margin-bottom: 6px;
+  display: block;
+}
 
 .photo-list {
   display: flex;
@@ -194,8 +216,13 @@
 }
 
 /* ---- 요구사항 ---- */
-.request-wrap { margin-top: 14px; }
-.request-label { margin-bottom: 6px; display: block; }
+.request-wrap {
+  margin-top: 14px;
+}
+.request-label {
+  margin-bottom: 6px;
+  display: block;
+}
 
 .request-box {
   background: #fff;
@@ -290,9 +317,17 @@
   font-size: 16px;
 }
 
-.time-display { text-align: center; }
-.main-time { font-size: 12px; font-weight: 700; }
-.sub-time { font-size: 8px; color: #777; }
+.time-display {
+  text-align: center;
+}
+.main-time {
+  font-size: 12px;
+  font-weight: 700;
+}
+.sub-time {
+  font-size: 8px;
+  color: #777;
+}
 
 /* ---- 입력창 ---- */
 .textarea {

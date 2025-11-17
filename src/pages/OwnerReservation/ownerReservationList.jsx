@@ -1,13 +1,48 @@
 import React, { useState } from 'react';
-import './ownerReservation.css';
+import './ownerReservationList.css';
 
-export default function OwnerReservation({ reservations }) {
+export default function OwnerReservationList({ reservations }) {
+  const dummyReservations = [
+    {
+      id: 1,
+      name: '김민주',
+      date: '2025-11-23',
+      time: '14:00',
+      photoUrl: 'https://placekitten.com/200/200',
+      requestText: '프렌치 네일로 하고 싶어요 💅',
+    },
+    {
+      id: 2,
+      name: '박서연',
+      date: '2025-11-23',
+      time: '16:30',
+      photoUrl: 'https://placekitten.com/210/210',
+      requestText: '은은한 글리터 넣어주세요 ✨',
+    },
+    {
+      id: 3,
+      name: '이하은',
+      date: '2025-11-24',
+      time: '13:00',
+      photoUrl: 'https://placekitten.com/220/220',
+      requestText: '손상된 부분 보완 가능할까요?',
+    },
+    {
+      id: 4,
+      name: '최지아',
+      date: '2025-11-25',
+      time: '11:00',
+      photoUrl: 'https://placekitten.com/230/230',
+      requestText: '',
+    },
+  ];
+
   return (
     <div className="owner-container">
-      <h1 className="owner-title">예약 내역</h1>
+      <h1 className="title-main">예약 내역</h1>
 
-      <div className="owner-box">
-        {reservations?.map((res) => (
+      <div className="owner-box-1">
+        {dummyReservations?.map((res) => (
           <ReservationCard key={res.id} res={res} />
         ))}
       </div>
@@ -56,8 +91,8 @@ function ReservationCard({ res }) {
             status === '예약 확정'
               ? 'status-confirm'
               : status === '예약 거절'
-              ? 'status-reject'
-              : 'status-pending'
+                ? 'status-reject'
+                : 'status-pending'
           }`}
         >
           <span className="status-dot" />
@@ -82,10 +117,7 @@ function ReservationCard({ res }) {
       <div className="divider indented" />
 
       {/* 상세 보기 */}
-      <div
-        className="toggle"
-        onClick={() => setIsOpen(!isOpen)}
-      >
+      <div className="toggle" onClick={() => setIsOpen(!isOpen)}>
         <span>상세 보기</span>
         <span className={`toggle-arrow ${isOpen ? 'open' : ''}`}>▼</span>
       </div>
@@ -211,9 +243,7 @@ function ReservationCard({ res }) {
           <div className="final-box">
             <strong className="final-title">전달 사항</strong>
 
-            {selectedTime && (
-              <div className="final-time">소요시간: {selectedTime}</div>
-            )}
+            {selectedTime && <div className="final-time">소요시간: {selectedTime}</div>}
 
             {message || '전달사항이 없습니다.'}
           </div>

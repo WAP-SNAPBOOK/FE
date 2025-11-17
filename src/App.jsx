@@ -14,7 +14,8 @@ import { useAuth } from './context/AuthContext';
 import ChatListPage from './pages/chat/ChatListPage';
 import ChatRoomPage from './pages/chat/ChatRoomPage';
 import Mypage from './pages/profile/Mypage';
-import ReservationList from './pages/ReservationList/ReservationList';
+import OwnerReservationList from './pages/OwnerReservation/ownerReservationList';
+import CustomerReservationList from './pages/ReservationList/CustomerReservationList';
 import LinkRedirectPage from './pages/redirect/LinkRedirectPage';
 
 const queryClient = new QueryClient();
@@ -51,7 +52,12 @@ function AppRoutes() {
       <Route path="/signup/owner/shop-info" element={<ShopInfoPage />} />
       <Route path="/chat" element={<ChatListPage />} />
       <Route path="/chat/:chatRoomId" element={<ChatRoomPage />} />
-      <Route path="/reservations" element={<ReservationList />} />
+      <Route
+        path="/reservations"
+        element={
+          auth?.userType === 'CUSTOMER' ? <CustomerReservationList /> : <OwnerReservationList />
+        }
+      />
       <Route path="/mypage" element={<Mypage />} />
     </Routes>
   );
