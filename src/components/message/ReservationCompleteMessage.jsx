@@ -2,7 +2,7 @@ import React from 'react';
 import CheckIcon from '../../assets/icons/check-icon.svg';
 import './ReservationCompleteMessage.css';
 
-export function ReservationCompleteMessage({ name, date, time, photoCount }) {
+export default function ReservationCompleteMessage({ name, date, time, photoCount }) {
   return (
     <div className="reservation-message">
       {/* 체크 아이콘 */}
@@ -29,7 +29,7 @@ export function ReservationCompleteMessage({ name, date, time, photoCount }) {
         </div>
         <div className="info-row">
           <span className="label">첨부 사진</span>
-          <span className="value photo-count">{photoCount}장</span>
+          <span className="value photo-count">{photoCount ?? 0}장</span>
         </div>
       </div>
     </div>
