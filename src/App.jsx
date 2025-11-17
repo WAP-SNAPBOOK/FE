@@ -15,7 +15,7 @@ import ChatListPage from './pages/chat/ChatListPage';
 import ChatRoomPage from './pages/chat/ChatRoomPage';
 import Mypage from './pages/profile/Mypage';
 import OwnerReservationList from './pages/OwnerReservation/ownerReservationList';
-import CustomerReservationList from './pages/ReservationList/CustomerReservationList';
+import CustomerReservationList from './pages/CustomerReservation/CustomerReservationList';
 import LinkRedirectPage from './pages/redirect/LinkRedirectPage';
 
 const queryClient = new QueryClient();
