@@ -24,7 +24,7 @@ export const useCreateReservation = (
 
       //예약 완료 메시지 생성
       const current = formDataRef?.current;
-      const photoCount = photoCountRef.current;
+      const photoCount = photoCountRef?.current;
       if (current) {
         onReservationComplete?.({
           name: current.basic?.name || '',
