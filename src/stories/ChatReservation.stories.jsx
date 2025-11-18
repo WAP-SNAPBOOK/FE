@@ -1,14 +1,70 @@
 import React, { useState } from 'react';
 import MessageList from '../components/message/MessageList';
 import * as S from '../pages/chat/ChatRoomPage.style';
-
+import { messages } from './storyMessages';
 export default {
-  title: 'Chat/Reservation',
+  title: 'Chat/ReservationStates',
+  component: MessageList,
+};
+
+const textOnly = messages.filter((m) => m.messageType === 'TEXT');
+
+const reservationOnly = messages.filter((m) => m.isReservationCard);
+
+const mixedMessages = messages;
+
+const oneReservation = [messages.find((m) => m.isReservationCard)];
+
+const manyReservations = messages.filter((m) => m.isReservationCard).slice(0, 5);
+
+const latestMessage = [messages[messages.length - 1]];
+
+const emptyMessages = [];
+
+export const TextOnly = {
+  args: {
+    messages: textOnly,
+  },
+};
+
+export const OnlyReservations = {
+  args: {
+    messages: reservationOnly,
+  },
+};
+
+export const Mixed = {
+  args: {
+    messages: mixedMessages,
+  },
+};
+
+export const OneReservation = {
+  args: {
+    messages: oneReservation,
+  },
+};
+
+export const ManyReservations = {
+  args: {
+    messages: manyReservations,
+  },
+};
+
+export const LatestMessageOnly = {
+  args: {
+    messages: latestMessage,
+  },
+};
+
+export const EmptyState = {
+  args: {
+    messages: emptyMessages,
+  },
 };
 
 export const ReservationFlow = () => {
   const [messages, setMessages] = useState([]);
-
   const onReservationComplete = (data) => {
     setMessages((prev) => [
       ...prev,
