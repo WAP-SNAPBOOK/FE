@@ -48,7 +48,7 @@ export const useCreateReservation = (
 
 //채팅방 내 고객 예약 조회 훅
 export const useCustomerChatReservations = (shopId) => {
-  const auth = useAuth();
+  const { auth } = useAuth();
   return useQuery({
     queryKey: ['customerChatReservations', shopId, auth?.userId],
     queryFn: () => reservationService.getCustomerChatReservations(shopId),
