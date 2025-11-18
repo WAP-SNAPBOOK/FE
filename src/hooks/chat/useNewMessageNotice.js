@@ -36,6 +36,9 @@ export function useNewMessageNotice(liveMessages, messageListRef, scrollToBottom
     const latest = liveMessages[liveMessages.length - 1];
     if (!latest || latest.senderId === userId) return; // 내가 보낸 건 제외
 
+    // 내가 보낸 메시지 + silent 메시지 모두 제외
+    if (latest.senderId === userId || latest?.isSilent) return;
+
     const container = messageListRef.current;
     if (!container) return;
 
@@ -46,7 +49,7 @@ export function useNewMessageNotice(liveMessages, messageListRef, scrollToBottom
       scrollToBottom(true);
     } else {
       setShowNewMessageCard(true);
-      setNewMessagePreview(latest.message);
+      setNewMessagePreview(latest.message ?? '예약 알림');
     }
   }, [liveMessages, messageListRef, scrollToBottom, userId]);
 

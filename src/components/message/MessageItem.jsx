@@ -1,7 +1,7 @@
 import React from 'react';
 import * as S from './MessageItem.style';
 import { formatTime } from '../../utils/formatTime';
-import { ReservationCompleteMessage } from '../message/ReservationCompleteMessage';
+import ReservationCompleteMessage from '../message/ReservationCompleteMessage';
 
 export default function MessageItem({ msg, isMine }) {
   //예약 폼 메시지 처리
