@@ -35,6 +35,23 @@ export default function ChatRoomPage() {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
+  //링크 유입시 가게 정보 조회
+  const [searchParams] = useSearchParams();
+  const slugOrCode = searchParams.get('slug');
+  const { data: shopInfo } = useShopInfoByCode(slugOrCode);
+
+  //모달 재오픈 방지용 ref
+  const hasAutoOpened = useRef(false);
+
+  // 링크 유입(slug 존재) + shopInfo 로딩 완료 시 모달 자동 오픈
+  // 인앱에서 1회만
+  useEffect(() => {
+    if (slugOrCode && shopInfo && !hasAutoOpened.current) {
+      hasAutoOpened.current = true;
+      openModal();
+    }
+  }, [slugOrCode, shopInfo, hasAutoOpened]);
+
   //메뉴 표시 여부 상태
   const [showMenu, setShowMenu] = useState(false);
 
@@ -50,10 +67,6 @@ export default function ChatRoomPage() {
   const { chatRoomId } = useParams();
 
   const queryClient = useQueryClient();
-  //링크 유입시 가게 정보 조회
-  const [searchParams] = useSearchParams();
-  const slugOrCode = searchParams.get('slug');
-  const { data: shopInfo } = useShopInfoByCode(slugOrCode);
 
   //메세지 전송 관련 훅
   const { addOptimisticMessage, replaceWithServerMessage } = useOptimisticMessage(
