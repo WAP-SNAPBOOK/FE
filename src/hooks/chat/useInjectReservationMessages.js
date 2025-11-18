@@ -4,7 +4,7 @@ import { useEffect } from 'react';
  * @param {Array} reservations 예약 상태 조회
  * @param {Function} setLiveMessages //실시간 메시지 상태함수
  */
-export function useInjectReservationMessages(reservations, setLiveMessages, userId) {
+export function useInjectReservationMessages(reservations, setLiveMessages) {
   useEffect(() => {
     if (!reservations || reservations.length === 0) return;
 
