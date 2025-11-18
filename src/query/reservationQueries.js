@@ -1,5 +1,6 @@
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { reservationService } from '../api/services/reservationService';
+import { useAuth } from '../context/AuthContext';
 
 //예약 폼 조회 훅
 export const useReservationForm = (shopId, enabled) => {
@@ -47,8 +48,9 @@ export const useCreateReservation = (
 
 //채팅방 내 고객 예약 조회 훅
 export const useCustomerChatReservations = (shopId) => {
+  const auth = useAuth();
   return useQuery({
-    queryKey: ['customerChatReservations', shopId],
+    queryKey: ['customerChatReservations', shopId, auth?.userId],
     queryFn: () => reservationService.getCustomerChatReservations(shopId),
     enabled: !!shopId, // shopId 있을 때만 요청
   });
