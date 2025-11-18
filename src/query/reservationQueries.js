@@ -52,6 +52,6 @@ export const useCustomerChatReservations = (shopId) => {
   return useQuery({
     queryKey: ['customerChatReservations', shopId, auth?.userId],
     queryFn: () => reservationService.getCustomerChatReservations(shopId),
-    enabled: !!shopId, // shopId 있을 때만 요청
+    enabled: !!shopId && !!auth?.userId, // shopId 있을 때만 요청
   });
 };
