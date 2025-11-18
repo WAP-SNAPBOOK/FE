@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import MessageList from '../components/message/MessageList';
-import * as S from '../pages/chat/ChatRoomPage.style';
+import MessageList from '../../components/message/MessageList';
+import * as S from '../../pages/chat/ChatRoomPage.style';
+import ChatStories from './chatStories';
 import { messages } from './storyMessages';
+
 export default {
   title: 'Chat/ReservationStates',
-  component: MessageList,
+  component: ChatStories,
 };
 
 const textOnly = messages.filter((m) => m.messageType === 'TEXT');
