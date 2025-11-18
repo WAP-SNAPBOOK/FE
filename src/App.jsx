@@ -55,7 +55,13 @@ function AppRoutes() {
       <Route
         path="/reservations"
         element={
-          auth?.userType === 'CUSTOMER' ? <CustomerReservationList /> : <OwnerReservationList />
+          !auth ? (
+            <LoginPage />
+          ) : auth.userType === 'CUSTOMER' ? (
+            <CustomerReservationList />
+          ) : (
+            <OwnerReservationList />
+          )
         }
       />
       <Route path="/mypage" element={<Mypage />} />
