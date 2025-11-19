@@ -49,7 +49,7 @@
 }
 
 /* 공통 값 */
-.value {
+.value-1 {
   font-weight: 600;
 }
 
@@ -58,8 +58,8 @@
   color: #222;
 }
 
-.date,
-.time {
+.date-1,
+.time-1 {
   color: #f08080;
 }
 
