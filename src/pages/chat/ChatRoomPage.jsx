@@ -192,6 +192,7 @@ export default function ChatRoomPage() {
 
   // 모든 메시지 병합 (기존 + 실시간, 중복 제거)
   const merged = [...(oldMessages ?? []), ...liveMessages];
+  //오름차순 시간 정렬
   const allMessages = Array.from(new Map(merged.map((m) => [m.messageId, m])).values()).sort(
     (a, b) => new Date(a.sentAt) - new Date(b.sentAt)
   );
