@@ -1,3 +1,4 @@
+// storyMessages.js
 export const messages = [
   {
     messageType: 'TEXT',
@@ -6,7 +7,7 @@ export const messages = [
     senderName: '박진오',
     message: '예약 좀 합시다',
     imageUrl: null,
-    sentAt: '2025-11-14T18:34:00.429955',
+    sentAt: '2025-11-14T18:34:00',
     roomId: 71,
   },
   {
@@ -16,7 +17,7 @@ export const messages = [
     senderName: '박진오',
     message: 'ㅊㅁㅊㅁ',
     imageUrl: null,
-    sentAt: '2025-11-15T18:31:00.252631',
+    sentAt: '2025-11-15T18:31:00',
     roomId: 71,
   },
   {
@@ -26,9 +27,10 @@ export const messages = [
     senderName: '박진오',
     message: 'ㄴㅇㄹ',
     imageUrl: null,
-    sentAt: '2025-11-17T18:23:20.16683',
+    sentAt: '2025-11-17T18:23:20',
     roomId: 71,
   },
+  // ------- 예약 상태 메시지들 (sentAt 추가됨) -------
   {
     messageId: 'reservation-35',
     type: 'PENDING',
@@ -39,8 +41,8 @@ export const messages = [
       time: '18:26:00',
       photoCount: 2,
     },
+    sentAt: '2025-11-15T18:26:00',
     senderId: -1,
-    isSilent: true,
   },
   {
     messageId: 'reservation-38',
@@ -52,8 +54,8 @@ export const messages = [
       time: '17:22:00',
       photoCount: 3,
     },
+    sentAt: '2025-11-16T17:22:00',
     senderId: -1,
-    isSilent: true,
   },
   {
     messageId: 'reservation-39',
@@ -65,8 +67,8 @@ export const messages = [
       time: '09:00:00',
       photoCount: 2,
     },
+    sentAt: '2025-11-19T09:00:00',
     senderId: -1,
-    isSilent: true,
   },
   {
     messageId: 'reservation-40',
@@ -78,8 +80,8 @@ export const messages = [
       time: '14:30:00',
       photoCount: 1,
     },
+    sentAt: '2025-11-29T14:30:00',
     senderId: -1,
-    isSilent: true,
   },
   {
     messageId: 'reservation-41',
@@ -91,12 +93,12 @@ export const messages = [
       time: '14:30:00',
       photoCount: 1,
     },
+    sentAt: '2025-11-20T14:30:00',
     senderId: -1,
-    isSilent: true,
   },
   {
     messageId: 'reservation-42',
-    type: 'PENDING',
+    type: 'CONFIRMED',
     isReservationCard: true,
     payload: {
       name: '박진오',
@@ -104,12 +106,12 @@ export const messages = [
       time: '09:00:00',
       photoCount: 2,
     },
+    sentAt: '2025-11-25T09:00:00',
     senderId: -1,
-    isSilent: true,
   },
   {
     messageId: 'reservation-43',
-    type: 'PENDING',
+    type: 'REJECTED',
     isReservationCard: true,
     payload: {
       name: '박진오',
@@ -117,46 +119,7 @@ export const messages = [
       time: '14:30:00',
       photoCount: 2,
     },
+    sentAt: '2025-11-28T14:30:00',
     senderId: -1,
-    isSilent: true,
-  },
-  {
-    messageId: 'reservation-44',
-    type: 'PENDING',
-    isReservationCard: true,
-    payload: {
-      name: '박진오',
-      date: '2025-12-03',
-      time: '09:00:00',
-      photoCount: 3,
-    },
-    senderId: -1,
-    isSilent: true,
-  },
-  {
-    messageId: 'reservation-45',
-    type: 'PENDING',
-    isReservationCard: true,
-    payload: {
-      name: '박진오',
-      date: '2025-11-27',
-      time: '15:00:00',
-      photoCount: 2,
-    },
-    senderId: -1,
-    isSilent: true,
-  },
-  {
-    messageId: 'reservation-46',
-    type: 'PENDING',
-    isReservationCard: true,
-    payload: {
-      name: '박진오',
-      date: '2025-11-22',
-      time: '15:30:00',
-      photoCount: 2,
-    },
-    senderId: -1,
-    isSilent: true,
   },
 ];
