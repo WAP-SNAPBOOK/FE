@@ -52,9 +52,10 @@ export default function MessageItem({ msg, isMine }) {
     );
   }
 
+  //일반 메시지 처리
   return (
     <S.MessageRow $isMine={isMine}>
-      {/* 일반 메시지 렌더링, 상대방, 본인 메시지에 따른 정렬 */}
+      {/*상대방, 본인 메시지에 따른 정렬 */}
       {isMine ? (
         <>
           <S.Time>{formatTime(msg.sentAt)}</S.Time>
