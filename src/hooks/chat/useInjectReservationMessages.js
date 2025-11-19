@@ -20,7 +20,6 @@ export function useInjectReservationMessages(reservations, setLiveMessages) {
         photoCount: r.photoCount,
       },
       sentAt: r.createdAt,
-      senderId: -1, //상대 메시지 처리,
       isSilent: true, //새 메시지 알림 제외
     }));
 
