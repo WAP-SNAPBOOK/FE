@@ -192,7 +192,9 @@ export default function ChatRoomPage() {
 
   // 모든 메시지 병합 (기존 + 실시간, 중복 제거)
   const merged = [...(oldMessages ?? []), ...liveMessages];
-  const allMessages = Array.from(new Map(merged.map((m) => [m.messageId, m])).values());
+  const allMessages = Array.from(new Map(merged.map((m) => [m.messageId, m])).values()).sort(
+    (a, b) => new Date(a.sentAt) - new Date(b.sentAt)
+  );
   return (
     <Container $start>
       <S.PageWrapper>
