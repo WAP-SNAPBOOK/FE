@@ -195,7 +195,7 @@ export default function ChatRoomPage() {
       ...prev,
       {
         messageId: `complete-${Date.now()}`,
-        type: 'RESERVATION_COMPLETE',
+        type: 'PENDING',
         isReservationCard: true, //예약 완료 메시지임을 명시
         payload: data, // { name, date, time, photoCount }
         sentAt: new Date().toISOString(),
@@ -205,7 +205,10 @@ export default function ChatRoomPage() {
 
   // 모든 메시지 병합 (기존 + 실시간, 중복 제거)
   const merged = [...(oldMessages ?? []), ...liveMessages];
-  const allMessages = Array.from(new Map(merged.map((m) => [m.messageId, m])).values());
+  //오름차순 시간 정렬
+  const allMessages = Array.from(new Map(merged.map((m) => [m.messageId, m])).values()).sort(
+    (a, b) => new Date(a.sentAt) - new Date(b.sentAt)
+  );
   return (
     <Container $start>
       <S.PageWrapper>

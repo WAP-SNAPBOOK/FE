@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import InputField from './InputField';
 import { sanitizeDigits, validateMobile010 } from '../../utils/phoneNumber';
 import { todayYMD, validateReservationDateTime } from '../../utils/dateTime';
+import './stepBasic.css';
 
 export default function StepBasic({ initialData, onNext, visibleFields }) {
   const [values, setValues] = useState({
@@ -10,6 +11,8 @@ export default function StepBasic({ initialData, onNext, visibleFields }) {
     date: '',
     time: '',
   });
+  //시간 선택 상태
+  const [openTimeList, setOpenTimeList] = useState(false);
 
   const [isComposing, setIsComposing] = useState(false);
   const MAX_NAME = 5;
@@ -44,15 +47,20 @@ export default function StepBasic({ initialData, onNext, visibleFields }) {
   };
 
   const STEP_MIN = 30;
-  const OPEN_TIME = "09:00";
-  const CLOSE_TIME = "22:00";
+  const OPEN_TIME = '09:00';
+  const CLOSE_TIME = '22:00';
 
-  const pad2 = (n) => String(n).padStart(2, "0");
+  const pad2 = (n) => String(n).padStart(2, '0');
 
   // 30분 간격 타임슬롯 생성 (영업시간 + 오늘이면 현재 이후만)
-  const buildTimeSlots = (dateStr, stepMin = STEP_MIN, open = OPEN_TIME, closeExclusive = CLOSE_TIME) => {
+  const buildTimeSlots = (
+    dateStr,
+    stepMin = STEP_MIN,
+    open = OPEN_TIME,
+    closeExclusive = CLOSE_TIME
+  ) => {
     const toMinutes = (hhmm) => {
-      const [h, m] = hhmm.split(":").map(Number);
+      const [h, m] = hhmm.split(':').map(Number);
       return h * 60 + m;
     };
     const fromMinutes = (mins) => `${pad2(Math.floor(mins / 60))}:${pad2(mins % 60)}`;
@@ -76,7 +84,6 @@ export default function StepBasic({ initialData, onNext, visibleFields }) {
       startMin = Math.max(startMin, ceilToStep);
     }
 
-
     if (startMin > lastStartMin) return []; // 오늘 남은 슬롯이 없을 때
 
     const slots = [];
@@ -94,19 +101,19 @@ export default function StepBasic({ initialData, onNext, visibleFields }) {
   // 옵션 리스트가 바뀌었을 때, 현재 선택값이 범위 밖이면 비웁니다.
   useEffect(() => {
     if (values.time && !timeOptions.includes(values.time)) {
-      setValues((v) => ({ ...v, time: "" }));
+      setValues((v) => ({ ...v, time: '' }));
     }
-  }, [timeOptions]); 
+  }, [timeOptions]);
 
   useEffect(() => {
     // timeOptions: 09:00~21:30, 오늘이면 현재 이후부터
     if (!values.date) return;
     if (timeOptions.length === 0) {
-      if (values.time) setValues(v => ({ ...v, time: '' }));
+      if (values.time) setValues((v) => ({ ...v, time: '' }));
       return;
     }
     if (!values.time || !timeOptions.includes(values.time)) {
-      setValues(v => ({ ...v, time: timeOptions[0] })); // 허용된 첫 슬롯 자동 선택
+      setValues((v) => ({ ...v, time: timeOptions[0] })); // 허용된 첫 슬롯 자동 선택
     }
   }, [values.date, timeOptions]);
 
@@ -123,6 +130,16 @@ export default function StepBasic({ initialData, onNext, visibleFields }) {
     if (!isValid) return;
     onNext?.(values);
   };
+
+  const handleBasicChange = (key, value) => {
+    setValues((v) => ({ ...v, [key]: value }));
+  };
+
+  const formattedDate = useMemo(() => {
+    if (!values.date) return '';
+    const d = new Date(values.date);
+    return d.toLocaleDateString('ko-KR').replace(/\./g, '.').trim();
+  }, [values.date]);
 
   return (
     <>
@@ -155,23 +172,47 @@ export default function StepBasic({ initialData, onNext, visibleFields }) {
         <label className="label">날짜</label>
         <label className="label">시간</label>
 
-        <input
-          className="field"
-          type="date"
-          value={values.date}
-          min={todayYMD()}
-          onChange={(e) => setValues((v) => ({ ...v, date: e.target.value }))}
-        />
-        <select
-          className="field"
-          value={values.time}
-          onChange={(e) => setValues((v) => ({ ...v, time: e.target.value }))}
-        >
-          <option value="" disabled>시간 선택</option>
-          {timeOptions.map((t) => (
-            <option key={t} value={t}>{t}</option>
-          ))}
-        </select>
+        {/** ===== 날짜 ===== */}
+        <div className="selectWrapper">
+          <input
+            type="date"
+            min={todayYMD()}
+            className="realInput"
+            value={values.date}
+            onChange={(e) => handleBasicChange('date', e.target.value)}
+          />
+
+          <div className="fakeInput">
+            <span>{formattedDate || '날짜 선택'}</span>
+            <span className="arrow">▼</span>
+          </div>
+        </div>
+
+        {/** ===== 시간 ===== */}
+        <div className="selectWrapper">
+          <div className="fakeInput" onClick={() => setOpenTimeList((o) => !o)}>
+            <span>{values.time || '시간 선택'}</span>
+            <span className="arrow">▼</span>
+          </div>
+
+          {/* 타임슬롯 리스트 */}
+          {openTimeList && (
+            <div className="dropdown">
+              {timeOptions.map((t) => (
+                <div
+                  key={t}
+                  className="option-1"
+                  onClick={() => {
+                    handleBasicChange('time', t);
+                    setOpenTimeList(false);
+                  }}
+                >
+                  {t}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* 날짜/시간 에러 메시지 */}

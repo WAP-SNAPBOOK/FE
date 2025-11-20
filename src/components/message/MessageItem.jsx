@@ -2,27 +2,60 @@ import React from 'react';
 import * as S from './MessageItem.style';
 import { formatTime } from '../../utils/formatTime';
 import ReservationCompleteMessage from '../message/ReservationCompleteMessage';
+import DecisionCard from '../message/DecisionCard';
 
 export default function MessageItem({ msg, isMine }) {
-  //예약 폼 메시지 처리
+  // 예약 상태 카드 처리
   if (msg.isReservationCard) {
-    return (
-      <S.MessageRow $isMine={false}>
-        <S.Bubble $isMine={false}>
+    let CardComponent = null;
+
+    switch (msg.type) {
+      case 'PENDING':
+        CardComponent = (
           <ReservationCompleteMessage
             name={msg.payload.name}
             date={msg.payload.date}
             time={msg.payload.time}
             photoCount={msg.payload.photoCount}
           />
-        </S.Bubble>
+        );
+        break;
+
+      case 'CONFIRMED':
+        CardComponent = (
+          <DecisionCard
+            variant="approved"
+            customerName={msg.payload.name}
+            dateText={msg.payload.date}
+            timeText={msg.payload.time}
+          />
+        );
+        break;
+
+      case 'REJECTED':
+        CardComponent = (
+          <DecisionCard
+            variant="rejected"
+            customerName={msg.payload.name}
+            dateText={msg.payload.date}
+            timeText={msg.payload.time}
+            noteText={msg.payload.reason ?? '예약이 불가한 시간입니다.'}
+          />
+        );
+        break;
+    }
+
+    return (
+      <S.MessageRow $isMine={false}>
+        <S.Bubble $isMine={false}>{CardComponent}</S.Bubble>
       </S.MessageRow>
     );
   }
 
+  //일반 메시지 처리
   return (
     <S.MessageRow $isMine={isMine}>
-      {/* 일반 메시지 렌더링, 상대방, 본인 메시지에 따른 정렬 */}
+      {/*상대방, 본인 메시지에 따른 정렬 */}
       {isMine ? (
         <>
           <S.Time>{formatTime(msg.sentAt)}</S.Time>
