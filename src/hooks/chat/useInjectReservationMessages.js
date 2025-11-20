@@ -11,7 +11,7 @@ export function useInjectReservationMessages(reservations, setLiveMessages) {
     // 예약 -> 메시지 변환
     const reservationMessages = reservations.map((r) => ({
       messageId: `reservation-${r.id}`,
-      type: 'RESERVATION_COMPLETE',
+      type: r.status,
       isReservationCard: true,
       payload: {
         name: r.customerName,
@@ -19,8 +19,7 @@ export function useInjectReservationMessages(reservations, setLiveMessages) {
         time: r.time,
         photoCount: r.photoCount,
       },
-
-      senderId: -1, //상대 메시지 처리,
+      sentAt: r.createdAt,
       isSilent: true, //새 메시지 알림 제외
     }));
 
