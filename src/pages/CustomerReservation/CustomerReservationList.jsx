@@ -1,25 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import './CustomerReservationList.css';
+import { myReservation } from '../../api/services/myReservation';
 
 export default function CustomerReservationList() {
   const [reservations, setReservations] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // 더미데이터
   useEffect(() => {
-    const dummyData = [
-      {
-        id: 1,
-        shopImageUrl: 'https://placekitten.com/80/80',
-        shopName: '마야네일',
-        status: '예약확정',
         ownerMessage:
-          '안녕하세요 고객님, OO네일입니다!\n예약해주신 시간은 11월 07일 14시입니다.\n방문시간 5분 전 도착 부탁드려요 💅',
-        customerName: '김민주',
-        date: '11.07',
-        day: '목',
-        time: '14:00',
-        selectedOptions: {
-          hand: '손',
           remove: '유',
           extension: '무',
           lamping: '유',
@@ -37,37 +25,28 @@ export default function CustomerReservationList() {
         date: '11.09',
         day: '토',
         time: '16:30',
-        selectedOptions: {
-          hand: '발',
-          remove: '무',
-          extension: '유',
           lamping: '무',
-          requestText: '지난번처럼 은은한 컬러로 부탁드려요 ✨',
-          photos: ['https://placekitten.com/104/104'],
-        },
-      },
-      {
-        id: 3,
-        shopImageUrl: 'https://placekitten.com/82/82',
         shopName: '말랑뷰티샵',
-        status: '접수중',
-        ownerMessage: '',
-        customerName: '염승혜',
-        date: '11.09',
-        day: '토',
-        time: '16:30',
-        selectedOptions: {
           hand: '발',
           remove: '무',
           extension: '유',
-          lamping: '무',
-          requestText: '지난번처럼 은은한 컬러로 부탁드려요 ✨',
-          photos: ['https://placekitten.com/104/104'],
         },
       },
     ];
 
-    setReservations(dummyData);
+    const fetchReservations = async () => {
+      try {
+        setIsLoading(true);
+        const data = await myReservation.getMyReservations();
+        setReservations(data || []);
+      } catch (err) {
+        console.error('예약 내역 불러오기 실패:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchReservations();
   }, []);
 
   return (
@@ -76,14 +55,30 @@ export default function CustomerReservationList() {
         <h1 className="title-header">예약 내역</h1>
       </div>
 
-      <div className="gray-box">
-        {reservations.map((r) => (
-          <ReservationCard key={r.id} data={r} />
-        ))}
-      </div>
+      {/* 1) 로딩 중일 때: 회색 박스 + 로딩 문구 */}
+      {isLoading && (
+        <div className="reservation-empty-text">
+            예약 내역을 불러오는 중입니다...
+        </div>
+      )}
+
+      {/* 2) 데이터가 없을 때: 회색 박스 없이 텍스트만 */}
+      {!isLoading && reservations.length === 0 && (
+        <div className="reservation-empty-text">아직 예약이 없습니다... 😭</div>
+      )}
+
+      {/* 3) 데이터가 있을 때 : 회색 박스 + 카드들 렌더링 */}
+      {!isLoading && reservations.length > 0 && (
+        <div className="gray-box">
+          {reservations.map((r) => (
+            <ReservationCard key={r.id} data={r} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
+
 
 function ReservationCard({ data }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -94,6 +89,18 @@ function ReservationCard({ data }) {
     예약거절: { bg: '#FFE8E8', text: '#FF5A5A' },
   };
 
+  const statusStyle = STATUS_STYLES[data.status] || {
+    bg: '#eeeeee',
+    text: '#555555',
+  };
+
+  const timeText =
+    data.time && typeof data.time === 'object'
+      ? `${String(data.time.hour ?? 0).padStart(2, '0')}:${String(
+          data.time.minute ?? 0,
+        ).padStart(2, '0')}`
+      : data.time ?? '';
+
   const selectedOptions = data.selectedOptions || {};
 
   return (
@@ -101,7 +108,11 @@ function ReservationCard({ data }) {
       {/* 상단 영역 */}
       <div className="card-top">
         <div className="shop-info">
-          <img src={data.shopImageUrl} alt={data.shopName} className="shop-img" />
+          <img
+            src={data.shopImageUrl || 'https://placehold.co/80x80?text=SHOP'}
+            alt={data.shopName}
+            className="shop-img"
+          />
           <h2 className="shop-name">{data.shopName}</h2>
         </div>
 
@@ -109,13 +120,13 @@ function ReservationCard({ data }) {
         <div
           className="status"
           style={{
-            backgroundColor: STATUS_STYLES[data.status].bg,
-            color: STATUS_STYLES[data.status].text,
+            backgroundColor: statusStyle.bg,
+            color: statusStyle.text,
           }}
         >
           <span
             className="status-dot"
-            style={{ backgroundColor: STATUS_STYLES[data.status].text }}
+            style={{ backgroundColor: statusStyle.text }}
           />
           {data.status}
         </div>
@@ -132,28 +143,23 @@ function ReservationCard({ data }) {
           </div>
           <div className="info-row">
             <span className="label">예약 날짜</span>
-            <span className="value highlight">
-              {data.date} ({data.day})
-            </span>
+            <span className="value highlight">{data.date}</span>
           </div>
           <div className="info-row">
             <span className="label">예약 시간</span>
-            <span className="value highlight">{data.time}</span>
+            <span className="value highlight">{timeText}</span>
           </div>
         </div>
 
         <div className="divider" />
 
-        {/* 상세 보기 토글 */}
         <div className="toggle-customer" onClick={() => setIsOpen(!isOpen)}>
           <span>상세 보기</span>
           <span className={`arrow ${isOpen ? 'open' : ''}`}>▼</span>
         </div>
 
-        {/* 상세 내용 */}
         {isOpen && (
           <div className="details">
-            {/* 옵션 */}
             {[
               { label: '손/발', options: ['손', '발'], selected: selectedOptions?.hand },
               { label: '제거', options: ['유', '무'], selected: selectedOptions?.remove },
@@ -168,7 +174,10 @@ function ReservationCard({ data }) {
                       item.selected === option ||
                       (item.label === '손/발' && item.selected === '손발');
                     return (
-                      <span key={option} className={`option ${isSelected ? 'selected' : ''}`}>
+                      <span
+                        key={option}
+                        className={`option ${isSelected ? 'selected' : ''}`}
+                      >
                         {option}
                       </span>
                     );
@@ -177,7 +186,6 @@ function ReservationCard({ data }) {
               </div>
             ))}
 
-            {/* 요구사항 */}
             {selectedOptions?.requestText && (
               <div className="request-section">
                 <span className="section-title">요구사항</span>
@@ -185,7 +193,6 @@ function ReservationCard({ data }) {
               </div>
             )}
 
-            {/* 사진 */}
             {selectedOptions?.photos?.length > 0 && (
               <div className="photo-section">
                 <span className="section-title">사진</span>
@@ -201,13 +208,12 @@ function ReservationCard({ data }) {
               </div>
             )}
 
-            {/* 사장님 전달사항 / 거절 사유 */}
-            {(data.status === '예약확정' || data.status === '예약거절') && (
+            {(data.status === 'CONFIRMED' || data.status === 'REJECTED') && (
               <div className="owner-section">
                 <div className="divider" />
                 <div className="owner-box">
                   <span className="owner-title">
-                    {data.status === '예약거절' ? '거절 사유' : '전달 사항'}
+                    {data.status === 'REJECTED' ? '거절 사유' : '전달 사항'}
                   </span>
                   <p className="owner-text">{data.ownerMessage}</p>
                 </div>
