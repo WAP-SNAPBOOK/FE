@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import InputField from './InputField';
 import { sanitizeDigits, validateMobile010 } from '../../utils/phoneNumber';
 import { todayYMD, validateReservationDateTime } from '../../utils/dateTime';
-import './stepBasic.css';
+import './StepBasic.css';
 
 export default function StepBasic({ initialData, onNext, visibleFields }) {
   const [values, setValues] = useState({
