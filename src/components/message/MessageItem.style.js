@@ -10,7 +10,7 @@ export const MessageRow = styled.div`
 `;
 
 export const Bubble = styled.div`
-  max-width: 80%;
+  max-width: 70%;
   align-self: ${({ $isMine }) => ($isMine ? 'flex-end' : 'flex-start')};
   background-color: ${({ $isMine }) =>
     $isMine ? theme.colors.primary : theme.colors.gray.dark[50]};
