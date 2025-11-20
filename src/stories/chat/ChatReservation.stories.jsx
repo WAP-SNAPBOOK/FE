@@ -72,7 +72,7 @@ export const ReservationFlow = () => {
       ...prev,
       {
         messageId: `complete-${Date.now()}`,
-        type: 'RESERVATION_COMPLETE',
+        type: 'PENDING',
         isReservationCard: true,
         payload: data,
         senderId: 999, // 예약카드는 항상 상대 메시지처럼 처리됨
@@ -82,7 +82,7 @@ export const ReservationFlow = () => {
   };
 
   return (
-    <div style={{ width: 400, height: 600, border: '1px solid #ddd', padding: 16 }}>
+    <>
       <button
         onClick={() =>
           onReservationComplete({
@@ -99,6 +99,6 @@ export const ReservationFlow = () => {
           <MessageList messages={messages} userId={1} />
         </S.Messages>
       </S.PageWrapper>
-    </div>
+    </>
   );
 };
