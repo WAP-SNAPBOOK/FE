@@ -182,7 +182,7 @@ export default function ChatRoomPage() {
       ...prev,
       {
         messageId: `complete-${Date.now()}`,
-        type: 'RESERVATION_COMPLETE',
+        type: 'PENDING',
         isReservationCard: true, //예약 완료 메시지임을 명시
         payload: data, // { name, date, time, photoCount }
         sentAt: new Date().toISOString(),
