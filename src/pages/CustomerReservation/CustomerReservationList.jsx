@@ -7,33 +7,6 @@ export default function CustomerReservationList() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-        ownerMessage:
-          remove: '유',
-          extension: '무',
-          lamping: '유',
-          requestText: '프렌치 네일로 하고 싶어요 💅',
-          photos: ['https://placekitten.com/100/100'],
-        },
-      },
-      {
-        id: 2,
-        shopImageUrl: 'https://placekitten.com/81/81',
-        shopName: '말랑뷰티샵',
-        status: '예약거절',
-        ownerMessage: '죄송합니다 😢 해당 시간대는 이미 예약이 꽉 찼어요.',
-        customerName: '김나현',
-        date: '11.09',
-        day: '토',
-        time: '16:30',
-          lamping: '무',
-        shopName: '말랑뷰티샵',
-          hand: '발',
-          remove: '무',
-          extension: '유',
-        },
-      },
-    ];
-
     const fetchReservations = async () => {
       try {
         setIsLoading(true);
