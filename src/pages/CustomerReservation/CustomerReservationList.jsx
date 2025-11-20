@@ -57,9 +57,9 @@ function ReservationCard({ data }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const STATUS_STYLES = {
-    접수중: { bg: '#ababFF', text: '#3131f7' },
-    예약확정: { bg: '#E6FFE8', text: '#2ECC71' },
-    예약거절: { bg: '#FFE8E8', text: '#FF5A5A' },
+    PENDING: { bg: '#ababFF', text: '#3131f7' },
+    CONFIRMED: { bg: '#E6FFE8', text: '#2ECC71' },
+    REJECTED: { bg: '#FFE8E8', text: '#FF5A5A' },
   };
 
   const statusStyle = STATUS_STYLES[data.status] || {
@@ -75,6 +75,7 @@ function ReservationCard({ data }) {
       : data.time ?? '';
 
   const selectedOptions = data.selectedOptions || {};
+  const photoUrls = data.photoUrls || [];
 
   return (
     <div className="card">
@@ -158,6 +159,22 @@ function ReservationCard({ data }) {
                 </div>
               </div>
             ))}
+            
+            {photoUrls.length > 0 && (
+              <div className="photo-section">
+                <span className="section-title">사진</span>
+                <div className="photo-list">
+                  {photoUrls.map((url, i) => (
+                    <img
+                      key={i}
+                      className="photo-item"
+                      src={url}
+                      alt={`예약 사진 ${i + 1}`}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
 
             {selectedOptions?.requestText && (
               <div className="request-section">
@@ -166,27 +183,12 @@ function ReservationCard({ data }) {
               </div>
             )}
 
-            {selectedOptions?.photos?.length > 0 && (
-              <div className="photo-section">
-                <span className="section-title">사진</span>
-                <div className="photo-list">
-                  {selectedOptions.photos.map((url, i) => (
-                    <div
-                      key={i}
-                      className="photo-item"
-                      style={{ backgroundImage: `url("${url}")` }}
-                    ></div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {(data.status === '예약확정' || data.status === '예약거절') && (
+            {(data.status === 'CONFIRMED' || data.status === 'REJECTED') && (
               <div className="owner-section">
                 <div className="divider" />
                 <div className="owner-box">
                   <span className="owner-title">
-                    {data.status === '예약거절' ? '거절 사유' : '전달 사항'}
+                    {data.status === 'REJECTED' ? '거절 사유' : '전달 사항'}
                   </span>
                   <p className="owner-text">{data.ownerMessage}</p>
                 </div>
