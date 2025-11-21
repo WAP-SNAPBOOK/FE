@@ -244,3 +244,14 @@
   width: 26px;
   height: 26px;
 }
+
+.reservation-empty-text {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 14px;
+  color: #999999;
+}
+

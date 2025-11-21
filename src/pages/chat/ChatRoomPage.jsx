@@ -24,21 +24,39 @@ import NewMessageCard from '../../components/notification/NewMessageCard';
 import InAppGuideBar from '../../components/common/InAppGuideBar';
 import { useCustomerChatReservations } from '../../query/reservationQueries';
 import { useInjectReservationMessages } from '../../hooks/chat/useInjectReservationMessages';
+import { useShopInfoById } from '../../query/shopQueries';
 
 export default function ChatRoomPage() {
-  const [input, setInput] = useState('');
-  const [liveMessages, setLiveMessages] = useState([]);
-  const [readyToObserve, setReadyToObserve] = useState(false);
+  const [input, setInput] = useState(''); //메시지 입력 상태
+  const [liveMessages, setLiveMessages] = useState([]); //실시간 추가 메시지 상태
+  const [readyToObserve, setReadyToObserve] = useState(false); //옵저버 등록 제어 상태
 
   //예약 모달 상태
   const [isModalOpen, setIsModalOpen] = useState(false);
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
-  //링크 유입시 가게 정보 조회
+  //메뉴 표시 여부 상태
+  const [showMenu, setShowMenu] = useState(false);
+
+  const navigate = useNavigate();
+
   const [searchParams] = useSearchParams();
+
+  //매장 식별 코드
   const slugOrCode = searchParams.get('slug');
-  const { data: shopInfo } = useShopInfoByCode(slugOrCode);
+
+  //매장 id
+  const shopIdFromQuery = searchParams.get('shopId') ? Number(searchParams.get('shopId')) : null;
+
+  //링크 유입시 가게 정보 조회
+  const { data: shopInfoBySlug } = useShopInfoByCode(slugOrCode);
+
+  //일반 유입시 가게 id조회
+  const { data: shopInfoById } = useShopInfoById(shopIdFromQuery);
+
+  //매장 정보 하나로 통합(같은 응답 구조)
+  const shopInfo = shopInfoBySlug || shopInfoById;
 
   //모달 재오픈 방지용 ref
   const hasAutoOpened = useRef(false);
@@ -50,12 +68,7 @@ export default function ChatRoomPage() {
       hasAutoOpened.current = true;
       openModal();
     }
-  }, [slugOrCode, shopInfo, hasAutoOpened]);
-
-  //메뉴 표시 여부 상태
-  const [showMenu, setShowMenu] = useState(false);
-
-  const navigate = useNavigate();
+  }, [shopInfo, hasAutoOpened]);
 
   //전역 상태 사용자 ID
   const { auth } = useAuth();
@@ -195,7 +208,7 @@ export default function ChatRoomPage() {
       ...prev,
       {
         messageId: `complete-${Date.now()}`,
-        type: 'PENDING',
+        type: 'RESERVATION_COMPLETE',
         isReservationCard: true, //예약 완료 메시지임을 명시
         payload: data, // { name, date, time, photoCount }
         sentAt: new Date().toISOString(),
@@ -219,10 +232,7 @@ export default function ChatRoomPage() {
           <S.BackButton onClick={handleBack}>
             <img src={backIcon} alt="back" />
           </S.BackButton>
-          {/*현재 링크 유입시만 가게이름 조회 가능*/}
-          <ChatRoomTitle>
-            {shopInfo?.shopName ? shopInfo.shopName : `채팅방 #${chatRoomId}`}
-          </ChatRoomTitle>
+          <ChatRoomTitle>{shopInfo?.shopName}</ChatRoomTitle>
           <S.BookButton onClick={openModal}>예약</S.BookButton>
         </S.Header>
         <S.Messages ref={messageListRef} onScroll={handleScroll}>
