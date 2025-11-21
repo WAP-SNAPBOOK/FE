@@ -5,15 +5,18 @@ import { myReservation } from '../../api/services/myReservation';
 export default function CustomerReservationList() {
   const [reservations, setReservations] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchReservations = async () => {
       try {
         setIsLoading(true);
+        setError(null);
         const data = await myReservation.getMyReservations();
         setReservations(data || []);
       } catch (err) {
         console.error('예약 내역 불러오기 실패:', err);
+        setError('예약 내역을 불러오는데 실패했습니다. 다시 시도해주세요.');
       } finally {
         setIsLoading(false);
       }
@@ -27,15 +30,14 @@ export default function CustomerReservationList() {
       <div className="title-wrapper">
         <h1 className="title-header">예약 내역</h1>
       </div>
-
       {/* 1) 로딩 중일 때: 회색 박스 + 로딩 문구 */}
       {isLoading && <div className="reservation-empty-text">예약 내역을 불러오는 중입니다...</div>}
-
+      {/* 에러처리 */}
+      {!isLoading && error && <div className="reservation-empty-text">{error}</div>}
       {/* 2) 데이터가 없을 때: 회색 박스 없이 텍스트만 */}
-      {!isLoading && reservations.length === 0 && (
+      {!isLoading && !error && reservations.length === 0 && (
         <div className="reservation-empty-text">아직 예약이 없습니다... 😭</div>
       )}
-
       {/* 3) 데이터가 있을 때 : 회색 박스 + 카드들 렌더링 */}
       {!isLoading && reservations.length > 0 && (
         <div className="gray-box">
