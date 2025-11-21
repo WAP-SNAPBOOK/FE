@@ -14,7 +14,7 @@ export default function ChatRoomItem({ room }) {
 
   //해당 채팅방 이동 헨들러
   const handleClick = () => {
-    navigate(`/chat/${room.chatRoomId}`);
+    navigate(`/chat/${room.chatRoomId}?shopId=${room.shopId}`);
   };
 
   //일정 길이 이상일때 마지막 메시지 길이 줄이기
