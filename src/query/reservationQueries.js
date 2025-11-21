@@ -40,6 +40,16 @@ export const useCreateReservation = (
     },
 
     onError: (error) => {
+      const status = error?.response?.status;
+      const code = error?.response?.data?.code;
+
+      // 409 충돌 (이미 예약된 시간)
+      if (status === 409 && code === 'TIME_SLOT_ALREADY_BOOKED') {
+        alert('해당 시간은 이미 예약되었거나 접수 대기 중입니다.');
+        return;
+      }
+
+      //기타 오류 처리
       console.error('예약 실패:', error);
       alert('예약 중 오류가 발생했습니다.');
     },
