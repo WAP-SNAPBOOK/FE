@@ -42,10 +42,12 @@ export default function ChatRoomPage() {
   const navigate = useNavigate();
 
   const [searchParams] = useSearchParams();
+
   //매장 식별 코드
   const slugOrCode = searchParams.get('slug');
+
   //매장 id
-  const shopIdFromQuery = searchParams.get('shopId');
+  const shopIdFromQuery = searchParams.get('shopId') ? Number(searchParams.get('shopId')) : null;
 
   //링크 유입시 가게 정보 조회
   const { data: shopInfoBySlug } = useShopInfoByCode(slugOrCode);
