@@ -117,15 +117,15 @@ function ReservationCard({ data }) {
         <div className="info-section">
           <div className="info-row">
             <span className="label">고객명</span>
-            <span className="value">{data.customerName}</span>
+            <span className="value-1">{data.customerName}</span>
           </div>
           <div className="info-row">
             <span className="label">예약 날짜</span>
-            <span className="value highlight">{data.date}</span>
+            <span className="value-1 highlight">{data.date}</span>
           </div>
           <div className="info-row">
             <span className="label">예약 시간</span>
-            <span className="value highlight">{timeText}</span>
+            <span className="value-1 highlight">{timeText}</span>
           </div>
         </div>
 

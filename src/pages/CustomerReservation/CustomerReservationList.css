@@ -21,8 +21,9 @@
 }
 
 .gray-box {
-  width: 341px;
+  width: 355px;
   height: 652px;
+  height: 100vh;
   background-color: #f6f6f6;
   padding: 22px 0;
   display: flex;
@@ -107,7 +108,7 @@
   color: #a0a0a0;
 }
 
-.value {
+.value-1 {
   font-weight: 600;
 }
 
@@ -254,4 +255,3 @@
   font-size: 14px;
   color: #999999;
 }
-
