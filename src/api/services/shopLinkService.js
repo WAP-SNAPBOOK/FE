@@ -37,4 +37,14 @@ export const shopLinkService = {
     const res = await axiosClient.get(`/shop/${slugOrCode}`);
     return res.data;
   },
+
+  /**
+   * 매장 정보 조회 (shopId 직접 조회)
+   *@param {Number} shopId 매장 아이디
+   * @returns {Promise<{shopId:number, shopName:string}>}
+   */
+  getShopInfo: async (shopId) => {
+    const res = await axiosClient.get(`/shop/info/${shopId}`);
+    return res.data;
+  },
 };
