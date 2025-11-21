@@ -5,6 +5,9 @@ import ReservationCompleteMessage from '../message/ReservationCompleteMessage';
 import DecisionCard from '../message/DecisionCard';
 
 export default function MessageItem({ msg, isMine }) {
+  if (!msg?.isReservationCard && !msg?.message?.trim()) {
+    return null;
+  }
   // 예약 상태 카드 처리
   if (msg.isReservationCard) {
     let CardComponent = null;
