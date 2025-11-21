@@ -29,11 +29,7 @@ export default function CustomerReservationList() {
       </div>
 
       {/* 1) 로딩 중일 때: 회색 박스 + 로딩 문구 */}
-      {isLoading && (
-        <div className="reservation-empty-text">
-            예약 내역을 불러오는 중입니다...
-        </div>
-      )}
+      {isLoading && <div className="reservation-empty-text">예약 내역을 불러오는 중입니다...</div>}
 
       {/* 2) 데이터가 없을 때: 회색 박스 없이 텍스트만 */}
       {!isLoading && reservations.length === 0 && (
@@ -52,7 +48,6 @@ export default function CustomerReservationList() {
   );
 }
 
-
 function ReservationCard({ data }) {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -62,6 +57,15 @@ function ReservationCard({ data }) {
     REJECTED: { bg: '#FFE8E8', text: '#FF5A5A' },
   };
 
+  //에약 상태 라벨링
+  const STATUS_LABELS = {
+    PENDING: '접수중',
+    CONFIRMED: '예약 확정',
+    REJECTED: '예약 거절',
+  };
+
+  const statusText = STATUS_LABELS[data.status];
+
   const statusStyle = STATUS_STYLES[data.status] || {
     bg: '#eeeeee',
     text: '#555555',
@@ -69,10 +73,11 @@ function ReservationCard({ data }) {
 
   const timeText =
     data.time && typeof data.time === 'object'
-      ? `${String(data.time.hour ?? 0).padStart(2, '0')}:${String(
-          data.time.minute ?? 0,
-        ).padStart(2, '0')}`
-      : data.time ?? '';
+      ? `${String(data.time.hour ?? 0).padStart(2, '0')}:${String(data.time.minute ?? 0).padStart(
+          2,
+          '0'
+        )}`
+      : (data.time ?? '');
 
   const selectedOptions = data.selectedOptions || {};
   const photoUrls = data.photoUrls || [];
@@ -98,11 +103,8 @@ function ReservationCard({ data }) {
             color: statusStyle.text,
           }}
         >
-          <span
-            className="status-dot"
-            style={{ backgroundColor: statusStyle.text }}
-          />
-          {data.status}
+          <span className="status-dot" style={{ backgroundColor: statusStyle.text }} />
+          {statusText}
         </div>
       </div>
 
@@ -148,10 +150,7 @@ function ReservationCard({ data }) {
                       item.selected === option ||
                       (item.label === '손/발' && item.selected === '손발');
                     return (
-                      <span
-                        key={option}
-                        className={`option ${isSelected ? 'selected' : ''}`}
-                      >
+                      <span key={option} className={`option ${isSelected ? 'selected' : ''}`}>
                         {option}
                       </span>
                     );
@@ -159,18 +158,13 @@ function ReservationCard({ data }) {
                 </div>
               </div>
             ))}
-            
+
             {photoUrls.length > 0 && (
               <div className="photo-section">
                 <span className="section-title">사진</span>
                 <div className="photo-list">
                   {photoUrls.map((url, i) => (
-                    <img
-                      key={i}
-                      className="photo-item"
-                      src={url}
-                      alt={`예약 사진 ${i + 1}`}
-                    />
+                    <img key={i} className="photo-item" src={url} alt={`예약 사진 ${i + 1}`} />
                   ))}
                 </div>
               </div>
