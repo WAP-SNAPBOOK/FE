@@ -9,6 +9,7 @@
 /* 카드 컨테이너 */
 .decision-card {
   width: 263px;
+  max-width: 100%;
   background: var(--card);
   border-radius: 16px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
