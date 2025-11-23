@@ -26,10 +26,9 @@ body {
 /* ---- 회색 박스 ---- */
 .owner-box-1 {
   background-color: #f1f1f1;
-  width: 360px;
+  width: 341px;
   height: 652px;
   padding: 22px;
-  overflow-x: hidden;
   overflow-y: auto;
   box-sizing: border-box;
 }
@@ -40,7 +39,7 @@ body {
   border-radius: 22px;
   border: 1px solid #f0f0f0;
   padding: 21px 20px;
-  width: 260px;
+  width: 298px;
   margin: 0 auto 26px;
   box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
 }
@@ -209,7 +208,7 @@ body {
 }
 
 .btn {
-  width: 97px;
+  width: 116px;
   height: 40px;
   font-size: 13px;
   font-weight: 700;
@@ -251,7 +250,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 202px;
+  width: auto;
   height: 39px;
   background: #fff;
   border: 1px solid #ddd;
@@ -279,7 +278,7 @@ body {
 
 /* ---- 입력창 ---- */
 .textarea {
-  width: 177px;
+  width: 212px;
   height: 66px;
   border-radius: 10px;
   border: 1px solid #ddd;
