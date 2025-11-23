@@ -29,6 +29,7 @@ body {
   width: 360px;
   height: 652px;
   padding: 22px;
+  overflow-x: hidden;
   overflow-y: auto;
   box-sizing: border-box;
 }
@@ -131,7 +132,7 @@ body {
 
 .toggle-arrow {
   transition: transform 0.2s;
-  font-size: 13px;
+  font-size: 9px;
 }
 .toggle-arrow.open { transform: rotate(180deg); }
 
@@ -326,7 +327,16 @@ body {
 }
 
 /* ---- 거절 박스 색 변경 ---- */
-.final-box.reject { background: #f7f7f7; }
+.final-box.reject { 
+  background: #f7f7f7;
+  border: 1px solid #e0e0e0;
+}
+
+/* ---- 거절 사유 입력 섹션 ---- */
+.reject-section {
+  margin-top: 18px;
+  padding-left: 55px;
+}
 
 /* ---- 빈 메시지 ---- */
 .empty-message {
