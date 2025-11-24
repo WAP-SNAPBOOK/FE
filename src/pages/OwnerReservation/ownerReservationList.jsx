@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './ownerReservationList.css';
 import { shopReservationService } from '../../api/services/shopReservation';
-
+import { useConfirmReservation, useRejectReservation } from '../../query/reservationQueries';
 export default function OwnerReservationList() {
   const [reservations, setReservations] = useState([]);
 
@@ -16,7 +16,7 @@ export default function OwnerReservationList() {
           id: item.id,
           name: item.customerName,
           date: item.date,
-          time: `${String(item.time.hour).padStart(2, '0')}:${String(item.time.minute).padStart(2, '0')}`,
+          time: item.time,
           photoUrl: item.photoUrls?.[0] || '',
           requestText: item.requestText || '',
           originalStatus: item.status, // PENDING/CONFIRMED/REJECTED
@@ -58,6 +58,11 @@ function ReservationCard({ res }) {
   const [selectedTime, setSelectedTime] = useState('');
   const [totalMinutes, setTotalMinutes] = useState(60);
 
+  //예약 확정 훅
+  const { mutate: confirmReservation } = useConfirmReservation();
+  //예약 거절 훅
+  const { mutate: rejectReservation } = useRejectReservation();
+
   const adjustTime = (delta) => {
     setTotalMinutes((prev) => Math.max(30, Math.min(prev + delta, 180)));
   };
@@ -72,9 +77,33 @@ function ReservationCard({ res }) {
   const handleReject = () => setMode('reject');
 
   const handleSubmit = () => {
-    if (mode === 'confirm') setStatus('예약 확정');
-    if (mode === 'reject') setStatus('예약 거절');
-    setMode(null);
+    if (mode === 'confirm') {
+      // 🔥 실제 API 호출 추가됨
+      confirmReservation(
+        { id: res.id, message },
+        {
+          onSuccess: () => {
+            setStatus('예약 확정');
+            setMode(null);
+          },
+        }
+      );
+      return;
+    }
+
+    if (mode === 'reject') {
+      // 🔥 실제 API 호출 추가됨
+      rejectReservation(
+        { id: res.id, reason: message },
+        {
+          onSuccess: () => {
+            setStatus('예약 거절');
+            setMode(null);
+          },
+        }
+      );
+      return;
+    }
   };
 
   return (
@@ -92,8 +121,8 @@ function ReservationCard({ res }) {
                 status === '예약 확정'
                   ? 'status-confirm'
                   : status === '예약 거절'
-                  ? 'status-reject'
-                  : 'status-pending'
+                    ? 'status-reject'
+                    : 'status-pending'
               }
             `}
           >
