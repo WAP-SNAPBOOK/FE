@@ -1,5 +1,6 @@
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { reservationService } from '../api/services/reservationService';
+import { shopReservationService } from '../api/services/shopReservation';
 import { useAuth } from '../context/AuthContext';
 
 //예약 폼 조회 훅
@@ -63,5 +64,40 @@ export const useCustomerChatReservations = (shopId) => {
     queryKey: ['customerChatReservations', shopId, auth?.userId],
     queryFn: () => reservationService.getCustomerChatReservations(shopId),
     enabled: !!shopId && !!auth?.userId, // shopId 있을 때만 요청
+  });
+};
+
+/**
+ * 예약 확정 훅
+ */
+export const useConfirmReservation = () => {
+  return useMutation({
+    mutationFn: ({ id, message }) => shopReservationService.confirmReservation(id, message),
+
+    onSuccess: () => {
+      alert('예약이 확정되었습니다.');
+    },
+    onError: (error) => {
+      console.error('예약 확정 실패:', error);
+      alert('예약 확정 중 오류가 발생했습니다.');
+    },
+  });
+};
+
+/**
+ * 예약 거절 훅
+ */
+export const useRejectReservation = () => {
+  return useMutation({
+    mutationFn: ({ id, reason }) => shopReservationService.rejectReservation(id, reason),
+
+    onSuccess: () => {
+      alert('예약을 거절했습니다.');
+    },
+
+    onError: (error) => {
+      console.error('예약 거절 실패:', error);
+      alert('예약 거절 중 오류가 발생했습니다.');
+    },
   });
 };
