@@ -2,8 +2,13 @@ body {
   overflow: hidden;
 }
 
+body {
+  overflow: hidden;
+}
+
 /* ---- 전체 컨테이너 ---- */
 .owner-container {
+  background-color: #ffffff;
   background-color: #ffffff;
   min-height: 100vh;
   display: flex;
@@ -11,6 +16,7 @@ body {
   align-items: center;
   padding: 40px 0;
   font-family: Pretendard;
+  overflow-x: hidden;
   overflow-x: hidden;
 }
 
@@ -24,23 +30,32 @@ body {
 }
 
 /* ---- 회색 박스 ---- */
+/* ---- 회색 박스 ---- */
 .owner-box-1 {
   background-color: #f1f1f1;
   width: 341px;
   height: 652px;
   padding: 22px;
+  padding: 22px;
   overflow-y: auto;
+  box-sizing: border-box;
   box-sizing: border-box;
 }
 
+/* ---- 예약 카드 ---- */
 /* ---- 예약 카드 ---- */
 .card {
   background: #ffffff;
   border-radius: 22px;
   border: 1px solid #f0f0f0;
   padding: 21px 20px;
+  background: #ffffff;
+  border-radius: 22px;
+  border: 1px solid #f0f0f0;
+  padding: 21px 20px;
   width: 298px;
   margin: 0 auto 26px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
   box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
 }
 
@@ -54,29 +69,39 @@ body {
 .user-icon {
   width: 45px;
   height: 45px;
+  width: 45px;
+  height: 45px;
   border-radius: 50%;
+  border: 1px solid #e0e0e0;
   border: 1px solid #e0e0e0;
   display: flex;
   justify-content: center;
   align-items: center;
   color: #bbb;
   font-size: 20px;
+  font-size: 20px;
 }
 
 .user-name {
+  font-size: 16px;
+  font-weight: 700;
   font-size: 16px;
   font-weight: 700;
   color: #111;
 }
 
 /* ---- 상태칩 ---- */
+/* ---- 상태칩 ---- */
 .status-chip {
   display: flex;
   align-items: center;
   gap: 6px;
   padding: 4px 8px;
+  padding: 4px 8px;
   font-size: 11px;
   font-weight: 600;
+  border-radius: 5px;
+  margin-left: auto;
   border-radius: 5px;
   margin-left: auto;
 }
@@ -97,7 +122,10 @@ body {
 .status-dot {
   width: 8px;
   height: 8px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
+  background: currentColor;
   background: currentColor;
 }
 
@@ -106,10 +134,13 @@ body {
   height: 1px;
   background: #eaeaea;
   margin: 14px 0;
+  background: #eaeaea;
+  margin: 14px 0;
 }
 
 /* ---- 기본 정보 ---- */
 .basic-info {
+  margin-left: 55px;
   margin-left: 55px;
   font-size: 13px;
   color: #999;
@@ -119,15 +150,20 @@ body {
   display: flex;
   justify-content: space-between;
   margin-bottom: 8px;
+  margin-bottom: 8px;
 }
 
 .pink {
   color: #fb808a;
   font-weight: 700;
+  font-weight: 700;
 }
 
 /* ---- 상세보기 토글 ---- */
+/* ---- 상세보기 토글 ---- */
 .toggle {
+  margin-top: 12px;
+  padding-left: 55px;
   margin-top: 12px;
   padding-left: 55px;
   display: flex;
@@ -135,11 +171,13 @@ body {
   align-items: center;
   color: #aaa;
   font-size: 11px;
+  font-size: 11px;
   cursor: pointer;
 }
 
 .toggle-arrow {
   transition: transform 0.2s;
+  font-size: 9px;
   font-size: 9px;
 }
 .toggle-arrow.open {
@@ -150,7 +188,10 @@ body {
 .detail-section {
   margin-top: 14px;
   padding-left: 55px;
+  margin-top: 14px;
+  padding-left: 55px;
   font-size: 9px;
+  color: #bbb;
   color: #bbb;
 }
 
@@ -158,15 +199,19 @@ body {
   display: flex;
   justify-content: space-between;
   margin-bottom: 8px;
+  margin-bottom: 8px;
 }
 
 .detail-key {
+  color: #808080;
+  font-weight: 600;
   color: #808080;
   font-weight: 600;
 }
 
 .detail-values {
   display: flex;
+  gap: 9px;
   gap: 9px;
 }
 .detail-values .yes {
@@ -183,6 +228,9 @@ body {
   margin-bottom: 8px;
   font-size: 9px;
   color: #808080;
+  margin-bottom: 8px;
+  font-size: 9px;
+  color: #808080;
   display: block;
 }
 
@@ -194,7 +242,11 @@ body {
 .photo {
   width: 52px;
   height: 52px;
+  width: 52px;
+  height: 52px;
   object-fit: cover;
+  border-radius: 14px;
+  border: 1px solid #e2e2e2;
   border-radius: 14px;
   border: 1px solid #e2e2e2;
 }
@@ -208,6 +260,9 @@ body {
   margin-bottom: 8px;
   font-size: 8px;
   color: #808080;
+  margin-bottom: 8px;
+  font-size: 8px;
+  color: #808080;
   display: block;
 }
 
@@ -217,12 +272,21 @@ body {
   border-radius: 12px;
   padding: 12px;
   font-size: 8px;
+  background: #fafafa;
+  border: 1px solid #dcdcdc;
+  border-radius: 12px;
+  padding: 12px;
+  font-size: 8px;
   line-height: 1.5;
 }
 
 /* ---- 버튼 ---- */
+/* ---- 버튼 ---- */
 .action-btns {
   display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 13px;
   justify-content: flex-end;
   gap: 12px;
   margin-top: 13px;
@@ -231,9 +295,12 @@ body {
 .btn {
   width: 116px;
   height: 40px;
+  width: 116px;
+  height: 40px;
   font-size: 13px;
   font-weight: 700;
   border: none;
+  border-radius: 10px;
   border-radius: 10px;
   cursor: pointer;
 }
@@ -251,10 +318,14 @@ body {
 .confirm-section {
   margin-top: 20px;
   padding-left: 55px;
+  margin-top: 20px;
+  padding-left: 55px;
 }
 
 .time-buttons {
   display: flex;
+  gap: 6px;
+  margin-bottom: 16px;
   gap: 6px;
   margin-bottom: 16px;
 }
@@ -264,10 +335,13 @@ body {
   border: 1px solid #ddd;
   border-radius: 30px;
   padding: 6px 10px;
+  border-radius: 30px;
+  padding: 6px 10px;
   font-size: 8px;
   cursor: pointer;
 }
 .time-btn.active {
+  background: #f4f4f4;
   background: #f4f4f4;
   border-color: #555;
   font-weight: 700;
@@ -279,8 +353,13 @@ body {
   justify-content: space-between;
   width: auto;
   height: 39px;
+  justify-content: space-between;
+  width: auto;
+  height: 39px;
   background: #fff;
   border: 1px solid #ddd;
+  border-radius: 25px;
+  margin-bottom: 16px;
   border-radius: 25px;
   margin-bottom: 16px;
 }
@@ -288,11 +367,15 @@ body {
 .circle-btn {
   width: 24px;
   height: 24px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   background: #d3d3d3;
   border: none;
   font-size: 13px;
+  font-size: 13px;
   cursor: pointer;
+  margin: 8px;
   margin: 8px;
 }
 
@@ -316,11 +399,13 @@ body {
 /* ---- 입력창 ---- */
 .textarea {
   width: 212px;
+  width: 212px;
   height: 66px;
   border-radius: 10px;
   border: 1px solid #ddd;
   padding: 12px 13px;
   font-size: 11px;
+  resize: none;
   resize: none;
 }
 
@@ -334,21 +419,29 @@ body {
 .small-confirm-btn {
   width: 60px;
   height: 26px;
+  width: 60px;
+  height: 26px;
   border: none;
   border-radius: 8px;
   background: #ec6060;
   color: #fff;
+  font-size: 10px;
   font-size: 10px;
   font-weight: 700;
   cursor: pointer;
 }
 
 /* ---- 결과 박스(확정/거절 공통) ---- */
+/* ---- 결과 박스(확정/거절 공통) ---- */
 .final-box {
+  margin-top: 18px;
+  margin-left: 55px;
   margin-top: 18px;
   margin-left: 55px;
   padding: 14px;
   border-radius: 12px;
+  border: 1px solid #e0e0e0;
+  background: #f5f6f7;
   border: 1px solid #e0e0e0;
   background: #f5f6f7;
   font-size: 8px;
@@ -356,6 +449,7 @@ body {
 }
 
 .final-title {
+  display: block;
   display: block;
   margin-bottom: 6px;
   font-size: 11px;

@@ -1,48 +1,41 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './ownerReservationList.css';
+import { shopReservationService } from '../../api/services/shopReservation';
+import { useConfirmReservation, useRejectReservation } from '../../query/reservationQueries';
+export default function OwnerReservationList() {
+  const [reservations, setReservations] = useState([]);
 
-export default function OwnerReservationList({ reservations }) {
-  const dummyReservations = [
-    {
-      id: 1,
-      name: '김민주',
-      date: '2025-11-23',
-      time: '14:00',
-      photoUrl: 'https://placekitten.com/200/200',
-      requestText: '프렌치 네일로 하고 싶어요 💅',
-    },
-    {
-      id: 2,
-      name: '박서연',
-      date: '2025-11-23',
-      time: '16:30',
-      photoUrl: 'https://placekitten.com/210/210',
-      requestText: '은은한 글리터 넣어주세요 ✨',
-    },
-    {
-      id: 3,
-      name: '이하은',
-      date: '2025-11-24',
-      time: '13:00',
-      photoUrl: 'https://placekitten.com/220/220',
-      requestText: '손상된 부분 보완 가능할까요?',
-    },
-    {
-      id: 4,
-      name: '최지아',
-      date: '2025-11-25',
-      time: '11:00',
-      photoUrl: 'https://placekitten.com/230/230',
-      requestText: '',
-    },
-  ];
+  // 🔥 서버에서 예약 데이터 불러오기
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const data = await shopReservationService.getShopReservations();
+
+        // 🟢 FE에서 쓰기 좋은 형태로 변환
+        const formatted = data.map((item) => ({
+          id: item.id,
+          name: item.customerName,
+          date: item.date,
+          time: item.time,
+          photoUrl: item.photoUrls?.[0] || '',
+          requestText: item.requestText || '',
+          originalStatus: item.status, // PENDING/CONFIRMED/REJECTED
+        }));
+
+        setReservations(formatted);
+      } catch (err) {
+        console.error('예약 데이터를 불러오지 못했습니다:', err);
+      }
+    }
+    fetchData();
+  }, []);
 
   return (
     <div className="owner-container">
       <h1 className="title-main">예약 내역</h1>
 
       <div className="owner-box-1">
-        {dummyReservations?.map((res) => (
+        {reservations?.map((res) => (
           <ReservationCard key={res.id} res={res} />
         ))}
       </div>
@@ -51,12 +44,24 @@ export default function OwnerReservationList({ reservations }) {
 }
 
 function ReservationCard({ res }) {
-  const [status, setStatus] = useState('접수 중');
+  // 🔥 백엔드 status → FE 상태칩 변환
+  const statusMap = {
+    PENDING: '접수 중',
+    CONFIRMED: '예약 확정',
+    REJECTED: '예약 거절',
+  };
+
+  const [status, setStatus] = useState(statusMap[res.originalStatus] || '접수 중');
   const [isOpen, setIsOpen] = useState(false);
   const [mode, setMode] = useState(null);
   const [message, setMessage] = useState('');
   const [selectedTime, setSelectedTime] = useState('');
   const [totalMinutes, setTotalMinutes] = useState(60);
+
+  //예약 확정 훅
+  const { mutate: confirmReservation } = useConfirmReservation();
+  //예약 거절 훅
+  const { mutate: rejectReservation } = useRejectReservation();
 
   const adjustTime = (delta) => {
     setTotalMinutes((prev) => Math.max(30, Math.min(prev + delta, 180)));
@@ -72,38 +77,64 @@ function ReservationCard({ res }) {
   const handleReject = () => setMode('reject');
 
   const handleSubmit = () => {
-    if (mode === 'confirm') setStatus('예약 확정');
-    if (mode === 'reject') setStatus('예약 거절');
-    setMode(null);
+    if (mode === 'confirm') {
+      // 🔥 실제 API 호출 추가됨
+      confirmReservation(
+        { id: res.id, message },
+        {
+          onSuccess: () => {
+            setStatus('예약 확정');
+            setMode(null);
+          },
+        }
+      );
+      return;
+    }
+
+    if (mode === 'reject') {
+      // 🔥 실제 API 호출 추가됨
+      rejectReservation(
+        { id: res.id, reason: message },
+        {
+          onSuccess: () => {
+            setStatus('예약 거절');
+            setMode(null);
+          },
+        }
+      );
+      return;
+    }
   };
 
   return (
     <div className="card">
       {/* 이름 + 상태 */}
-      <div className="card-header">
+      <div className="usercard-header">
         <div className="user-wrap">
           <div className="user-icon">👤</div>
           <span className="user-name">{res.name}</span>
-        </div>
 
-        <div
-          className={`status-chip ${
-            status === '예약 확정'
-              ? 'status-confirm'
-              : status === '예약 거절'
-                ? 'status-reject'
-                : 'status-pending'
-          }`}
-        >
-          <span className="status-dot" />
-          {status}
+          <div
+            className={`
+              status-chip
+              ${
+                status === '예약 확정'
+                  ? 'status-confirm'
+                  : status === '예약 거절'
+                    ? 'status-reject'
+                    : 'status-pending'
+              }
+            `}
+          >
+            <span className="status-dot" />
+            {status}
+          </div>
         </div>
       </div>
 
-      <div className="divider indented" />
-
       {/* 날짜/시간 */}
       <div className="basic-info">
+        <div className="divider indented" />
         <div className="info-row">
           <span>예약 날짜</span>
           <span className="pink">{res.date}</span>
@@ -112,9 +143,8 @@ function ReservationCard({ res }) {
           <span>예약 시간</span>
           <span className="pink">{res.time}</span>
         </div>
+        <div className="divider indented" />
       </div>
-
-      <div className="divider indented" />
 
       {/* 상세 보기 */}
       <div className="toggle" onClick={() => setIsOpen(!isOpen)}>
@@ -146,6 +176,7 @@ function ReservationCard({ res }) {
           <div className="request-wrap">
             <span className="request-label">요구사항</span>
             <div className="request-box">{res.requestText}</div>
+            <div className="divider indented" />
           </div>
         </div>
       )}
@@ -164,102 +195,83 @@ function ReservationCard({ res }) {
 
       {/* 수락 UI */}
       {mode === 'confirm' && (
-        <>
+        <div className="confirm-section">
           <div className="divider indented" />
 
-          <div className="confirm-section">
-            {/* 시간 선택 */}
-            <div className="time-buttons">
-              {['30분', '1시간', '1시간 30분', '2시간'].map((time) => (
-                <button
-                  key={time}
-                  className={`time-btn ${selectedTime === time ? 'active' : ''}`}
-                  onClick={() => setSelectedTime(time)}
-                >
-                  {time}
-                </button>
-              ))}
-            </div>
-
-            {/* 시간 조절 */}
-            <div className="time-adjust-box">
-              <button className="circle-btn" onClick={() => adjustTime(-30)}>
-                −
+          <div className="time-buttons">
+            {['30분', '1시간', '1시간 30분', '2시간'].map((time) => (
+              <button
+                key={time}
+                className={`time-btn ${selectedTime === time ? 'active' : ''}`}
+                onClick={() => setSelectedTime(time)}
+              >
+                {time}
               </button>
-
-              <div className="time-display">
-                <div className="main-time">{formatTime(totalMinutes)}</div>
-                <div className="sub-time">{selectedTime || '시간 선택'}</div>
-              </div>
-
-              <button className="circle-btn plus" onClick={() => adjustTime(30)}>
-                +
-              </button>
-            </div>
-
-            <textarea
-              className="textarea"
-              placeholder="전달 사항을 입력해주세요."
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-            />
-
-            <div className="submit-wrap">
-              <button className="small-confirm-btn" onClick={handleSubmit}>
-                확인
-              </button>
-            </div>
+            ))}
           </div>
-        </>
+
+          <div className="time-adjust-box">
+            <button className="circle-btn" onClick={() => adjustTime(-30)}>
+              −
+            </button>
+
+            <div className="time-display">
+              <div className="main-time">{formatTime(totalMinutes)}</div>
+              <div className="sub-time">{selectedTime || '시간 선택'}</div>
+            </div>
+
+            <button className="circle-btn plus" onClick={() => adjustTime(30)}>
+              +
+            </button>
+          </div>
+
+          <textarea
+            className="textarea"
+            placeholder="전달 사항을 입력해주세요."
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+          />
+
+          <div className="submit-wrap">
+            <button className="small-confirm-btn" onClick={handleSubmit}>
+              확인
+            </button>
+          </div>
+        </div>
       )}
 
-      {/* 거절 입력 */}
+      {/* 거절 UI */}
       {mode === 'reject' && (
-        <>
-          <div className="divider indented" />
+        <div className="reject-section">
+          <textarea
+            className="textarea"
+            placeholder="거절 사유를 입력해주세요."
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+          />
 
-          <div className="reject-section">
-            <textarea
-              className="textarea"
-              placeholder="거절 사유를 입력해주세요."
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-            />
-
-            <div className="submit-wrap">
-              <button className="small-confirm-btn" onClick={handleSubmit}>
-                확인
-              </button>
-            </div>
+          <div className="submit-wrap">
+            <button className="small-confirm-btn" onClick={handleSubmit}>
+              확인
+            </button>
           </div>
-        </>
+        </div>
       )}
 
       {/* 예약 확정 출력 */}
       {status === '예약 확정' && (
-        <>
-          <div className="divider indented" />
-
-          <div className="final-box">
-            <strong className="final-title">전달 사항</strong>
-
-            {selectedTime && <div className="final-time">소요시간: {selectedTime}</div>}
-
-            {message || '전달사항이 없습니다.'}
-          </div>
-        </>
+        <div className="final-box">
+          <strong className="final-title">전달 사항</strong>
+          {message || '전달사항이 없습니다.'}
+        </div>
       )}
 
       {/* 예약 거절 출력 */}
       {status === '예약 거절' && (
-        <>
-          <div className="divider indented" />
-
-          <div className="final-box">
-            <strong className="final-title">거절 사유</strong>
-            {message || '사유 없음'}
-          </div>
-        </>
+        <div className="final-box">
+          <strong className="final-title">거절 사유</strong>
+          {message || '사유 없음'}
+        </div>
       )}
     </div>
   );
