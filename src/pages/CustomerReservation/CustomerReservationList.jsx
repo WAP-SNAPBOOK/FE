@@ -84,6 +84,8 @@ function ReservationCard({ data }) {
   const selectedOptions = data.selectedOptions || {};
   const photoUrls = data.photoUrls || [];
 
+  const ownerMessage = data.status === 'REJECTED' ? data.rejectionReason : data.confirmationMessage;
+
   return (
     <div className="card">
       {/* 상단 영역 */}
@@ -186,7 +188,7 @@ function ReservationCard({ data }) {
                   <span className="owner-title">
                     {data.status === 'REJECTED' ? '거절 사유' : '전달 사항'}
                   </span>
-                  <p className="owner-text">{data.ownerMessage}</p>
+                  <p className="owner-text">{ownerMessage}</p>
                 </div>
               </div>
             )}
