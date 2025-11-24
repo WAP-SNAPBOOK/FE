@@ -31,6 +31,7 @@ export default function MessageItem({ msg, isMine }) {
             customerName={msg.payload.name}
             dateText={msg.payload.date}
             timeText={msg.payload.time}
+            noteText={msg.confirmationMessage}
           />
         );
         break;
@@ -42,7 +43,7 @@ export default function MessageItem({ msg, isMine }) {
             customerName={msg.payload.name}
             dateText={msg.payload.date}
             timeText={msg.payload.time}
-            noteText={msg.payload.reason ?? '예약이 불가한 시간입니다.'}
+            noteText={msg.rejectionReason ?? '예약이 불가한 시간입니다.'}
           />
         );
         break;
