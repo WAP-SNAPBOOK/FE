@@ -5,6 +5,7 @@ import { AuthInput } from '../../components/auth/AuthInput';
 import Container from '../../components/common/Container';
 import { NextButton } from '../../components/common/NextButton';
 import { useSignupCustomer, useSignupOwner } from '../../query/signupQueries';
+import { validateMobile010 } from '../../utils/phoneNumber';
 
 function SignupPage({ userType }) {
   const navigate = useNavigate();
@@ -50,6 +51,18 @@ function SignupPage({ userType }) {
       return;
     }
 
+    // 전화번호 유효성 검사
+    const { valid, reason } = validateMobile010(phoneNumber);
+
+    if (!valid) {
+      if (reason === 'length') {
+        alert('전화번호는 숫자만 11자리여야 합니다.');
+      } else if (reason === 'format') {
+        alert('정확한 휴대폰 번호(010으로 시작)를 입력해주세요.');
+      }
+      return;
+    }
+
     // slug 존재 + 점주 회원가입 시도 방지
     if (slug && userType !== 'CUSTOMER') {
       alert('링크를 통한 회원가입은 고객만 가능합니다.');
@@ -72,6 +85,7 @@ function SignupPage({ userType }) {
               name="name"
               value={formData.name}
               placeholder="이름"
+              maxLength={5}
               onChange={handleChange}
             />
           </label>
