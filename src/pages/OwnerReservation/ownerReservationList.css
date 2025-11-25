@@ -202,6 +202,12 @@
   gap: 9px;
   gap: 9px;
 }
+
+.detail-countvalue {
+  font-weight: 600;
+  color: #333;
+}
+
 .detail-values .yes {
   color: #222;
   font-weight: 600;
