@@ -195,7 +195,7 @@ function ReservationCard({ data }) {
                 <div key={item.key} className="option-row">
                   <span className="option-label">{item.label}</span>
 
-                  <div className="option-values-with-count">
+                  <div className="option-row">
                     {/* 손/발, 제거는 항상 / 연장·랩핑은 "무"일 때만 유/무 노출 */}
                     {showOptions && (
                       <div className="option-values">

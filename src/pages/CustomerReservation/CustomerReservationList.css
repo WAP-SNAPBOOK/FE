@@ -256,12 +256,6 @@
   color: #999999;
 }
 
-.option-values-with-count {
-  display: flex;
-  align-items: center;
-  gap: 8px; /* 유/무와 개수 pill 사이 간격 */
-}
-
 .option-count {
   min-width: 24px;
   padding: 2px 0px;
