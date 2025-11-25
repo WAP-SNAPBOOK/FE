@@ -104,7 +104,6 @@ function ReservationCard({ data }) {
   const photoCount =
     typeof data.photoCount === 'number' ? data.photoCount : photoUrls.length;
 
-  // ReservationCard 안, selectedOptions 만들기 위쪽 정도에 추가
   const mapYesNoToYn = (v) => {
     if (v === '예') return '유';
     if (v === '아니오') return '무';
