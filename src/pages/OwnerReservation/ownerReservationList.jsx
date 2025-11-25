@@ -5,13 +5,13 @@ import { useConfirmReservation, useRejectReservation } from '../../query/reserva
 export default function OwnerReservationList() {
   const [reservations, setReservations] = useState([]);
 
-  // 🔥 서버에서 예약 데이터 불러오기
+  // 서버에서 예약 데이터 불러오기
   useEffect(() => {
     async function fetchData() {
       try {
         const data = await shopReservationService.getShopReservations();
 
-        // 🟢 FE에서 쓰기 좋은 형태로 변환
+        // FE에서 쓰기 좋은 형태로 변환
         const formatted = data.map((item) => ({
           id: item.id,
           name: item.customerName,
@@ -20,6 +20,8 @@ export default function OwnerReservationList() {
           photoUrl: item.photoUrls?.[0] || '',
           requestText: item.requestText || '',
           originalStatus: item.status, // PENDING/CONFIRMED/REJECTED
+          extendCount: item.extendCount,
+          wrappingCount: item.wrappingCount,
         }));
 
         setReservations(formatted);
@@ -44,7 +46,6 @@ export default function OwnerReservationList() {
 }
 
 function ReservationCard({ res }) {
-  // 🔥 백엔드 status → FE 상태칩 변환
   const statusMap = {
     PENDING: '접수 중',
     CONFIRMED: '예약 확정',
@@ -92,7 +93,6 @@ function ReservationCard({ res }) {
     }
 
     if (mode === 'reject') {
-      // 🔥 실제 API 호출 추가됨
       rejectReservation(
         { id: res.id, reason: message },
         {
@@ -154,7 +154,8 @@ function ReservationCard({ res }) {
 
       {isOpen && (
         <div className="detail-section">
-          {['손/발', '제거', '연장', '램핑'].map((label) => (
+          {/* 손/발 / 제거 */}
+          {['손/발', '제거'].map((label) => (
             <div className="detail-row" key={label}>
               <span className="detail-key">{label}</span>
               <div className="detail-values">
@@ -163,6 +164,18 @@ function ReservationCard({ res }) {
               </div>
             </div>
           ))}
+
+          {/* 연장 */}
+          <div className="detail-row">
+            <span className="detail-key">연장</span>
+            <span className="detail-countvalue">{res.extendCount ?? 0}회</span>
+          </div>
+
+          {/* 랩핑 */}
+          <div className="detail-row">
+            <span className="detail-key">랩핑</span>
+            <span className="detail-countvalue">{res.wrappingCount ?? 0}개</span>
+          </div>
 
           {/* 사진 */}
           <div className="photo-wrap">
