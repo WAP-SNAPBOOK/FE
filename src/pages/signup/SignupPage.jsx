@@ -5,6 +5,7 @@ import { AuthInput } from '../../components/auth/AuthInput';
 import Container from '../../components/common/Container';
 import { NextButton } from '../../components/common/NextButton';
 import { useSignupCustomer, useSignupOwner } from '../../query/signupQueries';
+import { validateMobile010 } from '../../utils/phoneNumber';
 
 function SignupPage({ userType }) {
   const navigate = useNavigate();
@@ -84,6 +85,7 @@ function SignupPage({ userType }) {
               name="name"
               value={formData.name}
               placeholder="이름"
+              maxLength={5}
               onChange={handleChange}
             />
           </label>
