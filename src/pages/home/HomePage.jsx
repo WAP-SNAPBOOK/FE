@@ -1,6 +1,5 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
 import { useDeleteUser } from '../../query/authQueries';
 import * as S from './HomePage.styles';
 import ChatIcon from '../../assets/icons/mainChat-icon.svg';
@@ -9,20 +8,9 @@ import Container from '../../components/common/Container';
 import Header from '../../components/common/Header';
 import MainActionButton from '../../components/home/MainActionButton ';
 import BottomNav from '../../components/common/BottomNav';
-import { BaseButton } from '../../components/common/Button';
-import { NextButton } from '../../components/common/NextButton';
 
 export default function HomePage() {
   const navigate = useNavigate();
-  //사용자 정보 전역 상태
-  const { auth } = useAuth();
-  //회원탈퇴 훅
-  const deleteuser = useDeleteUser();
-
-  //회원탈퇴 헨들러
-  const deleteUserHandler = () => {
-    deleteuser.mutate();
-  };
 
   //채팅방 목록 이동
   const goToChat = () => {
@@ -42,10 +30,6 @@ export default function HomePage() {
           <MainActionButton onClick={goToChat} icon={ChatIcon} label="채팅방 조회" />
           <MainActionButton onClick={goToReservationList} icon={BookIcon} label="예약 내역" />
         </S.ButtonGroup>
-        {/* 임시 회원탈퇴 버튼 */}
-        <div className="fixed bottom-24 left-1/2 -translate-x-1/2 w-[90%] flex justify-center">
-          <NextButton onClick={deleteUserHandler}>임시 회원 탈퇴</NextButton>
-        </div>
         <BottomNav />
       </S.CenterArea>
     </Container>
