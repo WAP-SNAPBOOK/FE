@@ -10,7 +10,6 @@ import ReservationModal from '../../components/reservation/ReservationModal';
 import { authStorage } from '../../utils/auth/authStorage';
 import { useAuth } from '../../context/AuthContext';
 import { usePreserveScrollPosition } from '../../hooks/chat/usePreserveScrollPosition';
-import { useInitScrollToBottom } from '../../hooks/chat/useInitScrollToBottom';
 import { useTopObserver } from '../../hooks/chat/useTopObserver';
 import { useShopInfoByCode } from '../../query/linkQueries';
 import AddMenuButton from '../../components/chat/AddMenuButton';
@@ -25,6 +24,7 @@ import InAppGuideBar from '../../components/common/InAppGuideBar';
 import { useCustomerChatReservations } from '../../query/reservationQueries';
 import { useInjectReservationMessages } from '../../hooks/chat/useInjectReservationMessages';
 import { useShopInfoById } from '../../query/shopQueries';
+import { useInitFullReadyScroll } from '../../hooks/chat/useInitFullReadyScroll';
 
 export default function ChatRoomPage() {
   const [input, setInput] = useState(''); //메시지 입력 상태
@@ -91,6 +91,8 @@ export default function ChatRoomPage() {
   // 기존 메시지, cursor (HTTP GET 기반)
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isSuccess } =
     useChatMessages(chatRoomId);
+
+  const initialReadyRef = useRef(false);
 
   // shopId를 통한 예약 내역(상태) 조회 훅
   const { data: reservations } = useCustomerChatReservations(shopInfo?.shopId);
@@ -175,15 +177,6 @@ export default function ChatRoomPage() {
   //메시지 prepend시 스크롤 제어
   usePreserveScrollPosition(messageListRef, isFetchingNextPage);
 
-  //페이지 첫 마운트 시 스크롤 하단 제어
-  useInitScrollToBottom(
-    data,
-    isFetchingNextPage,
-    readyToObserve,
-    scrollToBottom,
-    setReadyToObserve
-  );
-
   //상단 스크롤 제어를 통한 fetch 훅
   useTopObserver(
     isSuccess,
@@ -222,6 +215,18 @@ export default function ChatRoomPage() {
   const allMessages = Array.from(new Map(merged.map((m) => [m.messageId, m])).values()).sort(
     (a, b) => new Date(a.sentAt) - new Date(b.sentAt)
   );
+
+  //페이지 첫 마운트 시 스크롤 하단 제어
+  useInitFullReadyScroll(
+    data,
+    reservations,
+    allMessages,
+    isFetchingNextPage,
+    readyToObserve,
+    scrollToBottom,
+    setReadyToObserve
+  );
+
   return (
     <Container $start>
       <S.PageWrapper>
