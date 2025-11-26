@@ -92,8 +92,6 @@ export default function ChatRoomPage() {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isSuccess } =
     useChatMessages(chatRoomId);
 
-  const initialReadyRef = useRef(false);
-
   // shopId를 통한 예약 내역(상태) 조회 훅
   const { data: reservations } = useCustomerChatReservations(shopInfo?.shopId);
   //메시지에 예약 상태 메시지 반영
