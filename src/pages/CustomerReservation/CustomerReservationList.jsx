@@ -50,30 +50,6 @@ export default function CustomerReservationList() {
   );
 }
 
-/** ---- 유틸 함수들 ---- */
-function formatTime(time) {
-  if (!time) return '';
-  if (typeof time === 'string') return time;
-
-  const hour = String(time.hour ?? 0).padStart(2, '0');
-  const minute = String(time.minute ?? 0).padStart(2, '0');
-  return `${hour}:${minute}`;
-}
-
-function formatCreatedAt(createdAt) {
-  if (!createdAt) return '';
-  const date = new Date(createdAt);
-  if (Number.isNaN(date.getTime())) return createdAt;
-
-  return date.toLocaleString('ko-KR', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-  });
-}
-
 function ReservationCard({ data }) {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -179,10 +155,8 @@ function ReservationCard({ data }) {
             ].map((item) => {
               const selected = selectedOptions[item.key];
               const count =
-                item.countKey && typeof data[item.countKey] === 'number'
-                  ? data[item.countKey]
-                  : 0;
-              const showOptions = !(item.countKey && isYes(selected));   // ← 유일 때 false
+                item.countKey && typeof data[item.countKey] === 'number' ? data[item.countKey] : 0;
+              const showOptions = !(item.countKey && isYes(selected)); // ← 유일 때 false
               const showCount = item.countKey && isYes(selected) && count > 0;
 
               return (
@@ -197,10 +171,12 @@ function ReservationCard({ data }) {
                           const isSelected =
                             option === selected ||
                             // 손발 같이 선택된 경우(예: "손발") → 둘 다 강조
-                            (item.key === 'hand' && selected === '손발' && (option === '손' || option === '발'));
+                            (item.key === 'hand' &&
+                              selected === '손발' &&
+                              (option === '손' || option === '발'));
 
                           return (
-                            <span key={option} className={`option ${isSelected ? 'selected' : ''}`} >
+                            <span key={option} className={`option ${isSelected ? 'selected' : ''}`}>
                               {option}
                             </span>
                           );
