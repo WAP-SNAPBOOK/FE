@@ -97,13 +97,8 @@ function ReservationCard({ data }) {
     text: '#555555',
   };
 
-  const timeText = formatTime(data.time);
-  const createdText = formatCreatedAt(data.createdAt);
-
+  const timeText = data.time;
   const photoUrls = Array.isArray(data.photoUrls) ? data.photoUrls : [];
-  const photoCount =
-    typeof data.photoCount === 'number' ? data.photoCount : photoUrls.length;
-
   const mapYesNoToYn = (v) => {
     if (v === '예') return '유';
     if (v === '아니오') return '무';
