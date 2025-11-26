@@ -13,7 +13,7 @@ export default function CustomerReservationList() {
         setIsLoading(true);
         setError(null);
         const data = await myReservation.getMyReservations();
-        setReservations(data || []);
+        setReservations(Array.isArray(data) ? data : []);
       } catch (err) {
         console.error('예약 내역 불러오기 실패:', err);
         setError('예약 내역을 불러오는데 실패했습니다. 다시 시도해주세요.');
@@ -50,6 +50,30 @@ export default function CustomerReservationList() {
   );
 }
 
+/** ---- 유틸 함수들 ---- */
+function formatTime(time) {
+  if (!time) return '';
+  if (typeof time === 'string') return time;
+
+  const hour = String(time.hour ?? 0).padStart(2, '0');
+  const minute = String(time.minute ?? 0).padStart(2, '0');
+  return `${hour}:${minute}`;
+}
+
+function formatCreatedAt(createdAt) {
+  if (!createdAt) return '';
+  const date = new Date(createdAt);
+  if (Number.isNaN(date.getTime())) return createdAt;
+
+  return date.toLocaleString('ko-KR', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+}
+
 function ReservationCard({ data }) {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -73,16 +97,23 @@ function ReservationCard({ data }) {
     text: '#555555',
   };
 
-  const timeText =
-    data.time && typeof data.time === 'object'
-      ? `${String(data.time.hour ?? 0).padStart(2, '0')}:${String(data.time.minute ?? 0).padStart(
-          2,
-          '0'
-        )}`
-      : (data.time ?? '');
+  const timeText = data.time;
+  const photoUrls = Array.isArray(data.photoUrls) ? data.photoUrls : [];
+  const mapYesNoToYn = (v) => {
+    if (v === '예') return '유';
+    if (v === '아니오') return '무';
+    return v ?? '';
+  };
 
-  const selectedOptions = data.selectedOptions || {};
-  const photoUrls = data.photoUrls || [];
+  const isYes = (v) => v === '유' || v === '예';
+
+  const selectedOptions = {
+    hand: data.part ?? '',
+    remove: mapYesNoToYn(data.removal) ?? '',
+    extension: data.extendStatus ?? '',
+    wrap: data.wrappingStatus ?? '',
+    requestText: data.requests ?? '',
+  };
 
   const ownerMessage = data.status === 'REJECTED' ? data.rejectionReason : data.confirmationMessage;
 
@@ -141,27 +172,48 @@ function ReservationCard({ data }) {
         {isOpen && (
           <div className="details">
             {[
-              { label: '손/발', options: ['손', '발'], selected: selectedOptions?.hand },
-              { label: '제거', options: ['유', '무'], selected: selectedOptions?.remove },
-              { label: '연장', options: ['유', '무'], selected: selectedOptions?.extension },
-              { label: '램핑', options: ['유', '무'], selected: selectedOptions?.lamping },
-            ].map((item) => (
-              <div key={item.label} className="option-row">
-                <span className="option-label">{item.label}</span>
-                <div className="option-values">
-                  {item.options.map((option) => {
-                    const isSelected =
-                      item.selected === option ||
-                      (item.label === '손/발' && item.selected === '손발');
-                    return (
-                      <span key={option} className={`option ${isSelected ? 'selected' : ''}`}>
-                        {option}
-                      </span>
-                    );
-                  })}
+              { key: 'hand', label: '손/발', options: ['손', '발'] },
+              { key: 'remove', label: '제거', options: ['유', '무'] },
+              { key: 'extension', label: '연장', options: ['유', '무'], countKey: 'extendCount' },
+              { key: 'wrap', label: '랩핑', options: ['유', '무'], countKey: 'wrappingCount' },
+            ].map((item) => {
+              const selected = selectedOptions[item.key];
+              const count =
+                item.countKey && typeof data[item.countKey] === 'number'
+                  ? data[item.countKey]
+                  : 0;
+              const showOptions = !(item.countKey && isYes(selected));   // ← 유일 때 false
+              const showCount = item.countKey && isYes(selected) && count > 0;
+
+              return (
+                <div key={item.key} className="option-row">
+                  <span className="option-label">{item.label}</span>
+
+                  <div className="option-row">
+                    {/* 손/발, 제거는 항상 / 연장·랩핑은 "무"일 때만 유/무 노출 */}
+                    {showOptions && (
+                      <div className="option-values">
+                        {item.options.map((option) => {
+                          const isSelected =
+                            option === selected ||
+                            // 손발 같이 선택된 경우(예: "손발") → 둘 다 강조
+                            (item.key === 'hand' && selected === '손발' && (option === '손' || option === '발'));
+
+                          return (
+                            <span key={option} className={`option ${isSelected ? 'selected' : ''}`} >
+                              {option}
+                            </span>
+                          );
+                        })}
+                      </div>
+                    )}
+
+                    {/* 연장/랩핑이 "유"일 때만 개수 pill 표시 */}
+                    {showCount && <span className="option-count">{count}개</span>}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
 
             {photoUrls.length > 0 && (
               <div className="photo-section">
