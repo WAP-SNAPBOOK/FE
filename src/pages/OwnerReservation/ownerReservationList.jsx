@@ -177,13 +177,13 @@ function ReservationCard({ res }) {
           {/* 연장 */}
           <div className="detail-row">
             <span className="detail-key">연장</span>
-            <span className="detail-countvalue">{res.extendCount ?? 0}회</span>
+            <span className="detail-count">{res.extendCount ?? 0}회</span>
           </div>
 
           {/* 랩핑 */}
           <div className="detail-row">
             <span className="detail-key">랩핑</span>
-            <span className="detail-countvalue">{res.wrappingCount ?? 0}개</span>
+            <span className="detail-count">{res.wrappingCount ?? 0}개</span>
           </div>
 
           {/* 사진 */}
