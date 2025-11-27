@@ -99,7 +99,7 @@ export default function ChatRoomPage() {
 
   const handleBack = () => {
     // 외부 링크 유입(slug), 홈으로 강제 이동
-    if (slug) {
+    if (slugOrCode) {
       navigate('/', { replace: true });
       return;
     }
