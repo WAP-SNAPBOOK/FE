@@ -24,8 +24,8 @@
 /* ---- 회색 박스 ---- */
 .owner-box-1 {
   background-color: #f1f1f1;
-  width: 341px;
-  height: 652px;
+  width: 355px;
+  height: 100vh;
   padding: 22px;
   padding: 22px;
   overflow-y: auto;
