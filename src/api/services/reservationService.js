@@ -26,7 +26,7 @@ export const reservationService = {
   },
 
   /**
-   * 특정 점주의 고객 예약 조회 (고객이 보는 채팅 예약 목록)
+   * 채팅방 내 고객 예약 조회 (고객이 보는 채팅 예약 목록)
    * @param {number} shopId - 상점 ID (query)
    * @returns {Promise<Array>} 예약 목록
    */
@@ -35,6 +35,19 @@ export const reservationService = {
       params: { shopId },
     });
 
+    return res.data;
+  },
+
+  /**
+   * 채팅방 내 고객 예약 조회 (점주가 보는 채팅 예약 목록)
+   * @param {number} shopId
+   * @param {number} customerId
+   * @returns {Promise<Array>}
+   */
+  getOwnerChatReservations: async (shopId, customerId) => {
+    const res = await axiosClient.get('/api/reservations/chat/owner', {
+      params: { shopId, customerId },
+    });
     return res.data;
   },
 };
