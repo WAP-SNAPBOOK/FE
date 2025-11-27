@@ -11,15 +11,8 @@ export default function InAppGuideBar() {
   const [showModal, setShowModal] = useState(false);
   const [selectedOS, setSelectedOS] = useState('android'); //선택된 OS
 
-  //사용자 기기 안드로이드 일시 크롬 이동 함수
-  const openIntent = () => {
-    const currentUrl = window.location.href;
-    const intentUrl = `intent://${currentUrl.replace(/^https?:\/\//, '')}#Intent;scheme=https;package=com.android.chrome;end;`;
-    window.location.href = intentUrl;
-  };
-
   //PWA 안내 사항 모달 관련 데이터
-  const view = modalViews(setShowModal, openIntent);
+  const view = modalViews(setShowModal);
 
   const handleClick = () => {
     setShowModal(true);

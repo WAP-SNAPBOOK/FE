@@ -98,10 +98,17 @@ export default function ChatRoomPage() {
   useInjectReservationMessages(reservations, setLiveMessages, userId);
 
   const handleBack = () => {
+    // 외부 링크 유입(slug), 홈으로 강제 이동
+    if (slugOrCode) {
+      navigate('/', { replace: true });
+      return;
+    }
+
+    // 내부 유입(웹, PWA 내부에서 이동)
     if (window.history.state && window.history.state.idx > 0) {
-      navigate(-1); // 이전 페이지가 존재할 경우 채팅 목록 이동
+      navigate(-1);
     } else {
-      navigate('/'); // 외부 유입이라 이전 기록 없을 때 홈으로(링크 유입)
+      navigate('/');
     }
   };
 
