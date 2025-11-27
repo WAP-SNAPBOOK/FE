@@ -95,20 +95,17 @@ export default function ChatRoomPage() {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isSuccess } =
     useChatMessages(chatRoomId);
 
-  //고객 입장, 점주 입장 분기될 예약 내역
-  let reservationsQuery;
+  //점주 채팅방 진입 시 상대 고객 Id
+  const customerId = searchParams.get('customerId');
 
-  if (userType === 'OWNER') {
-    const customerId = searchParams.get('customerId');
+  //점주 입장 예약 내역
+  const ownerReservationsQuery = useOwnerChatReservations(shopInfo?.shopId, customerId);
+  //고객 입장 예약 내역
+  const customerReservationsQuery = useCustomerChatReservations(shopInfo?.shopId);
 
-    // 오너 = shopId + customerId 모두 필요
-    reservationsQuery = useOwnerChatReservations(shopInfo?.shopId, customerId);
-  } else {
-    // 고객 = shopId만 필요
-    reservationsQuery = useCustomerChatReservations(shopInfo?.shopId);
-  }
-
-  const reservations = reservationsQuery?.data;
+  //유저 타입에 따라 예약 내역 결정
+  const reservations = (userType === 'OWNER' ? ownerReservationsQuery : customerReservationsQuery)
+    ?.data;
 
   //메시지에 예약 상태 메시지 반영
   useInjectReservationMessages(reservations, setLiveMessages, userId);
