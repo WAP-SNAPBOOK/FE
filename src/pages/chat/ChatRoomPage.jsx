@@ -21,7 +21,10 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useNewMessageNotice } from '../../hooks/chat/useNewMessageNotice';
 import NewMessageCard from '../../components/notification/NewMessageCard';
 import InAppGuideBar from '../../components/common/InAppGuideBar';
-import { useCustomerChatReservations } from '../../query/reservationQueries';
+import {
+  useCustomerChatReservations,
+  useOwnerChatReservations,
+} from '../../query/reservationQueries';
 import { useInjectReservationMessages } from '../../hooks/chat/useInjectReservationMessages';
 import { useShopInfoById } from '../../query/shopQueries';
 import { useInitFullReadyScroll } from '../../hooks/chat/useInitFullReadyScroll';
@@ -35,7 +38,6 @@ export default function ChatRoomPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
-
   //메뉴 표시 여부 상태
   const [showMenu, setShowMenu] = useState(false);
 
@@ -73,6 +75,7 @@ export default function ChatRoomPage() {
   //전역 상태 사용자 ID
   const { auth } = useAuth();
   const userId = auth?.userId;
+  const userType = auth?.userType; // CUSTOMER / OWNER
 
   const accessToken = authStorage.getAccessToken();
 
@@ -92,8 +95,18 @@ export default function ChatRoomPage() {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isSuccess } =
     useChatMessages(chatRoomId);
 
-  // shopId를 통한 예약 내역(상태) 조회 훅
-  const { data: reservations } = useCustomerChatReservations(shopInfo?.shopId);
+  //점주 채팅방 진입 시 상대 고객 Id
+  const customerId = searchParams.get('customerId');
+
+  //점주 입장 예약 내역
+  const ownerReservationsQuery = useOwnerChatReservations(shopInfo?.shopId, customerId);
+  //고객 입장 예약 내역
+  const customerReservationsQuery = useCustomerChatReservations(shopInfo?.shopId);
+
+  //유저 타입에 따라 예약 내역 결정
+  const reservations = (userType === 'OWNER' ? ownerReservationsQuery : customerReservationsQuery)
+    ?.data;
+
   //메시지에 예약 상태 메시지 반영
   useInjectReservationMessages(reservations, setLiveMessages, userId);
 

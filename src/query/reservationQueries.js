@@ -57,13 +57,22 @@ export const useCreateReservation = (
   });
 };
 
-//채팅방 내 고객 예약 조회 훅
+//채팅방 내 고객입장 예약 조회 훅
 export const useCustomerChatReservations = (shopId) => {
   const { auth } = useAuth();
   return useQuery({
     queryKey: ['customerChatReservations', shopId, auth?.userId],
     queryFn: () => reservationService.getCustomerChatReservations(shopId),
     enabled: !!shopId && !!auth?.userId, // shopId 있을 때만 요청
+  });
+};
+
+//채팅방 내 점주입장 예약 조회 훅
+export const useOwnerChatReservations = (shopId, customerId) => {
+  return useQuery({
+    queryKey: ['owner-chat-reservations', shopId, customerId],
+    queryFn: () => reservationService.getOwnerChatReservations(shopId, customerId),
+    enabled: !!shopId && !!customerId,
   });
 };
 

@@ -11,10 +11,17 @@ export default function ChatRoomItem({ room }) {
   const { shopBusinessName, otherUserName, lastMessageContent, lastMessageAt, unreadCount } = room;
   //현재 유저 정보 전역 상태
   const { auth } = useAuth();
+  const userType = auth?.userType;
 
   //해당 채팅방 이동 헨들러
   const handleClick = () => {
-    navigate(`/chat/${room.chatRoomId}?shopId=${room.shopId}`);
+    if (userType === 'OWNER') {
+      // 점주: URL에 customerId(otherUserId) 추가
+      navigate(`/chat/${room.chatRoomId}?shopId=${room.shopId}&customerId=${room.otherUserId}`);
+    } else {
+      //고객
+      navigate(`/chat/${room.chatRoomId}?shopId=${room.shopId}`);
+    }
   };
 
   //일정 길이 이상일때 마지막 메시지 길이 줄이기
@@ -25,7 +32,7 @@ export default function ChatRoomItem({ room }) {
       <S.Avatar>{otherUserName[0]}</S.Avatar>
       <S.InfoWrapper onClick={handleClick}>
         <S.TopRow>
-          <S.ShopName>{auth.userType === 'OWNER' ? otherUserName : shopBusinessName}</S.ShopName>
+          <S.ShopName>{userType === 'OWNER' ? otherUserName : shopBusinessName}</S.ShopName>
           <S.Time>
             {new Date(lastMessageAt).toLocaleTimeString('ko-KR', {
               hour: '2-digit',
