@@ -73,38 +73,31 @@ export default function StepOptions({ initialData, onNext, visibleFields }) {
           onChange={(v) => setField('handFootYn', v)}
         />
       )}
+      {/*TODO: 예약 폼 조회 api 수정시 수정된 폼 양식 적용 */}
+      <OptionRow
+        label="연장"
+        name="extYn"
+        value={values.extYn}
+        onChange={handleChangeExtYn}
+        showCount
+        countValue={values.extCount}
+        onCountChange={handleExtCountChange}
+        countAs="select"
+        countOptions={COUNT_OPTIONS}
+      />
+      {/*TODO: 예약 폼 조회 api 수정시 수정된 폼 양식 적용 */}
 
-      {visibleFields?.extend && (
-        <>
-          <OptionRow
-            label="연장"
-            name="extYn"
-            value={values.extYn}
-            onChange={handleChangeExtYn}
-            showCount
-            countValue={values.extCount}
-            onCountChange={handleExtCountChange}
-            countAs="select"
-            countOptions={COUNT_OPTIONS}
-          />
-        </>
-      )}
-
-      {visibleFields?.wrapping && (
-        <>
-          <OptionRow
-            label="래핑"
-            name="wrapYn"
-            value={values.wrapYn}
-            onChange={handleChangeWrapYn}
-            showCount
-            countValue={values.wrapCount}
-            onCountChange={handleWrapCountChange}
-            countAs="select"
-            countOptions={COUNT_OPTIONS}
-          />
-        </>
-      )}
+      <OptionRow
+        label="래핑"
+        name="wrapYn"
+        value={values.wrapYn}
+        onChange={handleChangeWrapYn}
+        showCount
+        countValue={values.wrapCount}
+        onCountChange={handleWrapCountChange}
+        countAs="select"
+        countOptions={COUNT_OPTIONS}
+      />
 
       <form onSubmit={handleSubmit} className="submitRow">
         <button type="submit" className="submitBtn">
