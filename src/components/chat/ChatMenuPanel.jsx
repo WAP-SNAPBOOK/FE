@@ -1,13 +1,20 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import reservationListIcon from '../../assets/icons/reservation-list-icon.svg';
 import { BaseButton } from '../common/Button';
 
 export default function ChatMenuPanel({ visible }) {
+  const navigate = useNavigate();
+
+  //예약 내역 이동 헨들러
+  const handleClick = () => {
+    navigate('/reservations');
+  };
   return (
     <Panel $visible={visible}>
       <PanelInner>
-        <ReservationListButton $column>
+        <ReservationListButton $column onClick={handleClick}>
           <img src={reservationListIcon} alt="reservationListIcon" />
           <span>예약 내역</span>
         </ReservationListButton>
