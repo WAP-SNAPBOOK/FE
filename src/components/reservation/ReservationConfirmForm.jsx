@@ -20,13 +20,20 @@ export default function ReservationConfirmForm({ onConfirm, isConfirming, confir
     <>
       <S.DurationPreset>
         {[30, 60, 90, 120].map((min) => (
-          <S.PresetButton key={min} active={duration === min} onClick={() => setDuration(min)}>
+          <S.PresetButton
+            key={min}
+            disabled={confirmed}
+            active={duration === min}
+            onClick={() => setDuration(min)}
+          >
             {LABEL_MAP[min]}
           </S.PresetButton>
         ))}
       </S.DurationPreset>
       <S.Stepper>
-        <button onClick={() => setDuration((d) => Math.max(30, d - 30))}>−</button>
+        <button onClick={() => setDuration((d) => Math.max(30, d - 30))} disabled={confirmed}>
+          −
+        </button>
         <div className="flex flex-col items-center">
           <span className="text-xs">
             {String(hour).padStart(2, '0')}:{String(min).padStart(2, '0')}
@@ -36,11 +43,14 @@ export default function ReservationConfirmForm({ onConfirm, isConfirming, confir
           </S.SubText>
         </div>
         {/*시간 증가는 2시간이 최대 */}
-        <button onClick={() => setDuration((d) => Math.min(120, d + 30))}>+</button>
+        <button onClick={() => setDuration((d) => Math.min(120, d + 30))} disabled={confirmed}>
+          +
+        </button>
       </S.Stepper>
 
       <S.Textarea
         placeholder="전달 사항을 입력해 주세요."
+        disabled={confirmed}
         value={memo}
         maxLength={200}
         onChange={(e) => setMemo(e.target.value)}

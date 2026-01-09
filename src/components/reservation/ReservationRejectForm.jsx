@@ -8,6 +8,7 @@ export default function ReservationRejectForm({ onReject, isRejecting, rejected 
     <>
       <S.Textarea
         placeholder="거절 사유를 입력해 주세요."
+        disabled={rejected}
         value={reason}
         maxLength={200}
         onChange={(e) => setReason(e.target.value)}
