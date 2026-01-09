@@ -21,7 +21,6 @@ export default function MessageItem({ msg, isMine }) {
     switch (msg.type) {
       case 'PENDING':
         // 점주 → 수락/거절 카드
-        console.log(msg);
         if (isOwner) {
           CardComponent = <ReservationDecisionMessage reservation={msg.payload} />;
         } else {
