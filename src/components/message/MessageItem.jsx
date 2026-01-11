@@ -7,12 +7,12 @@ import DecisionCard from '../message/DecisionCard';
 import { useAuth } from '../../context/AuthContext';
 
 export default function MessageItem({ msg, isMine }) {
+  const { auth } = useAuth();
+  const isOwner = auth?.userType === 'OWNER'; //점주 여부
+
   if (!msg?.isReservationCard && !msg?.message?.trim()) {
     return null;
   }
-
-  const { auth } = useAuth();
-  const isOwner = auth?.userType === 'OWNER'; //점주 여부
 
   // 예약 상태 카드 처리
   if (msg.isReservationCard) {
