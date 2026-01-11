@@ -16,8 +16,10 @@ export default function ChatRoomItem({ room }) {
   //해당 채팅방 이동 헨들러
   const handleClick = () => {
     if (userType === 'OWNER') {
-      // 점주: URL에 customerId(otherUserId) 추가
-      navigate(`/chat/${room.chatRoomId}?shopId=${room.shopId}&customerId=${room.otherUserId}`);
+      // 점주: URL에 customerId(otherUserId), otherUserName(고객명) 추가
+      navigate(
+        `/chat/${room.chatRoomId}?shopId=${room.shopId}&customerId=${room.otherUserId}&title=${encodeURIComponent(otherUserName)}`
+      );
     } else {
       //고객
       navigate(`/chat/${room.chatRoomId}?shopId=${room.shopId}`);
