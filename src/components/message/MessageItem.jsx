@@ -2,26 +2,39 @@ import React from 'react';
 import * as S from './MessageItem.style';
 import { formatTime } from '../../utils/formatTime';
 import ReservationCompleteMessage from '../message/ReservationCompleteMessage';
+import ReservationDecisionMessage from '../message/ReservationDecisionMessage';
 import DecisionCard from '../message/DecisionCard';
+import { useAuth } from '../../context/AuthContext';
 
 export default function MessageItem({ msg, isMine }) {
+  const { auth } = useAuth();
+  const isOwner = auth?.userType === 'OWNER'; //점주 여부
+
   if (!msg?.isReservationCard && !msg?.message?.trim()) {
     return null;
   }
+
   // 예약 상태 카드 처리
   if (msg.isReservationCard) {
     let CardComponent = null;
 
     switch (msg.type) {
       case 'PENDING':
-        CardComponent = (
-          <ReservationCompleteMessage
-            name={msg.payload.name}
-            date={msg.payload.date}
-            time={msg.payload.time}
-            photoCount={msg.payload.photoCount}
-          />
-        );
+        // 점주 → 수락/거절 카드
+        if (isOwner) {
+          CardComponent = <ReservationDecisionMessage reservation={msg.payload} />;
+        } else {
+          //일반 고객
+          CardComponent = (
+            <ReservationCompleteMessage
+              name={msg.payload.name}
+              date={msg.payload.date}
+              time={msg.payload.time}
+              photoCount={msg.payload.photoCount}
+            />
+          );
+        }
+
         break;
 
       case 'CONFIRMED':

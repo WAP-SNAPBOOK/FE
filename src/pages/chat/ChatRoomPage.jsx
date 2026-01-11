@@ -41,9 +41,17 @@ export default function ChatRoomPage() {
   //메뉴 표시 여부 상태
   const [showMenu, setShowMenu] = useState(false);
 
+  //전역 상태 사용자 ID
+  const { auth } = useAuth();
+  const userId = auth?.userId;
+  const userType = auth?.userType; // CUSTOMER / OWNER
+
   const navigate = useNavigate();
 
   const [searchParams] = useSearchParams();
+
+  //점주 입장의 채팅방 이름(상대 고객명)
+  const titleFromQuery = searchParams.get('title');
 
   //매장 식별 코드
   const slugOrCode = searchParams.get('slug');
@@ -60,6 +68,10 @@ export default function ChatRoomPage() {
   //매장 정보 하나로 통합(같은 응답 구조)
   const shopInfo = shopInfoBySlug || shopInfoById;
 
+  //유저 타입(고객, 점주)에 따른 채팅방 이름
+  const headerTitle =
+    userType === 'OWNER' ? titleFromQuery || '채팅방' : shopInfo?.shopName || '채팅방';
+
   //모달 재오픈 방지용 ref
   const hasAutoOpened = useRef(false);
 
@@ -71,11 +83,6 @@ export default function ChatRoomPage() {
       openModal();
     }
   }, [shopInfo, hasAutoOpened]);
-
-  //전역 상태 사용자 ID
-  const { auth } = useAuth();
-  const userId = auth?.userId;
-  const userType = auth?.userType; // CUSTOMER / OWNER
 
   const accessToken = authStorage.getAccessToken();
 
@@ -255,7 +262,7 @@ export default function ChatRoomPage() {
           <S.BackButton onClick={handleBack}>
             <img src={backIcon} alt="back" />
           </S.BackButton>
-          <ChatRoomTitle>{shopInfo?.shopName}</ChatRoomTitle>
+          <ChatRoomTitle>{headerTitle}</ChatRoomTitle>
           <S.BookButton onClick={openModal}>예약</S.BookButton>
         </S.Header>
         <S.Messages ref={messageListRef} onScroll={handleScroll}>
