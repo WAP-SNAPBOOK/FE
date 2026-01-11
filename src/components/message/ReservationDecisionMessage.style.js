@@ -68,7 +68,7 @@ export const ApproveButton = styled.button`
   flex: 1;
   height: 40px;
   border-radius: 10px;
-  background: #f08080;
+  background: #ec6060;
   border: none;
   color: white;
   font-weight: 700;
