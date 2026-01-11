@@ -11,16 +11,17 @@ export default function ReservationDecisionMessage({ reservation }) {
   const [open, setOpen] = useState(false); //상세보기 토글
   const [mode, setMode] = useState('VIEW'); // 상세보기(VIEW) | 예약 확정(CONFIRM) | 예약거절(REJECT)
 
+  //예약 확정 쿼리 훅
+  const { mutate: confirm, isLoading: isConfirming } = useConfirmReservation();
+  //예약 거절 쿼리 훅
+  const { mutate: reject, isLoading: isRejecting } = useRejectReservation();
+
   //예약 결정 여부
   const isDecisionDone = confirmed || rejected;
 
   if (!reservation) return null;
 
   const { id, name, date, time, info } = reservation;
-  //예약 확정 쿼리 훅
-  const { mutate: confirm, isLoading: isConfirming } = useConfirmReservation();
-  //예약 거절 쿼리 훅
-  const { mutate: reject, isLoading: isRejecting } = useRejectReservation();
 
   //예약 확정 헨들러
   const handleConfirm = ({ memo }) => {
