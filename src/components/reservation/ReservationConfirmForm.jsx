@@ -23,7 +23,7 @@ export default function ReservationConfirmForm({ onConfirm, isConfirming, confir
           <S.PresetButton
             key={min}
             disabled={confirmed}
-            active={duration === min}
+            $active={duration === min}
             onClick={() => setDuration(min)}
           >
             {LABEL_MAP[min]}
