@@ -11,6 +11,9 @@ export default function ReservationDecisionMessage({ reservation }) {
   const [open, setOpen] = useState(false); //상세보기 토글
   const [mode, setMode] = useState('VIEW'); // 상세보기(VIEW) | 예약 확정(CONFIRM) | 예약거절(REJECT)
 
+  //예약 결정 여부
+  const isDecisionDone = confirmed || rejected;
+
   if (!reservation) return null;
 
   const { id, name, date, time, info } = reservation;
@@ -64,7 +67,7 @@ export default function ReservationDecisionMessage({ reservation }) {
 
       <S.Divider />
 
-      <S.Toggle onClick={() => setOpen((v) => !v)}>
+      <S.Toggle disabled={isDecisionDone} onClick={() => setOpen((v) => !v)}>
         상세 보기
         <span>{open ? '▲' : '▼'}</span>
       </S.Toggle>
