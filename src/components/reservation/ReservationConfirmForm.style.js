@@ -11,8 +11,8 @@ export const PresetButton = styled.button`
   height: 46px;
   border-radius: 24px;
   border: 1px solid #ededed;
-  background: ${({ active }) => (active ? '#f2f2f2' : '#fff')};
-  color: ${({ active }) => (active ? '#222' : '#999')};
+  background: ${({ $active }) => ($active ? '#f2f2f2' : '#fff')};
+  color: ${({ $active }) => ($active ? '#222' : '#999')};
   font-size: 12px;
   font-weight: 600;
   display: flex;
