@@ -19,7 +19,9 @@ export default function MessageItem({ msg, isMine }) {
     let CardComponent = null;
 
     switch (msg.type) {
+      //TODO: 예약 상태 메시지 api 통합 적용 후 타입하나로 추후에 수정 예정
       case 'PENDING':
+      case 'RESERVATION_CREATED':
         // 점주 → 수락/거절 카드
         if (isOwner) {
           CardComponent = <ReservationDecisionMessage reservation={msg.payload} />;

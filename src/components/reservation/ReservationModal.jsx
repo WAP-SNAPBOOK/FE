@@ -9,7 +9,7 @@ import { useCreateReservation, useReservationForm } from '../../query/reservatio
 import { useUploadMultipleFiles } from '../../query/fileQueries';
 import { getVisibleFields } from '../../utils/form/formFieldVisibility';
 
-export default function ReservationModal({ isOpen, onClose, shopId, onReservationComplete }) {
+export default function ReservationModal({ isOpen, onClose, shopId }) {
   const [step, setStep] = useState(1);
 
   const { data: formConfig, isLoading, error } = useReservationForm(shopId, isOpen);
@@ -56,12 +56,7 @@ export default function ReservationModal({ isOpen, onClose, shopId, onReservatio
   };
 
   //예약 생성 query 훅
-  const { mutate: createReservation } = useCreateReservation(
-    onReservationComplete,
-    handleClose,
-    formDataRef,
-    photoCountRef
-  );
+  const { mutate: createReservation } = useCreateReservation(handleClose);
 
   //파일(사진) 전송 query 훅
   const { mutateAsync: uploadMultiple, isPending } = useUploadMultipleFiles();

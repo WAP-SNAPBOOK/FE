@@ -13,28 +13,11 @@ export const useReservationForm = (shopId, enabled) => {
 };
 
 //예약 생성 훅
-export const useCreateReservation = (
-  onReservationComplete,
-  handleClose,
-  formDataRef,
-  photoCountRef
-) => {
+export const useCreateReservation = (handleClose) => {
   return useMutation({
     mutationFn: (payload) => reservationService.createReservation(payload),
     onSuccess: () => {
       alert('예약이 완료되었습니다!');
-
-      //예약 완료 메시지 생성
-      const current = formDataRef?.current;
-      const photoCount = photoCountRef?.current;
-      if (current) {
-        onReservationComplete?.({
-          name: current.basic?.name || '',
-          date: current.basic?.date || '',
-          time: current.basic?.time || '',
-          photoCount: photoCount || 0,
-        });
-      }
 
       //모달 닫기까지 훅 내부에서 처리
       handleClose?.();
@@ -108,5 +91,16 @@ export const useRejectReservation = () => {
       console.error('예약 거절 실패:', error);
       alert('예약 거절 중 오류가 발생했습니다.');
     },
+  });
+};
+
+/**
+ * 예약 단건 상세 조회 훅
+ */
+export const useReservationDetail = (reservationId) => {
+  return useQuery({
+    queryKey: ['reservation-detail', reservationId],
+    queryFn: () => reservationService.getReservationById(reservationId),
+    enabled: !!reservationId,
   });
 };

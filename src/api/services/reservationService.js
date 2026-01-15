@@ -50,4 +50,14 @@ export const reservationService = {
     });
     return res.data;
   },
+
+  /**
+   * 예약 단건 상세 조회
+   * @param {number} reservationId
+   * @returns {Promise<Object>}
+   */
+  getReservationById: async (reservationId) => {
+    const res = await axiosClient.get(`/api/reservations/${reservationId}`);
+    return res.data;
+  },
 };

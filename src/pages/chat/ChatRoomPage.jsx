@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { useSendMessage, useChatMessages } from '../../query/chatQueries';
 import { chatSocketService } from '../../api/services/chatSocketService';
@@ -21,13 +21,10 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useNewMessageNotice } from '../../hooks/chat/useNewMessageNotice';
 import NewMessageCard from '../../components/notification/NewMessageCard';
 import InAppGuideBar from '../../components/common/InAppGuideBar';
-import {
-  useCustomerChatReservations,
-  useOwnerChatReservations,
-} from '../../query/reservationQueries';
-import { useInjectReservationMessages } from '../../hooks/chat/useInjectReservationMessages';
 import { useShopInfoById } from '../../query/shopQueries';
 import { useInitFullReadyScroll } from '../../hooks/chat/useInitFullReadyScroll';
+import { reservationService } from '../../api/services/reservationService';
+import { useNormalizedMessages } from '../../hooks/chat/useNormalizedMessages';
 
 export default function ChatRoomPage() {
   const [input, setInput] = useState(''); //메시지 입력 상태
@@ -105,18 +102,6 @@ export default function ChatRoomPage() {
   //점주 채팅방 진입 시 상대 고객 Id
   const customerId = searchParams.get('customerId');
 
-  //점주 입장 예약 내역
-  const ownerReservationsQuery = useOwnerChatReservations(shopInfo?.shopId, customerId);
-  //고객 입장 예약 내역
-  const customerReservationsQuery = useCustomerChatReservations(shopInfo?.shopId);
-
-  //유저 타입에 따라 예약 내역 결정
-  const reservations = (userType === 'OWNER' ? ownerReservationsQuery : customerReservationsQuery)
-    ?.data;
-
-  //메시지에 예약 상태 메시지 반영
-  useInjectReservationMessages(reservations, setLiveMessages, userId);
-
   const handleBack = () => {
     // 외부 링크 유입(slug), 홈으로 강제 이동
     if (slugOrCode) {
@@ -147,8 +132,20 @@ export default function ChatRoomPage() {
   //스크롤 제어 ref
   const bottomRef = useRef(null);
 
-  // 모든 페이지 메시지(기존) 합치기
-  const oldMessages = data?.pages.flatMap((page) => page.messages).reverse() ?? [];
+  const rawOldMessages = data?.pages.flatMap((p) => p.messages).reverse() ?? [];
+
+  const normalizedOldMessages = useNormalizedMessages(rawOldMessages);
+
+  const merged = [...normalizedOldMessages, ...liveMessages];
+
+  const allMessages = useMemo(
+    () =>
+      Array.from(new Map(merged.map((m) => [m.messageId, m])).values()).sort(
+        (a, b) => new Date(a.sentAt) - new Date(b.sentAt)
+      ),
+    [merged]
+  );
+
   //메시지 전송 훅
   const { mutate: sendMessage } = useSendMessage(chatRoomId, (message) => {
     //메시지 낙관적 업데이트
@@ -165,9 +162,41 @@ export default function ChatRoomPage() {
   //WebSocket 연결
   useEffect(() => {
     chatSocketService.connect(accessToken, () => {
-      //구독시 상대방 메시지 실시간 업데이트
-      chatSocketService.subscribe(chatRoomId, (incoming) => {
-        // 낙관적 메시지를 서버 메시지로 교체
+      chatSocketService.subscribe(chatRoomId, async (incoming) => {
+        if (incoming.messageType === 'RESERVATION_CREATED') {
+          try {
+            //reservationId로 단건 조회
+            const reservation = await reservationService.getReservationById(incoming.reservationId);
+            console.log(reservation);
+
+            //바로 완성된 예약 메시지 추가
+            setLiveMessages((prev) => [
+              ...prev,
+              {
+                messageId: incoming.messageId, // 서버 messageId
+                senderId: incoming.senderId,
+                senderName: incoming.senderName,
+                sentAt: incoming.sentAt,
+
+                type: incoming.messageType,
+                isReservationCard: true,
+
+                payload: {
+                  name: reservation.customerName,
+                  date: reservation.date,
+                  time: reservation.time,
+                  photoCount: reservation.photoCount,
+                },
+              },
+            ]);
+          } catch (e) {
+            console.error('예약 단건 조회 실패', e);
+          }
+
+          return;
+        }
+
+        // 일반 채팅 메시지
         replaceWithServerMessage(incoming);
       });
     });
@@ -220,31 +249,9 @@ export default function ChatRoomPage() {
     setInput('');
   };
 
-  //예약 전송 완료 메시지 처리 함수
-  const onReservationComplete = (data) => {
-    setLiveMessages((prev) => [
-      ...prev,
-      {
-        messageId: `complete-${Date.now()}`,
-        type: 'PENDING',
-        isReservationCard: true, //예약 완료 메시지임을 명시
-        payload: data, // { name, date, time, photoCount }
-        sentAt: new Date().toISOString(),
-      },
-    ]);
-  };
-
-  // 모든 메시지 병합 (기존 + 실시간, 중복 제거)
-  const merged = [...(oldMessages ?? []), ...liveMessages];
-  //오름차순 시간 정렬
-  const allMessages = Array.from(new Map(merged.map((m) => [m.messageId, m])).values()).sort(
-    (a, b) => new Date(a.sentAt) - new Date(b.sentAt)
-  );
-
   //페이지 첫 마운트 시 스크롤 하단 제어
   useInitFullReadyScroll(
     data,
-    reservations,
     allMessages,
     isFetchingNextPage,
     readyToObserve,
@@ -299,12 +306,7 @@ export default function ChatRoomPage() {
         </S.InputBar>
       </S.PageWrapper>
       {/*예약 모달 */}
-      <ReservationModal
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        shopId={shopInfo?.shopId}
-        onReservationComplete={onReservationComplete}
-      />
+      <ReservationModal isOpen={isModalOpen} onClose={closeModal} shopId={shopInfo?.shopId} />
     </Container>
   );
 }
