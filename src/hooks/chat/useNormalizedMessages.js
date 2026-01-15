@@ -16,7 +16,7 @@ export function useNormalizedMessages(rawMessages) {
             return msg;
           }
 
-          // 🔥 이미 처리한 예약이면 재요청 X
+          // 이미 처리한 예약이면 재요청 X
           if (cacheRef.current.has(msg.reservationId)) {
             return cacheRef.current.get(msg.reservationId);
           }

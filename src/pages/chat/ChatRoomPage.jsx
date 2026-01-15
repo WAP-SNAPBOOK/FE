@@ -132,8 +132,10 @@ export default function ChatRoomPage() {
   //스크롤 제어 ref
   const bottomRef = useRef(null);
 
-  const rawOldMessages = data?.pages.flatMap((p) => p.messages).reverse() ?? [];
-
+  const rawOldMessages = useMemo(
+    () => data?.pages.flatMap((p) => p.messages).reverse() ?? [],
+    [data]
+  );
   const normalizedOldMessages = useNormalizedMessages(rawOldMessages);
 
   const merged = [...normalizedOldMessages, ...liveMessages];
