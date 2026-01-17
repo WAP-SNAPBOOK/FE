@@ -28,13 +28,7 @@ export function useNormalizedMessages(rawMessages) {
             sentAt: msg.sentAt,
             isReservationCard: true,
             type: r.status,
-            payload: {
-              id: r.id,
-              name: r.customerName,
-              date: r.date,
-              time: r.time,
-              photoCount: r.photoCount,
-            },
+            payload: r,
           };
 
           cacheRef.current.set(msg.reservationId, converted);
