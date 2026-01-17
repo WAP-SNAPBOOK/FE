@@ -132,21 +132,17 @@ export default function ChatRoomPage() {
   //스크롤 제어 ref
   const bottomRef = useRef(null);
 
+  //초기 메시지 조회 정보
   const rawOldMessages = useMemo(
     () => data?.pages.flatMap((p) => p.messages).reverse() ?? [],
     [data]
   );
+
+  //각 예약 정보를 가져 올 수 있도록 정규화
   const normalizedOldMessages = useNormalizedMessages(rawOldMessages);
 
-  const merged = [...normalizedOldMessages, ...liveMessages];
-
-  const allMessages = useMemo(
-    () =>
-      Array.from(new Map(merged.map((m) => [m.messageId, m])).values()).sort(
-        (a, b) => new Date(a.sentAt) - new Date(b.sentAt)
-      ),
-    [merged]
-  );
+  //이전 메시지 preappend
+  const mergedMessages = [...normalizedOldMessages, ...liveMessages];
 
   //메시지 전송 훅
   const { mutate: sendMessage } = useSendMessage(chatRoomId, (message) => {
@@ -254,7 +250,7 @@ export default function ChatRoomPage() {
   //페이지 첫 마운트 시 스크롤 하단 제어
   useInitFullReadyScroll(
     data,
-    allMessages,
+    mergedMessages,
     isFetchingNextPage,
     readyToObserve,
     scrollToBottom,
@@ -277,7 +273,7 @@ export default function ChatRoomPage() {
         <S.Messages ref={messageListRef} onScroll={handleScroll}>
           {/*상단 스크롤 감지용 */}
           <div ref={topObserverRef} />
-          <MessageList messages={allMessages} userId={userId} />
+          <MessageList messages={mergedMessages} userId={userId} />
           {/* 하단 스크롤 고정용 */}
           <div ref={bottomRef} />
         </S.Messages>
