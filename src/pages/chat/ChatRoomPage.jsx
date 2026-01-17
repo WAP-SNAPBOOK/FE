@@ -165,7 +165,6 @@ export default function ChatRoomPage() {
           try {
             //reservationId로 단건 조회
             const reservation = await reservationService.getReservationById(incoming.reservationId);
-            console.log(reservation);
 
             //바로 완성된 예약 메시지 추가
             setLiveMessages((prev) => [
