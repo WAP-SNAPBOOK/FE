@@ -179,10 +179,19 @@ export default function ChatRoomPage() {
                 isReservationCard: true,
 
                 payload: {
+                  id: incoming.reservationId,
                   customerName: reservation.customerName,
                   date: reservation.date,
                   time: reservation.time,
                   photoCount: reservation.photoCount,
+                  photoUrls: reservation.photoUrls,
+                  part: reservation.part,
+                  removal: reservation.removal,
+                  requests: reservation.requests,
+                  extendCount: reservation.extendCount,
+                  wrappingCount: reservation.wrappingCount,
+                  extendStatus: reservation.extendStatus,
+                  wrappingStatus: reservation.wrappingStatus,
                 },
               },
             ]);
