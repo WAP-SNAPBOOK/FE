@@ -179,7 +179,7 @@ export default function ChatRoomPage() {
                 isReservationCard: true,
 
                 payload: {
-                  name: reservation.customerName,
+                  customerName: reservation.customerName,
                   date: reservation.date,
                   time: reservation.time,
                   photoCount: reservation.photoCount,
