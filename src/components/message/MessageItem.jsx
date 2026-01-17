@@ -29,7 +29,7 @@ export default function MessageItem({ msg, isMine }) {
           //일반 고객
           CardComponent = (
             <ReservationCompleteMessage
-              name={msg.payload.name}
+              name={msg.payload.customerName}
               date={msg.payload.date}
               time={msg.payload.time}
               photoCount={msg.payload.photoCount}
@@ -43,10 +43,10 @@ export default function MessageItem({ msg, isMine }) {
         CardComponent = (
           <DecisionCard
             variant="approved"
-            customerName={msg.payload.name}
+            customerName={msg.payload.customerName}
             dateText={msg.payload.date}
             timeText={msg.payload.time}
-            noteText={msg.confirmationMessage}
+            noteText={msg.payload.confirmationMessage}
           />
         );
         break;
@@ -55,10 +55,10 @@ export default function MessageItem({ msg, isMine }) {
         CardComponent = (
           <DecisionCard
             variant="rejected"
-            customerName={msg.payload.name}
+            customerName={msg.payload.customerName}
             dateText={msg.payload.date}
             timeText={msg.payload.time}
-            noteText={msg.rejectionReason ?? '예약이 불가한 시간입니다.'}
+            noteText={msg.payload.rejectionReason ?? '예약이 불가한 시간입니다.'}
           />
         );
         break;
