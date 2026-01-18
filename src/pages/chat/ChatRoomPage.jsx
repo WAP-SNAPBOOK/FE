@@ -99,9 +99,6 @@ export default function ChatRoomPage() {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isSuccess } =
     useChatMessages(chatRoomId);
 
-  //점주 채팅방 진입 시 상대 고객 Id
-  const customerId = searchParams.get('customerId');
-
   const handleBack = () => {
     // 외부 링크 유입(slug), 홈으로 강제 이동
     if (slugOrCode) {
