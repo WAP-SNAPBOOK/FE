@@ -12,7 +12,8 @@ export function useNormalizedMessages(rawMessages) {
     async function normalize() {
       const result = await Promise.all(
         rawMessages.map(async (msg) => {
-          if (msg.messageType !== 'RESERVATION_CREATED') {
+          //메시지에 예약 Id 불포함 시 일반 텍스트 메시지
+          if (!msg.reservationId) {
             return msg;
           }
 
@@ -21,18 +22,21 @@ export function useNormalizedMessages(rawMessages) {
             return cacheRef.current.get(msg.reservationId);
           }
 
-          const r = await reservationService.getReservationById(msg.reservationId);
-
-          const converted = {
-            messageId: msg.messageId,
-            sentAt: msg.sentAt,
-            isReservationCard: true,
-            type: r.status,
-            payload: r,
-          };
-
-          cacheRef.current.set(msg.reservationId, converted);
-          return converted;
+          try {
+            const r = await reservationService.getReservationById(msg.reservationId);
+            const converted = {
+              messageId: msg.messageId,
+              sentAt: msg.sentAt,
+              isReservationCard: true,
+              type: r.status,
+              payload: r,
+            };
+            cacheRef.current.set(msg.reservationId, converted);
+            return converted;
+          } catch (err) {
+            console.error('예약 상세 조회 실패:', err);
+            return msg; // 실패 시 원본 메시지로 fallback
+          }
         })
       );
 
