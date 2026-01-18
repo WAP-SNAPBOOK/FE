@@ -14,7 +14,6 @@ import { useEffect, useRef } from 'react';
  */
 export function useInitFullReadyScroll(
   data,
-  reservations,
   allMessages,
   isFetchingNextPage,
   readyToObserve,
@@ -29,13 +28,10 @@ export function useInitFullReadyScroll(
     // 1) oldMessages 준비 여부
     const oldReady = data?.pages?.length > 0;
 
-    // 2) reservation 준비 여부
-    const reservationReady = Array.isArray(reservations);
-
     // 3) 최종 합쳐진 메시지가 있는지
     const hasMessages = allMessages.length > 0;
 
-    if (!oldReady || !reservationReady || !hasMessages) return;
+    if (!oldReady || !hasMessages) return;
 
     // 최초 1회만 실행
     if (initialScrollDone.current) return;
@@ -47,5 +43,5 @@ export function useInitFullReadyScroll(
         setReadyToObserve(true); // 옵저버 켤 조건 전달
       }, 50);
     });
-  }, [data?.pages?.length, reservations, allMessages.length, isFetchingNextPage, readyToObserve]);
+  }, [data?.pages?.length, allMessages.length, isFetchingNextPage, readyToObserve]);
 }

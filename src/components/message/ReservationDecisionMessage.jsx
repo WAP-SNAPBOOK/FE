@@ -21,7 +21,7 @@ export default function ReservationDecisionMessage({ reservation }) {
 
   if (!reservation) return null;
 
-  const { id, name, date, time, info } = reservation;
+  const { id, customerName, date, time } = reservation;
 
   //예약 확정 헨들러
   const handleConfirm = ({ memo }) => {
@@ -55,7 +55,7 @@ export default function ReservationDecisionMessage({ reservation }) {
 
   return (
     <S.Card>
-      <S.Title>{name}</S.Title>
+      <S.Title>{customerName}</S.Title>
 
       <S.InfoRow>
         <S.Label>예약 날짜</S.Label>
@@ -76,7 +76,7 @@ export default function ReservationDecisionMessage({ reservation }) {
       {/*상세보기 영역(예약 거절, 예약 확정에 따른 폼 구성*/}
       {open &&
         (mode === 'VIEW' ? (
-          <ReservationInfoView info={info} />
+          <ReservationInfoView info={reservation} />
         ) : mode === 'CONFIRM' ? (
           <ReservationConfirmForm
             onConfirm={handleConfirm}

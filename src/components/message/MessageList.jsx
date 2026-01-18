@@ -13,7 +13,7 @@ export default function MessageList({ messages, userId }) {
         const showDateDivider = currentDate !== prevDate; //다른 날짜 판별 기준값
 
         return (
-          <React.Fragment key={`${index}-${msg.messageId}`}>
+          <React.Fragment key={msg.messageId}>
             {/*이전 날짜와 현재 날짜과 다르다면 구분선 추가*/}
             {showDateDivider && <DateDivider date={msg.sentAt} />}
             <MessageItem msg={msg} isMine={isMine} />
