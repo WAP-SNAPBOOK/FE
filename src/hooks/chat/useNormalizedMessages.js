@@ -28,7 +28,7 @@ export function useNormalizedMessages(rawMessages) {
               messageId: msg.messageId,
               sentAt: msg.sentAt,
               isReservationCard: true,
-              type: r.status,
+              type: msg.messageType,
               payload: r,
             };
             cacheRef.current.set(msg.reservationId, converted);

@@ -25,6 +25,7 @@ import { useShopInfoById } from '../../query/shopQueries';
 import { useInitFullReadyScroll } from '../../hooks/chat/useInitFullReadyScroll';
 import { reservationService } from '../../api/services/reservationService';
 import { useNormalizedMessages } from '../../hooks/chat/useNormalizedMessages';
+import { useReservationSocketHandler } from '../../hooks/chat/useReservationSocketHandler';
 
 export default function ChatRoomPage() {
   const [input, setInput] = useState(''); //메시지 입력 상태
@@ -139,7 +140,17 @@ export default function ChatRoomPage() {
   const normalizedOldMessages = useNormalizedMessages(rawOldMessages);
 
   //이전 메시지 preappend
-  const mergedMessages = [...normalizedOldMessages, ...liveMessages];
+  const mergedMessages = useMemo(() => {
+    const map = new Map();
+
+    //messageId를 키로 덮어 씌우기(중복 방지)
+    [...normalizedOldMessages, ...liveMessages].forEach((m) => {
+      if (!m.messageId) return;
+      map.set(m.messageId, m);
+    });
+
+    return Array.from(map.values());
+  }, [normalizedOldMessages, liveMessages]);
 
   //메시지 전송 훅
   const { mutate: sendMessage } = useSendMessage(chatRoomId, (message) => {
@@ -154,52 +165,18 @@ export default function ChatRoomPage() {
     };
   }, [chatRoomId]);
 
+  //실시간 예약 상태 메시지 처리 훅
+  const { handleReservationMessage } = useReservationSocketHandler(setLiveMessages);
+
   //WebSocket 연결
   useEffect(() => {
     chatSocketService.connect(accessToken, () => {
       chatSocketService.subscribe(chatRoomId, async (incoming) => {
-        if (incoming.messageType === 'RESERVATION_CREATED') {
-          try {
-            //reservationId로 단건 조회
-            const reservation = await reservationService.getReservationById(incoming.reservationId);
+        const handled = await handleReservationMessage(incoming);
 
-            //바로 완성된 예약 메시지 추가
-            setLiveMessages((prev) => [
-              ...prev,
-              {
-                messageId: incoming.messageId, // 서버 messageId
-                senderId: incoming.senderId,
-                senderName: incoming.senderName,
-                sentAt: incoming.sentAt,
+        if (handled) return;
 
-                type: incoming.messageType,
-                isReservationCard: true,
-
-                payload: {
-                  id: incoming.reservationId,
-                  customerName: reservation.customerName,
-                  date: reservation.date,
-                  time: reservation.time,
-                  photoCount: reservation.photoCount,
-                  photoUrls: reservation.photoUrls,
-                  part: reservation.part,
-                  removal: reservation.removal,
-                  requests: reservation.requests,
-                  extendCount: reservation.extendCount,
-                  wrappingCount: reservation.wrappingCount,
-                  extendStatus: reservation.extendStatus,
-                  wrappingStatus: reservation.wrappingStatus,
-                },
-              },
-            ]);
-          } catch (e) {
-            console.error('예약 단건 조회 실패', e);
-          }
-
-          return;
-        }
-
-        // 일반 채팅 메시지
+        // 예약 메시지가 아니면 일반 메시지 처리
         replaceWithServerMessage(incoming);
       });
     });
