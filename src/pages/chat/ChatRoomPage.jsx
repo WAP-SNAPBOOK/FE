@@ -139,7 +139,17 @@ export default function ChatRoomPage() {
   const normalizedOldMessages = useNormalizedMessages(rawOldMessages);
 
   //이전 메시지 preappend
-  const mergedMessages = [...normalizedOldMessages, ...liveMessages];
+  const mergedMessages = useMemo(() => {
+    const map = new Map();
+
+    //messageId를 키로 덮어 씌우기(중복 방지)
+    [...normalizedOldMessages, ...liveMessages].forEach((m) => {
+      if (!m.messageId) return;
+      map.set(m.messageId, m);
+    });
+
+    return Array.from(map.values());
+  }, [normalizedOldMessages, liveMessages]);
 
   //메시지 전송 훅
   const { mutate: sendMessage } = useSendMessage(chatRoomId, (message) => {
