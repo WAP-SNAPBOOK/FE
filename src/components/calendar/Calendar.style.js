@@ -36,6 +36,16 @@ export const WeekRow = styled.div`
   text-align: center;
 `;
 
+export const Weekday = styled.span`
+  font-size: 12px;
+  font-weight: 600;
+  color: ${({ $dayIndex }) => {
+    if ($dayIndex === 0) return '#FF6A6A'; // SUN
+    if ($dayIndex === 6) return '#4A90E2'; // SAT
+    return '#999'; // 평일
+  }};
+`;
+
 export const DayGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(7, 1fr);
