@@ -11,8 +11,10 @@ export default function Calendar({ value, currentMonth, onSelect }) {
     <S.Container>
       {/* 요일 */}
       <S.WeekRow>
-        {['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'].map((d) => (
-          <span key={d}>{d}</span>
+        {['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'].map((d, idx) => (
+          <S.Weekday key={d} $dayIndex={idx}>
+            {d}
+          </S.Weekday>
         ))}
       </S.WeekRow>
 
