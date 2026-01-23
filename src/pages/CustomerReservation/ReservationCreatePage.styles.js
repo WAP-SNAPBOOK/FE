@@ -23,6 +23,9 @@ export const Title = styled.h1`
 `;
 
 export const IconButton = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 32px;
   height: 32px;
   border: none;
