@@ -73,7 +73,7 @@ export default function ReservationCreatePage() {
     <Container $start>
       <S.PageWrapper>
         <S.Header>
-          <S.IconButton aria-label="뒤로가기">
+          <S.IconButton onClick={prev} aria-label="뒤로가기">
             <img src={backIcon} alt="back" />
           </S.IconButton>
 
