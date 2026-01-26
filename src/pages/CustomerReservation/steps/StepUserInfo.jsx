@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { sanitizeDigits, validateMobile010 } from '@/utils/phoneNumber';
+import userIcon from '@/assets/icons/user-icon_gray.svg';
+import phoneIcon from '@/assets/icons/phone-icon.svg';
 import * as S from './steps.styles';
 
 export default function StepUserInfo({ initialData, onChange }) {
@@ -22,22 +24,32 @@ export default function StepUserInfo({ initialData, onChange }) {
       <S.StepTitle>기본 정보 입력</S.StepTitle>
       <div className="flex flex-col items-center mb-[320px]">
         <S.Field>
-          <S.Label>이름</S.Label>
-          <S.Input
-            placeholder="이름을 입력해 주세요"
-            value={name}
-            onChange={(e) => setName(e.target.value.slice(0, 5))}
-          />
+          <S.InputWrapper>
+            <S.Input
+              placeholder="이름을 입력해 주세요"
+              value={name}
+              onChange={(e) => setName(e.target.value.slice(0, 5))}
+            />
+            <S.InputIcon>
+              <img src={userIcon} alt="userIcon" />
+            </S.InputIcon>
+          </S.InputWrapper>
         </S.Field>
 
         <S.Field>
           <S.Label>전화번호</S.Label>
-          <S.Input
-            placeholder="전화번호를 입력해 주세요"
-            inputMode="numeric"
-            value={phone}
-            onChange={(e) => setPhone(sanitizeDigits(e.target.value))}
-          />
+
+          <S.InputWrapper>
+            <S.Input
+              placeholder="전화번호를 입력해 주세요"
+              inputMode="numeric"
+              value={phone}
+              onChange={(e) => setPhone(sanitizeDigits(e.target.value))}
+            />
+            <S.InputIcon>
+              <img src={phoneIcon} alt="phoneIcon" />
+            </S.InputIcon>
+          </S.InputWrapper>
         </S.Field>
       </div>
     </>
