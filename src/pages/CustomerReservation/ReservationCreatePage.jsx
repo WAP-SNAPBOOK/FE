@@ -62,8 +62,6 @@ export default function ReservationCreatePage() {
   //이전 단계 이동으로 step감소
   const prev = () => setStep((s) => Math.max(s - 1, 1));
 
-  const updateBasic = (patch) => setFormData((p) => ({ ...p, basic: { ...p.basic, ...patch } }));
-
   const submitReservation = () => {
     // TODO: API payload 조합 후 createReservation
     console.log('FINAL SUBMIT', formData);
