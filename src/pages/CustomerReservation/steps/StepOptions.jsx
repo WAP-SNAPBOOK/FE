@@ -19,10 +19,13 @@ export default function StepOptions({ initialData, onChange }) {
     }
   }, [initialData]);
 
-  //  부모에 최신 상태 반영
-  useEffect(() => {
-    onChange(values);
-  }, [values, onChange]);
+  const updateField = (key, value) => {
+    setValues((p) => {
+      const next = { ...p, [key]: value };
+      onChange({ options: next }); // 부모 상태 변경
+      return next;
+    });
+  };
 
   //각 입력 필드 변경 함수
   const setField = (key, value) => setValues((p) => ({ ...p, [key]: value }));
@@ -39,7 +42,7 @@ export default function StepOptions({ initialData, onChange }) {
         label="제거 유무"
         options={['유', '무']}
         value={values.removeYn}
-        onChange={(v) => setField('removeYn', v)}
+        onChange={(v) => updateField('removeYn', v)}
         layout="vertical"
         variant="large"
       />
@@ -49,7 +52,7 @@ export default function StepOptions({ initialData, onChange }) {
         label="시술 부위"
         options={['손', '발']}
         value={values.handFootYn}
-        onChange={(v) => setField('handFootYn', v)}
+        onChange={(v) => updateField('handFootYn', v)}
         layout="vertical"
         variant="large"
       />
@@ -69,7 +72,7 @@ export default function StepOptions({ initialData, onChange }) {
         variant="toggle"
         withCount
         countValue={values.extCount}
-        onCountChange={(v) => setField('extCount', v)}
+        onCountChange={(v) => updateField('extCount', v)}
       />
 
       {/* 래핑 */}
@@ -87,7 +90,7 @@ export default function StepOptions({ initialData, onChange }) {
         withCount
         variant="toggle"
         countValue={values.wrapCount}
-        onCountChange={(v) => setField('wrapCount', v)}
+        onCountChange={(v) => updateField('wrapCount', v)}
       />
     </>
   );

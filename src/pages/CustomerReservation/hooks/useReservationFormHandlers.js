@@ -8,7 +8,7 @@ export function useReservationFormHandlers(setFormData, setCanNext) {
         ...p,
         basic: { ...p.basic, name, phoneNumber },
       }));
-      setCanNext(isValid); //다음 단계 진행 여부 판별
+      setCanNext(isValid); //다음 단계 진행 여부
     },
     [setFormData, setCanNext]
   );
@@ -39,11 +39,10 @@ export function useReservationFormHandlers(setFormData, setCanNext) {
 
   //옵션 선택 헨들러
   const handleOptionsChange = useCallback(
-    ({ options, isValid }) => {
-      setFormData((p) => ({ ...p, options: options }));
-      setCanNext(isValid);
+    ({ options }) => {
+      setFormData((p) => ({ ...p, options }));
     },
-    [setFormData, setCanNext]
+    [setFormData]
   );
 
   return {
