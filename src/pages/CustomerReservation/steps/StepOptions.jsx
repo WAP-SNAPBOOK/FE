@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import RadioOption from '@/pages/CustomerReservation/steps/RadioOption';
 import * as S from './steps.styles';
 
-export default function StepOptions({ initialData, onSubmit }) {
+export default function StepOptions({ initialData, onChange }) {
   const [values, setValues] = useState({
     removeYn: '유',
     handFootYn: '손',
@@ -12,19 +12,20 @@ export default function StepOptions({ initialData, onSubmit }) {
     wrapCount: '',
   });
 
+  // 초기값 주입 (뒤로가기 복원)
   useEffect(() => {
     if (initialData) {
       setValues((v) => ({ ...v, ...initialData }));
     }
   }, [initialData]);
 
+  //  부모에 최신 상태 반영
+  useEffect(() => {
+    onChange(values);
+  }, [values, onChange]);
+
   //각 입력 필드 변경 함수
   const setField = (key, value) => setValues((p) => ({ ...p, [key]: value }));
-
-  // step4 변경 시 상위로 전달
-  useEffect(() => {
-    onSubmit?.(values);
-  }, [values, onSubmit]);
 
   return (
     <>

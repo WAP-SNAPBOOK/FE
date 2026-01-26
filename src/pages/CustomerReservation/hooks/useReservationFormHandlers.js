@@ -40,7 +40,7 @@ export function useReservationFormHandlers(setFormData, setCanNext) {
   //옵션 선택 헨들러
   const handleOptionsChange = useCallback(
     ({ options, isValid }) => {
-      setFormData((p) => ({ ...p, options }));
+      setFormData((p) => ({ ...p, options: options }));
       setCanNext(isValid);
     },
     [setFormData, setCanNext]
