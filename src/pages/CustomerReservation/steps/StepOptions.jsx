@@ -20,15 +20,10 @@ export default function StepOptions({ initialData, onChange }) {
   }, [initialData]);
 
   const updateField = (key, value) => {
-    setValues((p) => {
-      const next = { ...p, [key]: value };
-      onChange({ options: next }); // 부모 상태 변경
-      return next;
-    });
+    const next = { ...values, [key]: value };
+    setValues(next); //로컬 state 갱신
+    onChange({ options: next }); // 부모 상태 갱신
   };
-
-  //각 입력 필드 변경 함수
-  const setField = (key, value) => setValues((p) => ({ ...p, [key]: value }));
 
   return (
     <>
