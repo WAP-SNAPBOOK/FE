@@ -46,12 +46,14 @@ export default function ReservationCreatePage() {
   };
 
   const handleNextClick = () => {
-    if (!canNext) return;
-
+    // step 4는  제출
     if (step === 4) {
       submitReservation();
       return;
     }
+
+    // step 1~3만 검증
+    if (!canNext) return;
 
     next(); // step 증가
     setCanNext(false); // 다음 step 진입 시 초기화
@@ -100,9 +102,9 @@ export default function ReservationCreatePage() {
             />
           )}
           {step === 4 && (
-            <StepOptions initialData={formData.options} onBack={prev} onSubmit={stepHandlers[4]} />
+            <StepOptions initialData={formData.options} onBack={prev} onChange={stepHandlers[4]} />
           )}
-          <NextButton $width="100%" disabled={!canNext} onClick={handleNextClick}>
+          <NextButton $width="100%" disabled={step !== 4 && !canNext} onClick={handleNextClick}>
             {step === 4 ? '예약 신청' : '다음 단계로'}
           </NextButton>
         </S.Content>
