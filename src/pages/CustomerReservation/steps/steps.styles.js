@@ -47,6 +47,13 @@ export const InputIcon = styled.div`
   pointer-events: none;
 `;
 
+/* 색션 메인 헤더*/
+export const SectionHeading = styled.div`
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 20px;
+`;
+
 /* 날짜 선택 / 시간 선택 같은 섹션 타이틀 */
 export const SectionTitle = styled.div`
   display: flex;
