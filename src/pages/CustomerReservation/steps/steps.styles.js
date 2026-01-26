@@ -24,12 +24,27 @@ export const Input = styled.input`
   height: 48px;
   border-radius: 12px;
   border: 1px solid #eee;
-  padding: 0 14px;
+  padding: 0 44px 0 16px; /* 오른쪽 아이콘 공간 확보 */
   font-size: 15px;
+  background-color: #f9fafb;
 
   &::placeholder {
     color: #bbb;
   }
+`;
+
+export const InputWrapper = styled.div`
+  position: relative;
+`;
+
+export const InputIcon = styled.div`
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  pointer-events: none;
 `;
 
 /* 날짜 선택 / 시간 선택 같은 섹션 타이틀 */
