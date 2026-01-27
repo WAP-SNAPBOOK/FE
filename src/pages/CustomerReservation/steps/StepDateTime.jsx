@@ -14,11 +14,13 @@ export default function StepDateTime({ initialData, onChange }) {
 
   //이전 달 이동 헨들러
   const goPrevMonth = () => {
-    //이전 달 이동 금지
-    setCurrentMonth((m) => (m.isSame(dayjs(), 'month') ? m : m.subtract(1, 'month')));
-    //달 이동시 선택 날짜, 시간 초기화
-    setSelectedDate(null);
-    setSelectedTime(null);
+    setCurrentMonth((m) => {
+      if (m.isSame(dayjs(), 'month')) return m; // 이동 불가
+      // 실제 이동 시에만 초기화
+      setSelectedDate(null);
+      setSelectedTime(null);
+      return m.subtract(1, 'month');
+    });
   };
 
   //다음 달 이동 헨들러
