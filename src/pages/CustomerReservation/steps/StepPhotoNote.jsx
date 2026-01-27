@@ -5,10 +5,10 @@ import pictureIcon from '@/assets/icons/picture-icon.svg';
 
 const MAX_PHOTOS = 4;
 
-export default function StepPhotoNote({ initialData, onChange }) {
+export default function StepPhotoNote({ initialData = {}, onChange }) {
   const fileInputRef = useRef(null); // 이미지 파일 참조용
-  const [files, setFiles] = useState(initialData.files || []); //사진 파일
-  const [notes, setNotes] = useState(initialData.notes || ''); //요구사항
+  const [files, setFiles] = useState(initialData.files ?? []); //사진 파일
+  const [notes, setNotes] = useState(initialData.notes ?? ''); //요구사항
 
   const [previews, setPreviews] = useState([]);
 
