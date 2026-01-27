@@ -42,12 +42,26 @@ export const ProgressBar = styled.div`
 `;
 
 export const Progress = styled.div`
+  position: relative;
   flex: 1;
   height: 8px;
   border-radius: 999px;
-  background: ${({ $active }) => ($active ? '#ff8a8a' : '#eee')};
-`;
+  background: #eee;
+  overflow: hidden;
 
+  /* progress 내부 Progress bar */
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: ${({ $active }) => ($active ? '100%' : '0%')};
+    background: #ff8a8a;
+    border-radius: 999px;
+    transition: width 0.4s ease;
+  }
+`;
 /* 중앙 컨텐츠 */
 export const Content = styled.div`
   display: flex;
