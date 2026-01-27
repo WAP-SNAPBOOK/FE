@@ -5,10 +5,10 @@ import phoneIcon from '@/assets/icons/phone-icon.svg';
 import * as S from './steps.styles';
 
 export default function StepUserInfo({ initialData, onChange }) {
-  const [name, setName] = useState(initialData.name);
-  const [phone, setPhone] = useState(initialData.phoneNumber);
+  const [name, setName] = useState(initialData.name ?? '');
+  const [phone, setPhone] = useState(initialData.phoneNumber ?? '');
 
-  const isValid = name.trim().length > 0 && validateMobile010(phone).valid;
+  const isValid = (name ?? '').trim().length > 0 && validateMobile010(phone).valid;
 
   //예약 폼 정보 변경(이름, 전화 번호)
   useEffect(() => {
