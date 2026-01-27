@@ -123,9 +123,7 @@ export default function ReservationCreatePage() {
               onBack={prev}
             />
           )}
-          {step === 4 && (
-            <StepOptions initialData={formData.options} onBack={prev} onChange={stepHandlers[4]} />
-          )}
+          {step === 4 && <StepOptions initialData={formData.options} onChange={stepHandlers[4]} />}
           <NextButton $width="100%" disabled={step !== 4 && !canNext} onClick={handleNextClick}>
             {step === 4 ? '예약 신청' : '다음 단계로'}
           </NextButton>
