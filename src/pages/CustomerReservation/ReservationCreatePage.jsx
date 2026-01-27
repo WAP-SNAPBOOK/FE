@@ -9,6 +9,8 @@ import { NextButton } from '@/components/common/NextButton';
 import backIcon from '@/assets/icons/back-icon.svg';
 import xIcon from '@/assets/icons/X-icon.svg';
 import { useReservationFormHandlers } from './hooks/useReservationFormHandlers';
+import { useNavigate, useLocation } from 'react-router-dom';
+
 export default function ReservationCreatePage() {
   const [step, setStep] = useState(1);
   const [canNext, setCanNext] = useState(false);
@@ -33,6 +35,9 @@ export default function ReservationCreatePage() {
       wrapCount: '',
     },
   });
+
+  const navigate = useNavigate();
+  const location = useLocation();
 
   //각 예약 단계 폼 입력 헨들러
   const { handleUserInfoChange, handleDateTimeChange, handlePhotoNoteChange, handleOptionsChange } =
@@ -66,7 +71,24 @@ export default function ReservationCreatePage() {
 
   const submitReservation = () => {
     // TODO: API payload 조합 후 createReservation
-    console.log('FINAL SUBMIT', formData);
+    //console.log('FINAL SUBMIT', formData);
+
+    const returnTo = location.state?.returnTo;
+
+    if (returnTo) {
+      navigate(returnTo, { replace: true });
+    } else {
+      navigate('/chat'); // fallback
+    }
+  };
+
+  //예약 생성 페이지 나가기 헨들러
+  const handleClose = () => {
+    if (window.history.length > 1) {
+      navigate(-1);
+    } else {
+      navigate('/chat'); // fallback
+    }
   };
 
   return (
@@ -79,7 +101,7 @@ export default function ReservationCreatePage() {
 
           <S.Title>예약하기</S.Title>
 
-          <S.IconButton aria-label="닫기">
+          <S.IconButton onClick={handleClose} aria-label="닫기">
             <img src={xIcon} alt="close" />
           </S.IconButton>
         </S.Header>
