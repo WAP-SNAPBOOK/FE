@@ -17,6 +17,7 @@ import Mypage from './pages/profile/Mypage';
 import OwnerReservationList from './pages/OwnerReservation/ownerReservationList';
 import CustomerReservationList from './pages/CustomerReservation/CustomerReservationList';
 import LinkRedirectPage from './pages/redirect/LinkRedirectPage';
+import ReservationCreatePage from './pages/CustomerReservation/ReservationCreatePage';
 
 const queryClient = new QueryClient();
 
@@ -52,6 +53,7 @@ function AppRoutes() {
       <Route path="/signup/owner/shop-info" element={<ShopInfoPage />} />
       <Route path="/chat" element={<ChatListPage />} />
       <Route path="/chat/:chatRoomId" element={<ChatRoomPage />} />
+      <Route path="/shops/:shopId/reservations/create" element={<ReservationCreatePage />} />
       <Route
         path="/reservations"
         element={

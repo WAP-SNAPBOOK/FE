@@ -23,7 +23,6 @@ import NewMessageCard from '../../components/notification/NewMessageCard';
 import InAppGuideBar from '../../components/common/InAppGuideBar';
 import { useShopInfoById } from '../../query/shopQueries';
 import { useInitFullReadyScroll } from '../../hooks/chat/useInitFullReadyScroll';
-import { reservationService } from '../../api/services/reservationService';
 import { useNormalizedMessages } from '../../hooks/chat/useNormalizedMessages';
 import { useReservationSocketHandler } from '../../hooks/chat/useReservationSocketHandler';
 
@@ -32,10 +31,6 @@ export default function ChatRoomPage() {
   const [liveMessages, setLiveMessages] = useState([]); //실시간 추가 메시지 상태
   const [readyToObserve, setReadyToObserve] = useState(false); //옵저버 등록 제어 상태
 
-  //예약 모달 상태
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
   //메뉴 표시 여부 상태
   const [showMenu, setShowMenu] = useState(false);
 
@@ -69,18 +64,6 @@ export default function ChatRoomPage() {
   //유저 타입(고객, 점주)에 따른 채팅방 이름
   const headerTitle =
     userType === 'OWNER' ? titleFromQuery || '채팅방' : shopInfo?.shopName || '채팅방';
-
-  //모달 재오픈 방지용 ref
-  const hasAutoOpened = useRef(false);
-
-  // 링크 유입(slug 존재) + shopInfo 로딩 완료 시 모달 자동 오픈
-  // 인앱에서 1회만
-  useEffect(() => {
-    if (slugOrCode && shopInfo && !hasAutoOpened.current) {
-      hasAutoOpened.current = true;
-      openModal();
-    }
-  }, [shopInfo, hasAutoOpened]);
 
   const accessToken = authStorage.getAccessToken();
 
@@ -229,6 +212,18 @@ export default function ChatRoomPage() {
     setInput('');
   };
 
+  //예약 생성 페이지 이동 헨들러
+  const handleClickReservation = () => {
+    if (!shopInfo?.shopId) return; //shopId 없을 시 예약 진행 X
+
+    navigate(`/shops/${shopInfo.shopId}/reservations/create`, {
+      state: {
+        //돌아올 경로 확정(채팅방)
+        returnTo: `/chat/${chatRoomId}`,
+      },
+    });
+  };
+
   //페이지 첫 마운트 시 스크롤 하단 제어
   useInitFullReadyScroll(
     data,
@@ -250,7 +245,7 @@ export default function ChatRoomPage() {
             <img src={backIcon} alt="back" />
           </S.BackButton>
           <ChatRoomTitle>{headerTitle}</ChatRoomTitle>
-          <S.BookButton onClick={openModal}>예약</S.BookButton>
+          <S.BookButton onClick={handleClickReservation}>예약</S.BookButton>
         </S.Header>
         <S.Messages ref={messageListRef} onScroll={handleScroll}>
           {/*상단 스크롤 감지용 */}
@@ -285,8 +280,6 @@ export default function ChatRoomPage() {
           <ChatSumbitButton onClick={handleSend} />
         </S.InputBar>
       </S.PageWrapper>
-      {/*예약 모달 */}
-      <ReservationModal isOpen={isModalOpen} onClose={closeModal} shopId={shopInfo?.shopId} />
     </Container>
   );
 }
