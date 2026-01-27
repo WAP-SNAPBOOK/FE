@@ -53,7 +53,7 @@ export default function StepPhotoNote({ initialData = {}, onChange }) {
       {/* 사진 */}
       <C.SectionTitle>사진</C.SectionTitle>
 
-      <S.UploadBox onClick={() => fileInputRef.current.click()}>
+      <S.UploadBox as="button" type="button" onClick={() => fileInputRef.current.click()}>
         사진을 선택해 주세요
         <S.UploadIcon>
           <img src={pictureIcon} alt="pictureIcon" />
