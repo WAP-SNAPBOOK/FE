@@ -57,13 +57,15 @@ export default function StepOptions({ initialData, onChange }) {
         label="연장"
         options={['유', '무']}
         value={values.extYn}
-        onChange={(v) =>
-          setValues((p) => ({
-            ...p,
+        onChange={(v) => {
+          const next = {
+            ...values,
             extYn: v,
-            extCount: v === '무' ? '' : p.extCount,
-          }))
-        }
+            extCount: v === '무' ? '' : values.extCount,
+          };
+          setValues(next);
+          onChange({ options: next });
+        }}
         variant="toggle"
         withCount
         countValue={values.extCount}
@@ -75,13 +77,15 @@ export default function StepOptions({ initialData, onChange }) {
         label="래핑"
         options={['유', '무']}
         value={values.wrapYn}
-        onChange={(v) =>
-          setValues((p) => ({
-            ...p,
+        onChange={(v) => {
+          const next = {
+            ...values,
             wrapYn: v,
-            wrapCount: v === '무' ? '' : p.wrapCount,
-          }))
-        }
+            wrapCount: v === '무' ? '' : values.wrapCount,
+          };
+          setValues(next);
+          onChange({ options: next });
+        }}
         withCount
         variant="toggle"
         countValue={values.wrapCount}
