@@ -32,6 +32,7 @@ export default function StepDateTime({ initialData, onChange }) {
   //다음 단계 진행 여부
   const isValid = Boolean(selectedDate && selectedTime);
 
+  //부모 에약 폼 정보 변경
   useEffect(() => {
     onChange({
       date: selectedDate,
