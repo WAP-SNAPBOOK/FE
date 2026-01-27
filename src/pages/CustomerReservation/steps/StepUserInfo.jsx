@@ -44,7 +44,7 @@ export default function StepUserInfo({ initialData, onChange }) {
               placeholder="전화번호를 입력해 주세요"
               inputMode="numeric"
               value={phone}
-              onChange={(e) => setPhone(sanitizeDigits(e.target.value))}
+              onChange={(e) => setPhone(sanitizeDigits(e.target.value).slice(0, 11))}
             />
             <S.InputIcon>
               <img src={phoneIcon} alt="phoneIcon" />
