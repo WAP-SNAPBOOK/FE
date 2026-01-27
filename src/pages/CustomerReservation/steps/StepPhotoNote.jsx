@@ -14,6 +14,7 @@ export default function StepPhotoNote({ initialData, onChange }) {
 
   const isValid = true; // 사진, 요구사항은 선택 사항
 
+  //부모 에약 폼 정보 변경
   useEffect(() => {
     onChange({
       files,
