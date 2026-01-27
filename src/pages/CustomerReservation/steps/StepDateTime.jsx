@@ -6,10 +6,9 @@ import TimeSlots from '@/components/time/TimeSlots';
 import { formatKoreanDate } from '@/utils/dateTime';
 import * as S from './steps.styles';
 
-export default function StepDateTime({ initialData, onChange }) {
-  const [selectedDate, setSelectedDate] = useState(initialData.date); //선택된 날짜
-  const [selectedTime, setSelectedTime] = useState(initialData.time); //선택된 시간
-  //선택된 날짜의 month, 없다면 현재 달
+export default function StepDateTime({ initialData = {}, onChange }) {
+  const [selectedDate, setSelectedDate] = useState(initialData.date ?? null); //선택된 날짜
+  const [selectedTime, setSelectedTime] = useState(initialData.time ?? null); //선택된 시간  //선택된 날짜의 month, 없다면 현재 달
   const [currentMonth, setCurrentMonth] = useState(selectedDate ? dayjs(selectedDate) : dayjs());
 
   //이전 달 이동 헨들러
