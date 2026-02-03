@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './CustomerReservationList.css';
 import { myReservation } from '../../api/services/myReservation';
+import ImageModal from '@/components/modal/ImageModal';
 
 export default function CustomerReservationList() {
   const [reservations, setReservations] = useState([]);
@@ -52,6 +53,7 @@ export default function CustomerReservationList() {
 
 function ReservationCard({ data }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(null); //모달 활성화된 사진 idx
 
   const STATUS_STYLES = {
     PENDING: { bg: '#ababFF', text: '#3131f7' },
@@ -196,8 +198,18 @@ function ReservationCard({ data }) {
                 <span className="section-title">사진</span>
                 <div className="photo-list">
                   {photoUrls.map((url, i) => (
-                    <img key={i} className="photo-item" src={url} alt={`예약 사진 ${i + 1}`} />
+                    <img
+                      key={i}
+                      className="photo-item"
+                      src={url}
+                      alt={`예약 사진 ${i + 1}`}
+                      onClick={() => setActiveIndex(i)}
+                    />
                   ))}
+                  {/*예약 사진 모달 활성화*/}
+                  {activeIndex !== null && (
+                    <ImageModal src={photoUrls[activeIndex]} onClose={() => setActiveIndex(null)} />
+                  )}
                 </div>
               </div>
             )}
