@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import AuthRedirectPage from './pages/redirect/AuthRedirectPage';
@@ -18,10 +18,15 @@ import OwnerReservationList from './pages/OwnerReservation/ownerReservationList'
 import CustomerReservationList from './pages/CustomerReservation/CustomerReservationList';
 import LinkRedirectPage from './pages/redirect/LinkRedirectPage';
 import ReservationCreatePage from './pages/CustomerReservation/ReservationCreatePage';
-
+import { blockZoom } from './utils/gesture/zoomBlocker';
 const queryClient = new QueryClient();
 
 function App() {
+  // 줌 차단
+  useEffect(() => {
+    blockZoom();
+  }, []);
+
   return (
     <>
       <GlobalStyle />

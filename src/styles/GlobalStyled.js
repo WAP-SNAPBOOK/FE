@@ -19,6 +19,8 @@ const GlobalStyle = createGlobalStyle`
   html, body {
     margin: 0;
     padding: 0;
+    touch-action: manipulation;
+    overscroll-behavior: none;
     width: 100%;
     min-height: 100%;
     background-color: #fff;
