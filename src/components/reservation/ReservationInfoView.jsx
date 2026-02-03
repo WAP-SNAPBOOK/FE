@@ -1,6 +1,10 @@
+import { useState } from 'react';
+import ImageModal from '../modal/ImageModal';
 import * as S from './ReservationInfoView.style';
 
 export default function ReservationInfoView({ info }) {
+  const [activeIndex, setActiveIndex] = useState(null); //모달 활성화 된 사진 index
+
   return (
     <S.DetailSection>
       <S.DetailRow>
@@ -35,9 +39,13 @@ export default function ReservationInfoView({ info }) {
           <S.Label>사진</S.Label>
           <S.PhotoGrid>
             {info.photoUrls.map((url, i) => (
-              <S.Photo key={i} src={url} />
+              //선택 사진 모달 활성화
+              <S.Photo key={i} src={url} onClick={() => setActiveIndex(i)} />
             ))}
           </S.PhotoGrid>
+          {activeIndex !== null && (
+            <ImageModal src={info.photoUrls[activeIndex]} onClose={() => setActiveIndex(null)} />
+          )}
         </>
       )}
 

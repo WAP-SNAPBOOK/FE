@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import './ownerReservationList.css';
 import { shopReservationService } from '../../api/services/shopReservation';
 import { useConfirmReservation, useRejectReservation } from '../../query/reservationQueries';
+import ImageModal from '@/components/modal/ImageModal';
+
 export default function OwnerReservationList() {
   const [reservations, setReservations] = useState([]);
 
@@ -67,6 +69,7 @@ function ReservationCard({ res }) {
   const [message, setMessage] = useState('');
   const [selectedTime, setSelectedTime] = useState('');
   const [totalMinutes, setTotalMinutes] = useState(60);
+  const [activeIndex, setActiveIndex] = useState(null); //모달 활성화된 사진 idx
 
   //예약 확정 훅
   const { mutate: confirmReservation } = useConfirmReservation();
@@ -190,9 +193,19 @@ function ReservationCard({ res }) {
           <div className="photo-wrap">
             <span className="photo-label">사진</span>
             <div className="photo-list">
-              {res.photoUrls.map((url, idx) => (
-                <img key={idx} src={url} alt={`photo-${idx}`} className="photo" />
+              {res.photoUrls.map((url, i) => (
+                <img
+                  key={i}
+                  src={url}
+                  alt={`photo-${i}`}
+                  onClick={() => setActiveIndex(i)}
+                  className="photo"
+                />
               ))}
+              {/*예약 사진 모달 활성화*/}
+              {activeIndex !== null && (
+                <ImageModal src={res.photoUrls[activeIndex]} onClose={() => setActiveIndex(null)} />
+              )}
             </div>
           </div>
 
