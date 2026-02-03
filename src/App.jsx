@@ -24,7 +24,8 @@ const queryClient = new QueryClient();
 function App() {
   // 줌 차단
   useEffect(() => {
-    blockZoom();
+    const cleanup = blockZoom();
+    return cleanup;
   }, []);
 
   return (
