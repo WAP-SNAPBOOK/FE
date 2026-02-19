@@ -115,3 +115,14 @@ export const useShopTags = (shopId) => {
     enabled: !!shopId,
   });
 };
+
+/**
+ * 태그(카테고리)별 메뉴 목록 조회 훅
+ */
+export const useMenusByTag = (shopId, tagId) => {
+  return useQuery({
+    queryKey: ['shop-menus', shopId, tagId],
+    queryFn: () => reservationService.getMenusByTag(shopId, tagId),
+    enabled: !!shopId && !!tagId,
+  });
+};
