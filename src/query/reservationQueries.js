@@ -104,3 +104,14 @@ export const useReservationDetail = (reservationId) => {
     enabled: !!reservationId,
   });
 };
+
+/**
+ * 상점별 태그(카테고리) 목록 조회 훅
+ */
+export const useShopTags = (shopId) => {
+  return useQuery({
+    queryKey: ['shop-tags', shopId],
+    queryFn: () => reservationService.getShopTags(shopId),
+    enabled: !!shopId,
+  });
+};
