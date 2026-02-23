@@ -8,6 +8,9 @@ export const handlers = [
     return HttpResponse.json([
       { id: 1, name: '네일' },
       { id: 3, name: '왁싱' },
+      { id: 4, name: '치킨' },
+      { id: 5, name: '피자' },
+      { id: 7, name: '짜장면' },
     ]);
   }),
 
@@ -30,6 +33,38 @@ export const handlers = [
           id: 2,
           shopId: 1,
           name: '젤아트',
+          description: '아트 시술',
+          isActive: true,
+          sortOrder: 2,
+        },
+        {
+          id: 3,
+          shopId: 1,
+          name: '젤아트',
+          description: '아트 시술',
+          isActive: true,
+          sortOrder: 2,
+        },
+        {
+          id: 4,
+          shopId: 1,
+          name: '아트',
+          description: '아트 시술',
+          isActive: true,
+          sortOrder: 2,
+        },
+        {
+          id: 5,
+          shopId: 1,
+          name: '아트',
+          description: '아트 시술',
+          isActive: true,
+          sortOrder: 2,
+        },
+        {
+          id: 6,
+          shopId: 1,
+          name: '아트',
           description: '아트 시술',
           isActive: true,
           sortOrder: 2,
