@@ -1,5 +1,11 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import theme from '@/styles/theme';
+
+const dropIn = keyframes`
+  0% { transform: scale(0); opacity: 0.6; }
+  60% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+`;
 
 const Outer = styled.div`
   flex-shrink: 0;
@@ -22,7 +28,8 @@ const Inner = styled.div`
   border-radius: 50%;
   background-color: ${theme.colors.primary};
   opacity: ${({ $checked }) => ($checked ? 1 : 0)};
-  transition: opacity 0.15s ease;
+  transform: scale(${({ $checked }) => ($checked ? 1 : 0)});
+  animation: ${({ $checked }) => ($checked ? dropIn : 'none')} 0.3s ease forwards;
 `;
 
 export default function RadioButton({ checked, onChange }) {
