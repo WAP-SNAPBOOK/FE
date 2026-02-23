@@ -30,7 +30,8 @@ export default function ReservationCreatePage() {
     },
     tagMenu: {
       tagId: null,
-      menuId: null,
+      menuIds: [],
+      menuCounts: {},
     },
     options: {
       removeYn: '유',
