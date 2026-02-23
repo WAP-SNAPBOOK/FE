@@ -47,13 +47,8 @@ export default function ReservationCreatePage() {
   const location = useLocation();
 
   //각 예약 단계 폼 입력 헨들러
-  const {
-    handleUserInfoChange,
-    handleDateTimeChange,
-    handlePhotoNoteChange,
-    handleTagMenuChange,
-    handleOptionsChange,
-  } = useReservationFormHandlers(setFormData, setCanNext);
+  const { handleUserInfoChange, handleDateTimeChange, handleTagMenuChange, handleOptionsChange } =
+    useReservationFormHandlers(setFormData, setCanNext);
 
   const stepHandlers = {
     1: handleUserInfoChange,
