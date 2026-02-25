@@ -76,3 +76,19 @@ export const useUpdateShopMenu = () => {
     },
   });
 };
+
+/**
+ * 메뉴 비활성화 훅
+ */
+export const useDeactivateShopMenu = () => {
+  return useMutation({
+    mutationFn: ({ shopId, menuId }) => shopManageService.deactivateMenu(shopId, menuId),
+    onSuccess: () => {
+      alert('메뉴가 비활성화되었습니다.');
+    },
+    onError: (error) => {
+      console.error('메뉴 비활성화 실패:', error);
+      alert('메뉴 비활성화 중 오류가 발생했습니다.');
+    },
+  });
+};

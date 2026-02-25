@@ -52,4 +52,14 @@ export const shopManageService = {
     const res = await axiosClient.patch(`/api/shops/${shopId}/menus/${menuId}`, body);
     return res.data;
   },
+
+  /**
+   * 메뉴 비활성화
+   * @param {number} shopId - 상점 ID (path param)
+   * @param {number} menuId - 메뉴 ID (path param)
+   * @returns {Promise<void>}
+   */
+  deactivateMenu: async (shopId, menuId) => {
+    await axiosClient.delete(`/api/shops/${shopId}/menus/${menuId}`);
+  },
 };
