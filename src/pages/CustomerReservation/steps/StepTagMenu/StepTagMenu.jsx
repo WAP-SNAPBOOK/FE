@@ -2,10 +2,10 @@ import { useState, useEffect } from 'react';
 import * as C from '../steps.styles';
 import * as S from './StepTagMenu.styles';
 import RadioButton from '@/components/common/RadioButton';
+import CountStepper from './CountStepper';
 import { useShopTags, useMenusByTag } from '@/query/reservationQueries';
 
 const MIN = 1;
-const MAX = 10;
 
 export default function StepTagMenu({ shopId, initialData = {}, onChange }) {
   const [selectedTagId, setSelectedTagId] = useState(initialData.tagId ?? null);
@@ -51,15 +51,6 @@ export default function StepTagMenu({ shopId, initialData = {}, onChange }) {
     });
   };
 
-  const handleMinus = (e, menuId) => {
-    e.stopPropagation();
-    setMenuCounts((prev) => ({ ...prev, [menuId]: Math.max(MIN, (prev[menuId] ?? MIN) - 1) }));
-  };
-
-  const handlePlus = (e, menuId) => {
-    e.stopPropagation();
-    setMenuCounts((prev) => ({ ...prev, [menuId]: Math.min(MAX, (prev[menuId] ?? MIN) + 1) }));
-  };
 
   if (tagsLoading) return <div>로딩 중...</div>;
 
@@ -101,13 +92,10 @@ export default function StepTagMenu({ shopId, initialData = {}, onChange }) {
                     <S.MenuName $disabled={isDisabled}>{menu.name}</S.MenuName>
                     <S.MenuDescription $disabled={isDisabled}>{menu.description}</S.MenuDescription>
                     {isSelected && (
-                      <S.CountControl>
-                        <S.CountButton onClick={(e) => handleMinus(e, menu.id)}>−</S.CountButton>
-                        <S.CountNumber>{menuCounts[menu.id] ?? MIN}</S.CountNumber>
-                        <S.CountButton $primary onClick={(e) => handlePlus(e, menu.id)}>
-                          +
-                        </S.CountButton>
-                      </S.CountControl>
+                      <CountStepper
+                        count={menuCounts[menu.id] ?? MIN}
+                        onChange={(val) => setMenuCounts((prev) => ({ ...prev, [menu.id]: val }))}
+                      />
                     )}
                   </S.MenuContent>
                 </S.MenuCard>
