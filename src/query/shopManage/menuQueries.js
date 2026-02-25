@@ -100,9 +100,6 @@ export const useUnlinkMenuTag = () => {
 };
 
 /**
- * 메뉴 입력 필드 생성 훅
- */
-/**
  * 메뉴 입력 필드 조회 훅
  */
 export const useMenuInputFields = (shopId, menuId) => {
@@ -118,14 +115,30 @@ export const useMenuInputFields = (shopId, menuId) => {
  */
 export const useCreateMenuInputField = () => {
   return useMutation({
-    mutationFn: ({ shopId, menuId, ...body }) =>
-      menuService.createInputField(shopId, menuId, body),
+    mutationFn: ({ shopId, menuId, ...body }) => menuService.createInputField(shopId, menuId, body),
     onSuccess: () => {
       alert('입력 필드가 생성되었습니다.');
     },
     onError: (error) => {
       console.error('입력 필드 생성 실패:', error);
       alert('입력 필드 생성 중 오류가 발생했습니다.');
+    },
+  });
+};
+
+/**
+ * 메뉴 입력 필드 수정 훅
+ */
+export const useUpdateMenuInputField = () => {
+  return useMutation({
+    mutationFn: ({ shopId, menuId, fieldId, ...body }) =>
+      menuService.updateInputField(shopId, menuId, fieldId, body),
+    onSuccess: () => {
+      alert('입력 필드가 수정되었습니다.');
+    },
+    onError: (error) => {
+      console.error('입력 필드 수정 실패:', error);
+      alert('입력 필드 수정 중 오류가 발생했습니다.');
     },
   });
 };

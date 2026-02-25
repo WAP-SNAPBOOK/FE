@@ -88,4 +88,20 @@ export const menuService = {
     const res = await axiosClient.get(`/api/shops/${shopId}/menus/${menuId}/input-fields`);
     return res.data;
   },
+
+  /**
+   * 메뉴 입력 필드 수정
+   * @param {number} shopId - 상점 ID (path param)
+   * @param {number} menuId - 메뉴 ID (path param)
+   * @param {number} fieldId - 입력 필드 ID (path param)
+   * @param {Object} body - { label, minValue, maxValue, stepValue, maxLength, placeholder, sortOrder }
+   * @returns {Promise<Object>} 수정된 입력 필드 정보
+   */
+  updateInputField: async (shopId, menuId, fieldId, body) => {
+    const res = await axiosClient.patch(
+      `/api/shops/${shopId}/menus/${menuId}/input-fields/${fieldId}`,
+      body
+    );
+    return res.data;
+  },
 };
