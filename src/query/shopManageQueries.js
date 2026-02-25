@@ -59,3 +59,20 @@ export const useCreateShopMenu = () => {
     },
   });
 };
+
+/**
+ * 메뉴 수정 훅
+ */
+export const useUpdateShopMenu = () => {
+  return useMutation({
+    mutationFn: ({ shopId, menuId, name, description, sortOrder }) =>
+      shopManageService.updateMenu(shopId, menuId, { name, description, sortOrder }),
+    onSuccess: () => {
+      alert('메뉴가 수정되었습니다.');
+    },
+    onError: (error) => {
+      console.error('메뉴 수정 실패:', error);
+      alert('메뉴 수정 중 오류가 발생했습니다.');
+    },
+  });
+};
