@@ -30,4 +30,14 @@ export const shopManageService = {
     const res = await axiosClient.post(`/api/shops/${shopId}/menus`, body);
     return res.data;
   },
+
+  /**
+   * 메뉴 목록 조회
+   * @param {number} shopId - 상점 ID (path param)
+   * @returns {Promise<Array>} 메뉴 목록 [{id, shopId, name, description, isActive, sortOrder}, ...]
+   */
+  getMenus: async (shopId) => {
+    const res = await axiosClient.get(`/api/shops/${shopId}/menus`);
+    return res.data;
+  },
 };

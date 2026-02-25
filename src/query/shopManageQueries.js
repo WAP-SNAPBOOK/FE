@@ -28,6 +28,17 @@ export const useCreateShopTag = () => {
 };
 
 /**
+ * 메뉴 목록 조회 훅
+ */
+export const useShopManageMenus = (shopId) => {
+  return useQuery({
+    queryKey: ['shop-manage-menus', shopId],
+    queryFn: () => shopManageService.getMenus(shopId),
+    enabled: !!shopId,
+  });
+};
+
+/**
  * 메뉴 생성 훅
  */
 export const useCreateShopMenu = () => {
