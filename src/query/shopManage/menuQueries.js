@@ -142,3 +142,20 @@ export const useUpdateMenuInputField = () => {
     },
   });
 };
+
+/**
+ * 메뉴 입력 필드 비활성화 훅
+ */
+export const useDeactivateMenuInputField = () => {
+  return useMutation({
+    mutationFn: ({ shopId, menuId, fieldId }) =>
+      menuService.deactivateInputField(shopId, menuId, fieldId),
+    onSuccess: () => {
+      alert('입력 필드가 비활성화되었습니다.');
+    },
+    onError: (error) => {
+      console.error('입력 필드 비활성화 실패:', error);
+      alert('입력 필드 비활성화 중 오류가 발생했습니다.');
+    },
+  });
+};

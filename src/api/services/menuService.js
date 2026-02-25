@@ -104,4 +104,15 @@ export const menuService = {
     );
     return res.data;
   },
+
+  /**
+   * 메뉴 입력 필드 비활성화
+   * @param {number} shopId - 상점 ID (path param)
+   * @param {number} menuId - 메뉴 ID (path param)
+   * @param {number} fieldId - 입력 필드 ID (path param)
+   * @returns {Promise<void>}
+   */
+  deactivateInputField: async (shopId, menuId, fieldId) => {
+    await axiosClient.delete(`/api/shops/${shopId}/menus/${menuId}/input-fields/${fieldId}`);
+  },
 };
