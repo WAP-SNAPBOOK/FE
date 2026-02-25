@@ -19,4 +19,15 @@ export const shopManageService = {
     const res = await axiosClient.get('/api/tags');
     return res.data;
   },
+
+  /**
+   * 메뉴 생성
+   * @param {number} shopId - 상점 ID (path param)
+   * @param {Object} body - { name, description, sortOrder }
+   * @returns {Promise<Object>} 생성된 메뉴 정보
+   */
+  createMenu: async (shopId, body) => {
+    const res = await axiosClient.post(`/api/shops/${shopId}/menus`, body);
+    return res.data;
+  },
 };
