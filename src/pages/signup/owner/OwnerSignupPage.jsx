@@ -31,6 +31,7 @@ function OwnerSignupPage() {
       times: [{ start: '09:00', end: '20:00' }],
       weekdayTimes: [{ start: '09:00', end: '18:00' }],
       weekendTimes: [{ start: '10:00', end: '16:00' }],
+      dayTimes: {},
     },
   });
 
@@ -80,10 +81,19 @@ function OwnerSignupPage() {
       return;
     }
 
+    // scheduleType에 따라 관련 시간 필드만 포함
+    const { slotInterval, scheduleType, times, weekdayTimes, weekendTimes, dayTimes } = formData.step2;
+    const schedulePayload =
+      scheduleType === 'DAILY'
+        ? { slotInterval, scheduleType, times }
+        : scheduleType === 'WEEKDAY_WEEKEND'
+          ? { slotInterval, scheduleType, weekdayTimes, weekendTimes }
+          : { slotInterval, scheduleType, dayTimes };
+
     // 마지막 단계: 모든 step 데이터를 조합해서 API 호출
     const payload = {
       ...formData.step1,
-      // ...formData.step2, // 추후 단계 추가 시 확장
+      ...schedulePayload,
     };
 
     signup.mutate(payload, {
