@@ -14,12 +14,11 @@ export const SectionTitle = styled.div`
 export const ToggleButton = styled.button`
   flex: 1;
   height: ${({ $tall }) => ($tall ? '56px' : '48px')};
-  border: 1.5px solid
-    ${({ $active }) => ($active ? theme.colors.primary : theme.colors.gray.border)};
+  border: 3px solid ${({ $active }) => ($active ? theme.colors.primary : theme.colors.gray.border)};
   border-radius: ${theme.radius.md};
   color: ${({ $active }) => ($active ? theme.colors.primary : theme.colors.gray.dark.DEFAULT)};
   font-size: ${({ $tall }) => ($tall ? '13px' : '14px')};
-  font-weight: 500;
+  font-weight: 700;
   background: white;
   cursor: pointer;
   transition:
