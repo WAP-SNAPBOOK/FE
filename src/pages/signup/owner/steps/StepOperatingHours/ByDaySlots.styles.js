@@ -23,9 +23,8 @@ export const DayButton = styled.button`
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  border: 1.5px solid ${({ $active }) => ($active ? theme.colors.primary : theme.colors.gray.border)};
-  background: ${({ $active }) => ($active ? theme.colors.primary : 'white')};
-  color: ${({ $active }) => ($active ? 'white' : theme.colors.gray.dark.DEFAULT)};
+  border: 2px solid ${({ $active }) => ($active ? theme.colors.primary : theme.colors.gray.border)};
+  color: ${({ $active }) => ($active ? theme.colors.primary : theme.colors.gray.dark.DEFAULT)};
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
