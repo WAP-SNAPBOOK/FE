@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import TimeSlots from './TimeSlots';
+import ByDaySlots from './ByDaySlots';
 import * as S from './StepOperatingHours.styles';
 
 const SLOT_INTERVALS = [
@@ -23,10 +24,11 @@ export default function StepOperatingHours({ initialData, onChange }) {
   const [weekendTimes, setWeekendTimes] = useState(
     initialData.weekendTimes ?? [{ start: '10:00', end: '16:00' }]
   );
+  const [dayTimes, setDayTimes] = useState(initialData.dayTimes ?? {});
 
   // 현재 전체 state를 parent에 전달 (patch로 최신값 덮어쓰기)
   const notify = (patch) =>
-    onChange({ slotInterval, scheduleType, times, weekdayTimes, weekendTimes, ...patch });
+    onChange({ slotInterval, scheduleType, times, weekdayTimes, weekendTimes, dayTimes, ...patch });
 
   const handleSlotInterval = (val) => {
     setSlotInterval(val);
@@ -110,9 +112,13 @@ export default function StepOperatingHours({ initialData, onChange }) {
       )}
 
       {scheduleType === 'BY_DAY' && (
-        <p className="text-center text-gray-400 text-[14px] py-[20px]">
-          요일별 설정은 추후 구현 예정입니다.
-        </p>
+        <ByDaySlots
+          dayTimes={dayTimes}
+          onUpdate={(next) => {
+            setDayTimes(next);
+            notify({ dayTimes: next });
+          }}
+        />
       )}
     </div>
   );
