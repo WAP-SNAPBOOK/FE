@@ -98,7 +98,7 @@ function OwnerSignupPage() {
 
   return (
     <Container $start>
-      <div className="w-[305px] flex flex-col items-center pt-[40px]">
+      <div className="w-[305px] flex flex-col items-center pt-[40px] flex-1 pb-[40px]">
         {/* 단계 진행 바 */}
         <S.StepBar>
           {STEPS.map((s, i) => (
@@ -120,7 +120,7 @@ function OwnerSignupPage() {
           <StepOperatingHours initialData={formData.step2} onChange={handleStep2Change} />
         )}
 
-        <NextButton disabled={signup.isPending} onClick={handleNextClick} className="mt-[30px]">
+        <NextButton disabled={signup.isPending} onClick={handleNextClick} className="mt-auto">
           {signup.isPending ? '처리중...' : isLastStep ? '가입하기' : '다음 단계로'}
         </NextButton>
 
