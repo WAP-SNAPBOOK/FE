@@ -5,7 +5,7 @@ export const SectionTitle = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 600;
   margin: 0 0 16px;
 `;
