@@ -7,7 +7,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { AuthProvider } from './context/AuthContext';
 import LoginPage from './pages/login/LoginPage';
 import GlobalStyle from './styles/GlobalStyled';
-import SignupPage from './pages/signup/SignupPage';
+import CustomerSignupPage from './pages/signup/SignupPage';
 import OwnerSignupPage from './pages/signup/owner/OwnerSignupPage';
 import HomePage from './pages/home/HomePage';
 import { useAuth } from './context/AuthContext';
@@ -54,7 +54,7 @@ function AppRoutes() {
       {/* 인스타 링크 리다이렉트 */}
       <Route path="/s/:slugOrCode" element={<LinkRedirectPage />} />
       <Route path="/signup" element={<SignupGatePage />} />
-      <Route path="/signup/customer" element={<SignupPage />} />
+      <Route path="/signup/customer" element={<CustomerSignupPage />} />
       <Route path="/signup/owner" element={<OwnerSignupPage />} />
       <Route path="/chat" element={<ChatListPage />} />
       <Route path="/chat/:chatRoomId" element={<ChatRoomPage />} />
