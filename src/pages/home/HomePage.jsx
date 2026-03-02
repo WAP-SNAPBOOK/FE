@@ -31,16 +31,16 @@ export default function HomePage() {
           <MainActionButton onClick={goToChat} icon={ChatIcon} label="채팅방 조회" />
           <MainActionButton onClick={goToReservationList} icon={BookIcon} label="예약 내역" />
         </S.ButtonGroup>
-        {import.meta.env.DEV && (
-          <button
-            onClick={() => deleteUser.mutate()}
-            style={{ marginTop: 12, fontSize: 12, color: 'gray' }}
-          >
-            [DEV] 회원탈퇴
-          </button>
-        )}
         <BottomNav />
       </S.CenterArea>
+      {import.meta.env.DEV && (
+        <button
+          onClick={() => deleteUser.mutate()}
+          style={{ position: 'fixed', top: 8, right: 8, fontSize: 11, color: 'gray', zIndex: 9999 }}
+        >
+          [DEV] 회원탈퇴
+        </button>
+      )}
     </Container>
   );
 }
