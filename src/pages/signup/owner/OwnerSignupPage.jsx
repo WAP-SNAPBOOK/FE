@@ -6,6 +6,7 @@ import { useOwnerSignupFlow } from '../../../query/signupQueries';
 import { validateMobile010 } from '../../../utils/phoneNumber';
 import StepBasicInfo from './steps/StepBasicInfo/StepBasicInfo';
 import StepOperatingHours from './steps/StepOperatingHours/StepOperatingHours';
+import StepHolidays from './steps/StepHolidays/StepHolidays';
 import * as S from './OwnerSignupPage.styles';
 
 // 추후 단계 추가 시 STEPS 배열과 아래 step 렌더링 블록, validateStep, payload 조합을 함께 업데이트
@@ -17,7 +18,7 @@ const STEPS = [
 ];
 const TOTAL_STEPS = STEPS.length;
 // 추후 단계 구현 시 TOTAL_STEPS로 변경
-const SUBMIT_AT_STEP = 2;
+const SUBMIT_AT_STEP = 3;
 
 function OwnerSignupPage() {
   const navigate = useNavigate();
@@ -43,6 +44,10 @@ function OwnerSignupPage() {
       weekendTimes: [{ start: '10:00', end: '16:00' }],
       dayTimes: {},
     },
+    step3: {
+      publicHolidayOff: false,
+      holidays: [],
+    },
   });
 
   const ownerSignup = useOwnerSignupFlow();
@@ -58,6 +63,10 @@ function OwnerSignupPage() {
 
   const handleStep2Change = (data) => {
     setFormData((prev) => ({ ...prev, step2: data }));
+  };
+
+  const handleStep3Change = (data) => {
+    setFormData((prev) => ({ ...prev, step3: data }));
   };
 
   // --- Step별 유효성 검사 ---
@@ -102,7 +111,7 @@ function OwnerSignupPage() {
           : { slotInterval, scheduleType, dayTimes };
 
     try {
-      await ownerSignup.submit(formData.step1, schedulePayload);
+      await ownerSignup.submit(formData.step1, schedulePayload, formData.step3);
       navigate('/');
     } catch {
       // 에러는 ownerSignup.isError로 표시
@@ -134,6 +143,9 @@ function OwnerSignupPage() {
         {step === 1 && <StepBasicInfo initialData={formData.step1} onChange={handleStep1Change} />}
         {step === 2 && (
           <StepOperatingHours initialData={formData.step2} onChange={handleStep2Change} />
+        )}
+        {step === 3 && (
+          <StepHolidays initialData={formData.step3} onChange={handleStep3Change} />
         )}
 
         <NextButton disabled={isPending} onClick={handleNextClick} className="mt-auto">
