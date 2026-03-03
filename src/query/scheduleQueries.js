@@ -34,6 +34,15 @@ export const useUpdateSlotInterval = () => {
 };
 
 /**
+ * 공휴일 휴무 토글 훅
+ */
+export const useUpdateScheduleSettings = () => {
+  return useMutation({
+    mutationFn: ({ shopId, ...payload }) => scheduleService.updateScheduleSettings(shopId, payload),
+  });
+};
+
+/**
  * 정기 휴무일 생성 훅
  * holidayType: 'WEEKLY' | 'BIWEEKLY' | 'MONTHLY' | 'CUSTOM'
  */

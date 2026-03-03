@@ -41,6 +41,16 @@ export const scheduleService = {
   },
 
   /**
+   * 공휴일 휴무 토글
+   * @param {number} shopId - 매장 ID (path param)
+   * @param {{ intervalMinutes: number, publicHolidayOff: boolean }} payload
+   */
+  updateScheduleSettings: async (shopId, payload) => {
+    const res = await axiosClient.put(`/api/v1/shops/${shopId}/schedule/settings`, payload);
+    return res.data;
+  },
+
+  /**
    * 정기 휴무일 생성
    * @param {number} shopId - 매장 ID (path param)
    * @param {Object} payload
