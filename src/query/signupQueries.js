@@ -3,7 +3,7 @@ import { signupService } from '../api/services/signupService';
 import { authStorage } from '../utils/auth/authStorage';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { useUpdateOperatingTimes } from './scheduleQueries';
+import { useUpdateOperatingTimes, useUpdateSlotInterval } from './scheduleQueries';
 
 export const useSignupCustomer = () => {
   const { login } = useAuth();
@@ -31,21 +31,24 @@ export const useSignupCustomer = () => {
   });
 };
 
-// 점주 회원가입 전체 플로우: 기본정보 → 운영시간 설정
+// 점주 회원가입 전체 플로우: 기본정보 → 슬롯 간격 설정 → 운영시간 설정
 export const useOwnerSignupFlow = () => {
   const signup = useSignupOwner();
+  const updateSlotInterval = useUpdateSlotInterval();
   const updateOperatingTimes = useUpdateOperatingTimes();
 
   const submit = async (step1Data, schedulePayload) => {
+    const { slotInterval, ...timesPayload } = schedulePayload;
     const { shopId } = await signup.mutateAsync(step1Data); // 1) 점주 기본 정보 회원가입
-    await updateOperatingTimes.mutateAsync({ shopId, ...schedulePayload }); // 2) 운영시간 설정
+    await updateSlotInterval.mutateAsync({ shopId, intervalMinutes: Number(slotInterval) }); // 2) 슬롯 간격 설정
+    await updateOperatingTimes.mutateAsync({ shopId, ...timesPayload }); // 3) 운영시간 설정
   };
 
   return {
     submit,
-    isPending: signup.isPending || updateOperatingTimes.isPending,
-    isError: signup.isError || updateOperatingTimes.isError,
-    error: signup.error || updateOperatingTimes.error,
+    isPending: signup.isPending || updateSlotInterval.isPending || updateOperatingTimes.isPending,
+    isError: signup.isError || updateSlotInterval.isError || updateOperatingTimes.isError,
+    error: signup.error || updateSlotInterval.error || updateOperatingTimes.error,
   };
 };
 
