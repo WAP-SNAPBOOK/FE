@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import * as S from './ByDaySlots.styles';
+import { DayButton, DaysRow } from '../StepCommon.styles';
 
 const DAYS = [
   { value: 'MONDAY', label: '월' },
@@ -116,18 +117,18 @@ export default function ByDaySlots({ dayTimes, onUpdate }) {
       {groups.map((group, groupIdx) => (
         <S.ByDayGroup key={groupIdx}>
           <S.ByDayNote>동일한 시간으로 운영되는 요일을 선택해 주세요!</S.ByDayNote>
-          <S.DaysRow>
+          <DaysRow>
             {DAYS.map(({ value, label }) => (
-              <S.DayButton
+              <DayButton
                 key={value}
                 type="button"
                 $active={group.days.includes(value)}
                 onClick={() => toggleDay(groupIdx, value)}
               >
                 {label}
-              </S.DayButton>
+              </DayButton>
             ))}
-          </S.DaysRow>
+          </DaysRow>
           {group.times.map((time, timeIdx) => (
             <S.TimeRow key={timeIdx}>
               <S.TimeInput

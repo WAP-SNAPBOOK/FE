@@ -12,28 +12,6 @@ export const ByDayNote = styled.p`
   text-align: center;
 `;
 
-// 요일 버튼 행
-export const DaysRow = styled.div`
-  display: flex;
-  justify-content: space-between;
-`;
-
-// 원형 요일 토글 버튼
-export const DayButton = styled.button`
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: 2px solid ${({ $active }) => ($active ? theme.colors.primary : theme.colors.gray.border)};
-  color: ${({ $active }) => ($active ? theme.colors.primary : theme.colors.gray.dark.DEFAULT)};
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  transition:
-    background 0.15s,
-    border-color 0.15s,
-    color 0.15s;
-`;
-
 // 시간 입력 행 (start ~ end [×])
 export const TimeRow = styled.div`
   display: flex;

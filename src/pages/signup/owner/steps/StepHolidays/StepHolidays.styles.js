@@ -24,19 +24,6 @@ export const ToggleButton = styled.button`
   line-height: 1.4;
 `;
 
-// 원형 요일 / 째주 버튼
-export const DayButton = styled.button`
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: 2px solid ${({ $active }) => ($active ? theme.colors.primary : theme.colors.gray.border)};
-  color: ${({ $active }) => ($active ? theme.colors.primary : theme.colors.gray.dark.DEFAULT)};
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  background: white;
-`;
-
 export const DateInput = styled.input`
   width: 100%;
   height: 44px;

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import * as S from './StepHolidays.styles';
+import { DayButton, DaysRow } from '../StepCommon.styles';
 
 const HOLIDAY_TYPES = [
   { value: 'WEEKLY', label: '매주' },
@@ -98,18 +99,18 @@ export default function StepHolidays({ initialData, onChange }) {
 
       {/* 요일 선택 (WEEKLY / BIWEEKLY / MONTHLY) */}
       {form.holidayType !== 'CUSTOM' && (
-        <div className="flex gap-[6px] mb-[12px]">
+        <DaysRow className="mb-[12px]">
           {DAYS.map(({ value, label }) => (
-            <S.DayButton
+            <DayButton
               key={value}
               type="button"
               $active={form.dayOfWeek === value}
               onClick={() => setForm((f) => ({ ...f, dayOfWeek: value }))}
             >
               {label}
-            </S.DayButton>
+            </DayButton>
           ))}
-        </div>
+        </DaysRow>
       )}
 
       {/* BIWEEKLY: 기준 날짜 */}
@@ -123,18 +124,18 @@ export default function StepHolidays({ initialData, onChange }) {
 
       {/* MONTHLY: 몇째주 */}
       {form.holidayType === 'MONTHLY' && (
-        <div className="flex gap-[6px] mb-[12px]">
+        <DaysRow className="mb-[12px]">
           {[1, 2, 3, 4, 5].map((w) => (
-            <S.DayButton
+            <DayButton
               key={w}
               type="button"
               $active={form.weekOfMonth === w}
               onClick={() => setForm((f) => ({ ...f, weekOfMonth: w }))}
             >
               {w}째
-            </S.DayButton>
+            </DayButton>
           ))}
-        </div>
+        </DaysRow>
       )}
 
       {/* CUSTOM: 특정 날짜 */}
