@@ -3,7 +3,7 @@ import { signupService } from '../api/services/signupService';
 import { authStorage } from '../utils/auth/authStorage';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { useUpdateOperatingTimes, useUpdateSlotInterval } from './scheduleQueries';
+import { useUpdateOperatingTimes, useUpdateSlotInterval, useUpdateScheduleSettings, useCreateHoliday } from './scheduleQueries';
 
 export const useSignupCustomer = () => {
   const { login } = useAuth();
@@ -31,24 +31,32 @@ export const useSignupCustomer = () => {
   });
 };
 
-// 점주 회원가입 전체 플로우: 기본정보 → 슬롯 간격 설정 → 운영시간 설정
+// 점주 회원가입 전체 플로우: 기본정보 → 슬롯 간격 → 운영시간 → 공휴일/슬롯 설정 → 정기 휴무일 생성
 export const useOwnerSignupFlow = () => {
   const signup = useSignupOwner();
   const updateSlotInterval = useUpdateSlotInterval();
   const updateOperatingTimes = useUpdateOperatingTimes();
+  const updateScheduleSettings = useUpdateScheduleSettings();
+  const createHoliday = useCreateHoliday();
 
-  const submit = async (step1Data, schedulePayload) => {
+  const submit = async (step1Data, schedulePayload, holidayPayload) => {
     const { slotInterval, ...timesPayload } = schedulePayload;
+    const { publicHolidayOff, holidays } = holidayPayload;
+
     const { shopId } = await signup.mutateAsync(step1Data); // 1) 점주 기본 정보 회원가입
     await updateSlotInterval.mutateAsync({ shopId, intervalMinutes: Number(slotInterval) }); // 2) 슬롯 간격 설정
     await updateOperatingTimes.mutateAsync({ shopId, ...timesPayload }); // 3) 운영시간 설정
+    await updateScheduleSettings.mutateAsync({ shopId, intervalMinutes: Number(slotInterval), publicHolidayOff }); // 4) 공휴일 휴무 설정
+    for (const holiday of holidays) {
+      await createHoliday.mutateAsync({ shopId, ...holiday }); // 5) 정기 휴무일 생성
+    }
   };
 
   return {
     submit,
-    isPending: signup.isPending || updateSlotInterval.isPending || updateOperatingTimes.isPending,
-    isError: signup.isError || updateSlotInterval.isError || updateOperatingTimes.isError,
-    error: signup.error || updateSlotInterval.error || updateOperatingTimes.error,
+    isPending: signup.isPending || updateSlotInterval.isPending || updateOperatingTimes.isPending || updateScheduleSettings.isPending || createHoliday.isPending,
+    isError: signup.isError || updateSlotInterval.isError || updateOperatingTimes.isError || updateScheduleSettings.isError || createHoliday.isError,
+    error: signup.error || updateSlotInterval.error || updateOperatingTimes.error || updateScheduleSettings.error || createHoliday.error,
   };
 };
 
