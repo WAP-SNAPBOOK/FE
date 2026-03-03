@@ -41,6 +41,24 @@ export const scheduleService = {
   },
 
   /**
+   * 정기 휴무일 생성
+   * @param {number} shopId - 매장 ID (path param)
+   * @param {Object} payload
+   * @param {'WEEKLY'|'BIWEEKLY'|'MONTHLY'|'CUSTOM'} payload.holidayType
+   *
+   * WEEKLY:   { holidayType, dayOfWeek }
+   * BIWEEKLY: { holidayType, dayOfWeek, referenceDate }  // referenceDate: 'YYYY-MM-DD'
+   * MONTHLY:  { holidayType, dayOfWeek, weekOfMonth }    // weekOfMonth: 1~5
+   * CUSTOM:   { holidayType, specificDate }              // specificDate: 'YYYY-MM-DD'
+   *
+   * @returns {Promise<{ holidayId, holidayType, dayOfWeek, weekOfMonth, referenceDate, specificDate }>}
+   */
+  createHoliday: async (shopId, payload) => {
+    const res = await axiosClient.post(`/api/v1/shops/${shopId}/schedule/holidays`, payload);
+    return res.data;
+  },
+
+  /**
    * 운영시간 조회
    * @param {number} shopId - 매장 ID (path param)
    * @returns {Promise<Object>} 운영시간 데이터

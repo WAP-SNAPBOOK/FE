@@ -32,3 +32,13 @@ export const useUpdateSlotInterval = () => {
       scheduleService.updateSlotInterval(shopId, intervalMinutes),
   });
 };
+
+/**
+ * 정기 휴무일 생성 훅
+ * holidayType: 'WEEKLY' | 'BIWEEKLY' | 'MONTHLY' | 'CUSTOM'
+ */
+export const useCreateHoliday = () => {
+  return useMutation({
+    mutationFn: ({ shopId, ...payload }) => scheduleService.createHoliday(shopId, payload),
+  });
+};
