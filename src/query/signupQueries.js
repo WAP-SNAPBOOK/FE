@@ -3,7 +3,14 @@ import { signupService } from '../api/services/signupService';
 import { authStorage } from '../utils/auth/authStorage';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { useUpdateOperatingTimes, useUpdateSlotInterval, useUpdateScheduleSettings, useCreateHoliday } from './scheduleQueries';
+import {
+  useUpdateOperatingTimes,
+  useUpdateSlotInterval,
+  useUpdateScheduleSettings,
+  useCreateHoliday,
+} from './scheduleQueries';
+import { useCreateShopTag } from './shopManage/tagQueries';
+import { useCreateShopMenu, useLinkMenuTag } from './shopManage/menuQueries';
 
 export const useSignupCustomer = () => {
   const { login } = useAuth();
@@ -31,32 +38,82 @@ export const useSignupCustomer = () => {
   });
 };
 
-// 점주 회원가입 전체 플로우: 기본정보 → 슬롯 간격 → 운영시간 → 공휴일/슬롯 설정 → 정기 휴무일 생성
+// 점주 회원가입 전체 플로우: 기본정보 → 슬롯 간격 → 운영시간 → 공휴일/슬롯 설정 → 정기 휴무일 생성 → 태그/메뉴 생성
 export const useOwnerSignupFlow = () => {
   const signup = useSignupOwner();
   const updateSlotInterval = useUpdateSlotInterval();
   const updateOperatingTimes = useUpdateOperatingTimes();
   const updateScheduleSettings = useUpdateScheduleSettings();
   const createHoliday = useCreateHoliday();
+  const createShopTag = useCreateShopTag();
+  const createShopMenu = useCreateShopMenu();
+  const linkMenuTag = useLinkMenuTag();
 
-  const submit = async (step1Data, schedulePayload, holidayPayload) => {
+  const submit = async (step1Data, schedulePayload, holidayPayload, menuItems = []) => {
     const { slotInterval, ...timesPayload } = schedulePayload;
     const { publicHolidayOff, holidays } = holidayPayload;
 
     const { shopId } = await signup.mutateAsync(step1Data); // 1) 점주 기본 정보 회원가입
     await updateSlotInterval.mutateAsync({ shopId, intervalMinutes: Number(slotInterval) }); // 2) 슬롯 간격 설정
     await updateOperatingTimes.mutateAsync({ shopId, ...timesPayload }); // 3) 운영시간 설정
-    await updateScheduleSettings.mutateAsync({ shopId, intervalMinutes: Number(slotInterval), publicHolidayOff }); // 4) 공휴일 휴무 설정
+    await updateScheduleSettings.mutateAsync({
+      shopId,
+      intervalMinutes: Number(slotInterval),
+      publicHolidayOff,
+    }); // 4) 공휴일 휴무 설정
     for (const holiday of holidays) {
       await createHoliday.mutateAsync({ shopId, ...holiday }); // 5) 정기 휴무일 생성
+    }
+
+    // 6) 태그(카테고리) 생성 → 메뉴 생성 → 메뉴-태그 연결
+    const tagMap = {}; // tagName → tagId
+    let sortOrder = 1;
+    for (const { tagName, menuName, description } of menuItems) {
+      //태그 중복 생성 제어
+      if (!tagMap[tagName]) {
+        const tag = await createShopTag.mutateAsync(tagName);
+        tagMap[tagName] = tag.id;
+      }
+      //메뉴 생성
+      const menu = await createShopMenu.mutateAsync({
+        shopId,
+        name: menuName,
+        description,
+        sortOrder: sortOrder++,
+      });
+      await linkMenuTag.mutateAsync({ shopId, menuId: menu.id, tagId: tagMap[tagName] });
     }
   };
 
   return {
     submit,
-    isPending: signup.isPending || updateSlotInterval.isPending || updateOperatingTimes.isPending || updateScheduleSettings.isPending || createHoliday.isPending,
-    isError: signup.isError || updateSlotInterval.isError || updateOperatingTimes.isError || updateScheduleSettings.isError || createHoliday.isError,
-    error: signup.error || updateSlotInterval.error || updateOperatingTimes.error || updateScheduleSettings.error || createHoliday.error,
+    isPending:
+      signup.isPending ||
+      updateSlotInterval.isPending ||
+      updateOperatingTimes.isPending ||
+      updateScheduleSettings.isPending ||
+      createHoliday.isPending ||
+      createShopTag.isPending ||
+      createShopMenu.isPending ||
+      linkMenuTag.isPending,
+    isError:
+      signup.isError ||
+      updateSlotInterval.isError ||
+      updateOperatingTimes.isError ||
+      updateScheduleSettings.isError ||
+      createHoliday.isError ||
+      createShopTag.isError ||
+      createShopMenu.isError ||
+      linkMenuTag.isError,
+    error:
+      signup.error ||
+      updateSlotInterval.error ||
+      updateOperatingTimes.error ||
+      updateScheduleSettings.error ||
+      createHoliday.error ||
+      createShopTag.error ||
+      createShopMenu.error ||
+      linkMenuTag.error,
   };
 };
 
