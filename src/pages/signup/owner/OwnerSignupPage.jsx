@@ -31,7 +31,7 @@ function OwnerSignupPage() {
     if (!isSignupRequired) navigate('/');
   }, [navigate]);
 
-  const [step, setStep] = useState(4);
+  const [step, setStep] = useState(1);
 
   // 각 단계의 입력값을 부모에서 관리 → 뒤로가기 시 입력값 유지
   const [formData, setFormData] = useState({
