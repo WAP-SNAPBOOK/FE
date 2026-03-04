@@ -29,7 +29,7 @@ export default function StepMenuSetup({ initialData, onChange }) {
       <S.SectionTitle>메뉴 추가</S.SectionTitle>
 
       <S.Input
-        placeholder="카테고리 (예: 커피, 디저트)"
+        placeholder="카테고리"
         value={form.tagName}
         onChange={(e) => setForm((f) => ({ ...f, tagName: e.target.value }))}
       />
