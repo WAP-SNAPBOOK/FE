@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 const D = 12; // 화살표 깊이 (px)
-const R = 8; // 모서리 반지름 (px)
+const R = 20; // 모서리 반지름 (px)
 
 export const StepBar = styled.div`
   display: flex;
@@ -48,8 +48,9 @@ export const StepItem = styled.div`
   &::before {
     content: '';
     position: absolute;
-    inset: 2px;
+    inset: 1px;
     background: ${({ $active }) => ($active ? 'transparent' : 'white')};
+    border-radius: 0 20px 20px 0;
     clip-path: ${({ $last }) => chevronPath($last)};
     z-index: -1;
   }
