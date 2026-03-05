@@ -25,6 +25,7 @@ export const StepItemWrapper = styled.div`
   border-radius: ${({ $first, $last }) =>
     $first ? `${R}px 0 0 ${R}px` : $last ? `0 ${R}px ${R}px 0` : '0'};
   overflow: hidden;
+  cursor: ${({ $clickable }) => ($clickable ? 'pointer' : 'default')};
 `;
 
 export const StepItem = styled.div`
