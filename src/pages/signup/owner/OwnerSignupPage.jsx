@@ -3,14 +3,13 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import Container from '../../../components/common/Container';
 import { NextButton } from '../../../components/common/NextButton';
 import { useOwnerSignupFlow } from '../../../query/signupQueries';
-import { validateMobile010 } from '../../../utils/phoneNumber';
+import { validateStep1 } from './validateSteps';
 import StepBasicInfo from './steps/StepBasicInfo/StepBasicInfo';
 import StepOperatingHours from './steps/StepOperatingHours/StepOperatingHours';
 import StepHolidays from './steps/StepHolidays/StepHolidays';
 import StepMenuSetup from './steps/StepMenuSetup/StepMenuSetup';
 import * as S from './OwnerSignupPage.styles';
 
-// 추후 단계 추가 시 STEPS 배열과 아래 step 렌더링 블록, validateStep, payload 조합을 함께 업데이트
 const STEPS = [
   { label: '기본\n정보' },
   { label: '운영시간\n설정' },
@@ -76,31 +75,9 @@ function OwnerSignupPage() {
     setFormData((prev) => ({ ...prev, step4: data }));
   };
 
-  // --- Step별 유효성 검사 ---
-  const validateStep = (stepNum) => {
-    if (stepNum === 1) {
-      const { name, phoneNumber, businessName, address } = formData.step1;
-      if (!name || !phoneNumber || !businessName || !address) {
-        alert('모든 항목을 입력해주세요.');
-        return false;
-      }
-      const { valid, reason } = validateMobile010(phoneNumber);
-      if (!valid) {
-        alert(
-          reason === 'length'
-            ? '전화번호는 숫자만 11자리여야 합니다.'
-            : '정확한 휴대폰 번호(010으로 시작)를 입력해주세요.'
-        );
-        return false;
-      }
-    }
-    // if (stepNum === 2) { ... } // 추후 추가
-    return true;
-  };
-
   // 다음 단계 or 최종 제출
   const handleNextClick = async () => {
-    if (!validateStep(step)) return;
+    if (step === 1 && !validateStep1(formData.step1)) return;
 
     if (step < SUBMIT_AT_STEP) {
       next();
