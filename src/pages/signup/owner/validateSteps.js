@@ -63,3 +63,11 @@ export const validateStep2 = ({ scheduleType, times, weekdayTimes, weekendTimes,
 
   return true;
 };
+
+export const validateStep4 = ({ items }) => {
+  if (items.length === 0) {
+    alert('메뉴를 하나 이상 추가해주세요.');
+    return false;
+  }
+  return true;
+};

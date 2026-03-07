@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import Container from '../../../components/common/Container';
 import { NextButton } from '../../../components/common/NextButton';
 import { useOwnerSignupFlow } from '../../../query/signupQueries';
-import { validateStep1, validateStep2 } from './validateSteps';
+import { validateStep1, validateStep2, validateStep4 } from './validateSteps';
 import StepBasicInfo from './steps/StepBasicInfo/StepBasicInfo';
 import StepOperatingHours from './steps/StepOperatingHours/StepOperatingHours';
 import StepHolidays from './steps/StepHolidays/StepHolidays';
@@ -78,6 +78,7 @@ function OwnerSignupPage() {
   const handleNextClick = async () => {
     if (step === 1 && !validateStep1(formData.step1)) return;
     if (step === 2 && !validateStep2(formData.step2)) return;
+    if (step === 4 && !validateStep4(formData.step4)) return;
 
     if (step < SUBMIT_AT_STEP) {
       next();
