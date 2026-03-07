@@ -17,7 +17,6 @@ const STEPS = [
   { label: '메뉴\n추가' },
 ];
 const TOTAL_STEPS = STEPS.length;
-const SUBMIT_AT_STEP = TOTAL_STEPS;
 
 function OwnerSignupPage() {
   const navigate = useNavigate();
@@ -32,7 +31,7 @@ function OwnerSignupPage() {
 
   const [step, setStep] = useState(1);
 
-  // 각 단계의 입력값을 부모에서 관리 → 뒤로가기 시 입력값 유지
+  // 각 단계의 입력값을 부모에서 관리(뒤로가기 시 입력값 유지)
   const [formData, setFormData] = useState({
     step1: { name: '', phoneNumber: '', businessName: '', address: '' },
     step2: {
@@ -108,7 +107,7 @@ function OwnerSignupPage() {
     }
   };
 
-  const isLastStep = step === SUBMIT_AT_STEP;
+  const isLastStep = step === TOTAL_STEPS;
   const { isPending } = ownerSignup;
 
   return (
