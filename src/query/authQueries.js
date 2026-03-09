@@ -49,9 +49,6 @@ export function useDeleteUser() {
       //기존 사용자 정보 다 날리기
       logout();
 
-      //스토리지 초기화
-      authStorage.clear();
-
       //홈 화면 이동
       navigate('/');
     },
