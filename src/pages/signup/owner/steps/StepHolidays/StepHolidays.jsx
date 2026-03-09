@@ -50,6 +50,14 @@ export default function StepHolidays({ initialData, onChange }) {
 
   const addHoliday = () => {
     const { holidayType, dayOfWeek, weekOfMonth, referenceDate, specificDate } = form;
+    if (holidayType === 'BIWEEKLY' && !referenceDate) {
+      alert('기준 날짜를 선택해주세요.');
+      return;
+    }
+    if (holidayType === 'CUSTOM' && !specificDate) {
+      alert('특정 날짜를 선택해주세요.');
+      return;
+    }
     let entry;
     if (holidayType === 'WEEKLY') entry = { holidayType, dayOfWeek };
     else if (holidayType === 'BIWEEKLY') entry = { holidayType, dayOfWeek, referenceDate };
