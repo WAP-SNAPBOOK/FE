@@ -7,7 +7,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { AuthProvider } from './context/AuthContext';
 import LoginPage from './pages/login/LoginPage';
 import GlobalStyle from './styles/GlobalStyled';
-import CustomerSignupPage from './pages/signup/SignupPage';
+import CustomerSignupPage from './pages/signup/CustomerSignupPage';
 import OwnerSignupPage from './pages/signup/owner/OwnerSignupPage';
 import HomePage from './pages/home/HomePage';
 import { useAuth } from './context/AuthContext';
