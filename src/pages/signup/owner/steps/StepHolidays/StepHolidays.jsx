@@ -31,7 +31,8 @@ const DEFAULT_FORM = {
 
 const holidayLabel = (h) => {
   if (h.holidayType === 'WEEKLY') return `매주 ${DAY_LABEL[h.dayOfWeek]}요일`;
-  if (h.holidayType === 'BIWEEKLY') return `격주 ${DAY_LABEL[h.dayOfWeek]}요일 (기준: ${h.referenceDate})`;
+  if (h.holidayType === 'BIWEEKLY')
+    return `격주 ${DAY_LABEL[h.dayOfWeek]}요일 (기준: ${h.referenceDate})`;
   if (h.holidayType === 'MONTHLY') return `매달 ${h.weekOfMonth}째주 ${DAY_LABEL[h.dayOfWeek]}요일`;
   return h.specificDate;
 };
@@ -80,10 +81,18 @@ export default function StepHolidays({ initialData, onChange }) {
       {/* 공휴일 휴무 토글 */}
       <S.SectionTitle>공휴일에 쉬나요?</S.SectionTitle>
       <div className="flex gap-[10px] mb-[24px]">
-        <S.ToggleButton type="button" $active={publicHolidayOff} onClick={() => handlePublicHolidayOff(true)}>
+        <S.ToggleButton
+          type="button"
+          $active={publicHolidayOff}
+          onClick={() => handlePublicHolidayOff(true)}
+        >
           예
         </S.ToggleButton>
-        <S.ToggleButton type="button" $active={!publicHolidayOff} onClick={() => handlePublicHolidayOff(false)}>
+        <S.ToggleButton
+          type="button"
+          $active={!publicHolidayOff}
+          onClick={() => handlePublicHolidayOff(false)}
+        >
           아니오
         </S.ToggleButton>
       </div>
@@ -165,7 +174,11 @@ export default function StepHolidays({ initialData, onChange }) {
           {holidays.map((h, i) => (
             <S.HolidayItem key={i}>
               <span>{holidayLabel(h)}</span>
-              <S.RemoveButton type="button" onClick={() => removeHoliday(i)}>
+              <S.RemoveButton
+                type="button"
+                aria-label={`${holidayLabel(h)} 삭제`}
+                onClick={() => removeHoliday(i)}
+              >
                 ×
               </S.RemoveButton>
             </S.HolidayItem>
