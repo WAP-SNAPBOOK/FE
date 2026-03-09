@@ -60,7 +60,11 @@ export default function StepMenuSetup({ initialData, onChange }) {
                 <S.MenuName>{item.menuName}</S.MenuName>
                 {item.description && <S.Description>{item.description}</S.Description>}
               </div>
-              <S.RemoveButton type="button" onClick={() => removeItem(i)}>
+              <S.RemoveButton
+                type="button"
+                aria-label={`${item.menuName} 삭제`}
+                onClick={() => removeItem(i)}
+              >
                 ×
               </S.RemoveButton>
             </S.MenuItem>
