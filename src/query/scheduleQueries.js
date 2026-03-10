@@ -65,3 +65,17 @@ export const useMonthlyAvailability = (shopId, staffId, yearMonth) => {
     enabled: !!shopId && !!staffId && !!yearMonth,
   });
 };
+
+/**
+ * 일별 예약 가능 시간 조회 훅 (고객용)
+ * @param {number} shopId
+ * @param {number} staffId
+ * @param {string} date - 'YYYY-MM-DD'
+ */
+export const useDailyAvailability = (shopId, staffId, date) => {
+  return useQuery({
+    queryKey: ['daily-availability', shopId, staffId, date],
+    queryFn: () => scheduleService.getDailyAvailability(shopId, staffId, date),
+    enabled: !!shopId && !!staffId && !!date,
+  });
+};

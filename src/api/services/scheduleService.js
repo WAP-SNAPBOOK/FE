@@ -101,4 +101,23 @@ export const scheduleService = {
     );
     return res.data;
   },
+
+  /**
+   * 일별 예약 가능 시간 조회 (고객용)
+   * @param {number} shopId - 매장 ID (path param)
+   * @param {number} staffId - 스태프 ID (path param)
+   * @param {string} date - 조회 날짜 (예: '2026-03-05', 'YYYY-MM-DD')
+   * @returns {Promise<{
+   *   date: string,
+   *   slots: string[],
+   *   holiday: boolean
+   * }>}
+   */
+  getDailyAvailability: async (shopId, staffId, date) => {
+    const res = await axiosClient.get(
+      `/api/v1/shops/${shopId}/staff/${staffId}/availability`,
+      { params: { date } }
+    );
+    return res.data;
+  },
 };
