@@ -81,4 +81,19 @@ export const scheduleService = {
     );
     return res.data;
   },
+
+  /**
+   * 월별 예약 가능 캘린더 조회 (고객용)
+   * @param {number} shopId - 매장 ID (path param)
+   * @param {number} staffId - 스태프 ID (path param)
+   * @param {string} yearMonth - 조회 월 (예: '2026-03')
+   * @returns {Promise<Object>} 월별 예약 가능 날짜 데이터
+   */
+  getMonthlyAvailability: async (shopId, staffId, yearMonth) => {
+    const res = await axiosClient.get(
+      `/api/v1/shops/${shopId}/staff/${staffId}/availability/monthly`,
+      { params: { yearMonth } }
+    );
+    return res.data;
+  },
 };
