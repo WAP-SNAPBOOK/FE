@@ -113,7 +113,7 @@ export default function ReservationCreatePage() {
 
         <S.Content>
           {step === 1 && <StepUserInfo initialData={formData.basic} onChange={stepHandlers[1]} />}
-          {step === 2 && <StepDateTime initialData={formData.basic} onChange={stepHandlers[2]} />}
+          {step === 2 && <StepDateTime shopId={shopId} initialData={formData.basic} onChange={stepHandlers[2]} />}
           {step === 3 && (
             <StepTagMenu
               shopId={shopId}
