@@ -8,13 +8,12 @@ import { useMonthlyAvailability, useDailyAvailability } from '@/query/scheduleQu
 import * as S from '../steps.styles';
 
 // TODO: staffId를 동적으로 받아야 함
-const STAFF_ID = 1;
+const STAFF_ID = 28;
 
 export default function StepDateTime({ shopId, initialData = {}, onChange }) {
   const [selectedDate, setSelectedDate] = useState(initialData.date ?? null); //선택된 날짜
   const [selectedTime, setSelectedTime] = useState(initialData.time ?? null); //선택된 시간  //선택된 날짜의 month, 없다면 현재 달
   const [currentMonth, setCurrentMonth] = useState(selectedDate ? dayjs(selectedDate) : dayjs());
-
   const yearMonth = currentMonth.format('YYYY-MM');
   const { data: monthlyData } = useMonthlyAvailability(shopId, STAFF_ID, yearMonth);
   const { data: dailyData } = useDailyAvailability(shopId, STAFF_ID, selectedDate);
