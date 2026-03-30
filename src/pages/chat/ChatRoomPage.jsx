@@ -6,7 +6,6 @@ import Container from '../../components/common/Container';
 import * as S from './ChatRoomPage.style';
 import backIcon from '../../assets/icons/back-icon.svg';
 import { ChatRoomTitle } from '../../components/title/SignupTitle';
-import ReservationModal from '../../components/reservation/ReservationModal';
 import { authStorage } from '../../utils/auth/authStorage';
 import { useAuth } from '../../context/AuthContext';
 import { usePreserveScrollPosition } from '../../hooks/chat/usePreserveScrollPosition';
