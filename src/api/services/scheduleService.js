@@ -81,4 +81,44 @@ export const scheduleService = {
     );
     return res.data;
   },
+
+  /**
+   * 월별 예약 가능 캘린더 조회 (고객용)
+   * @param {number} shopId - 매장 ID (path param)
+   * @param {number} staffId - 스태프 ID (path param)
+   * @param {string} yearMonth - 조회 월 (예: '2026-03')
+   * @returns {Promise<{
+   *   yearMonth: string,
+   *   availableDates: number[],
+   *   holidayDates: number[],
+   *   closedDates: number[]
+   * }>}
+   */
+  getMonthlyAvailability: async (shopId, staffId, yearMonth) => {
+    const res = await axiosClient.get(
+      `/api/v1/shops/${shopId}/staff/${staffId}/availability/monthly`,
+      { params: { yearMonth } }
+    );
+    return res.data;
+  },
+
+  /**
+   * 일별 예약 가능 시간 조회 (고객용)
+   * @param {number} shopId - 매장 ID (path param)
+   * @param {number} staffId - 스태프 ID (path param)
+   * @param {string} date - 조회 날짜 (예: '2026-03-05', 'YYYY-MM-DD')
+   * @returns {Promise<{
+   *   date: string,
+   *   intervalMinutes: number,
+   *   slots: { time: string, status: 'AVAILABLE' | 'BOOKED' }[],
+   *   holiday: boolean
+   * }>}
+   */
+  getDailyAvailability: async (shopId, staffId, date) => {
+    const res = await axiosClient.get(
+      `/api/v1/shops/${shopId}/staff/${staffId}/availability`,
+      { params: { date } }
+    );
+    return res.data;
+  },
 };
