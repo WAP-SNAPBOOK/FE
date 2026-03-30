@@ -10,9 +10,17 @@ import backIcon from '@/assets/icons/back-icon.svg';
 import xIcon from '@/assets/icons/X-icon.svg';
 import { useReservationFormHandlers } from './hooks/useReservationFormHandlers';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
+import { useCreateReservation } from '@/query/reservationQueries';
+import { useUploadMultipleFiles } from '@/query/fileQueries';
+
+// TODO: staffId를 동적으로 받아야 함
+const STAFF_ID = 29;
 
 export default function ReservationCreatePage() {
   const { shopId } = useParams();
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const [step, setStep] = useState(1);
   const [canNext, setCanNext] = useState(false);
 
@@ -34,8 +42,18 @@ export default function ReservationCreatePage() {
     },
   });
 
-  const navigate = useNavigate();
-  const location = useLocation();
+  //예약 생성 페이지 나가기 헨들러
+  const handleClose = () => {
+    const returnTo = location.state?.returnTo;
+    if (returnTo) {
+      navigate(returnTo, { replace: true });
+    } else {
+      navigate('/chat'); // fallback
+    }
+  };
+
+  const createReservation = useCreateReservation(handleClose);
+  const uploadFiles = useUploadMultipleFiles();
 
   //각 예약 단계 폼 입력 헨들러
   const { handleUserInfoChange, handleDateTimeChange, handleTagMenuChange, handlePhotoNoteChange } =
@@ -47,6 +65,11 @@ export default function ReservationCreatePage() {
     3: handleTagMenuChange,
     4: handlePhotoNoteChange,
   };
+
+  //다음 단계 이동으로 step증가
+  const next = () => setStep((s) => Math.min(s + 1, 4));
+  //이전 단계 이동으로 step감소
+  const prev = () => setStep((s) => Math.max(s - 1, 1));
 
   const handleNextClick = () => {
     // step 4는  제출
@@ -62,31 +85,37 @@ export default function ReservationCreatePage() {
     setCanNext(false); // 다음 step 진입 시 초기화
   };
 
-  //다음 단계 이동으로 step증가
-  const next = () => setStep((s) => Math.min(s + 1, 4));
-  //이전 단계 이동으로 step감소
-  const prev = () => setStep((s) => Math.max(s - 1, 1));
+  const submitReservation = async () => {
+    const { basic, tagMenu, photoNote } = formData;
 
-  const submitReservation = () => {
-    // TODO: API payload 조합 후 createReservation
-    //console.log('FINAL SUBMIT', formData);
+    // 이미지 업로드
+    const uploadResults =
+      photoNote.files.length > 0 ? await uploadFiles.mutateAsync(photoNote.files) : [];
+    const imageUrls = uploadResults.map(({ fileUrl }) => fileUrl);
 
-    const returnTo = location.state?.returnTo;
+    // menuSelections 변환: { [menuId]: { [fieldId]: value } } → API 형식
+    const menuSelections = tagMenu.menuIds.map((menuId) => ({
+      menuId,
+      inputValues: Object.entries(tagMenu.inputFieldValues[menuId] ?? {}).map(
+        ([fieldId, value]) => ({
+          fieldId: Number(fieldId),
+          valueNumber: typeof value === 'number' ? value : null,
+          valueText: typeof value === 'string' ? value : null,
+        })
+      ),
+    }));
 
-    if (returnTo) {
-      navigate(returnTo, { replace: true });
-    } else {
-      navigate('/chat'); // fallback
-    }
-  };
+    const payload = {
+      shopId: Number(shopId),
+      staffId: STAFF_ID,
+      date: basic.date,
+      time: basic.time,
+      requirements: photoNote.notes || null,
+      imageUrls,
+      menuSelections,
+    };
 
-  //예약 생성 페이지 나가기 헨들러
-  const handleClose = () => {
-    if (window.history.length > 1) {
-      navigate(-1);
-    } else {
-      navigate('/chat'); // fallback
-    }
+    createReservation.mutate(payload);
   };
 
   return (
@@ -113,7 +142,14 @@ export default function ReservationCreatePage() {
 
         <S.Content>
           {step === 1 && <StepUserInfo initialData={formData.basic} onChange={stepHandlers[1]} />}
-          {step === 2 && <StepDateTime shopId={shopId} initialData={formData.basic} onChange={stepHandlers[2]} />}
+          {step === 2 && (
+            <StepDateTime
+              shopId={shopId}
+              staffId={STAFF_ID}
+              initialData={formData.basic}
+              onChange={stepHandlers[2]}
+            />
+          )}
           {step === 3 && (
             <StepTagMenu
               shopId={shopId}
