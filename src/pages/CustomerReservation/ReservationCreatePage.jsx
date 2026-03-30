@@ -160,8 +160,12 @@ export default function ReservationCreatePage() {
           {step === 4 && (
             <StepPhotoNote initialData={formData.photoNote} onChange={stepHandlers[4]} />
           )}
-          <NextButton $width="100%" disabled={step !== 4 && !canNext} onClick={handleNextClick}>
-            {step === 4 ? '예약 신청' : '다음 단계로'}
+          <NextButton
+            $width="100%"
+            disabled={(step !== 4 && !canNext) || uploadFiles.isPending || createReservation.isPending}
+            onClick={handleNextClick}
+          >
+            {uploadFiles.isPending || createReservation.isPending ? '처리중...' : step === 4 ? '예약 신청' : '다음 단계로'}
           </NextButton>
         </S.Content>
       </S.PageWrapper>
