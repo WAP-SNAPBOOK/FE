@@ -31,6 +31,7 @@ export default function StepTagMenu({ shopId, initialData = {}, onChange }) {
   const handleTagClick = (tagId) => {
     setSelectedTagId(tagId);
     setSelectedMenuIds([]);
+    setInputFieldValues({});
   };
 
   const handleMenuClick = (menu) => {
