@@ -3,7 +3,7 @@
 > **예약과 문의를 채팅에서 한 번에!**  
 > 네이버 예약·카톡으로 흩어져 있던 예약과 문의를, 한 곳의 채팅방에서 관리할 수 있게 해주는 서비스입니다.
 
-![서비스 소개](docs/photo/스냅북%20소개%20사진.png)
+<img width="1706" height="561" alt="image" src="https://github.com/user-attachments/assets/9f614f28-efae-4769-b3e7-751ff5c522de" />
 
 ## 프로젝트 개요
 
@@ -50,7 +50,7 @@
 
 ### SNS 링크 접속 시 예약 페이지 자동 진입
 
-<img src="docs/photo/1.gif" width="1000"><br>
+<img width="1200" height="675" alt="image" src="https://github.com/user-attachments/assets/a75bd0f1-f17a-4f76-8a06-3ee7476ad62f" />
 
 ### 예약 과정
 
@@ -72,9 +72,13 @@
 <details>
    <summary><b>주요 화면 뷰 토글</b></summary>
    <p align="center">
-     <img src="docs/photo/Mockuuups%20Transparent%20Samsung%20Galaxy%20S24%20Mockup.png" width="300"><br><br>
-     <img src="docs/photo/Mockuuups%20Transparent%20Samsung%20Galaxy%20S24%20Mockup1.png" width="300"><br><br>
-     <img src="docs/photo/Mockuuups%20Transparent%20Samsung%20Galaxy%20S24%20Mockup2.png" width="300"><br><br>
-     <img src="docs/photo/Mockuuups%20Transparent%20Samsung%20Galaxy%20S24%20Mockup3.png" width="300">
+       <img width="300" alt="image" src="https://github.com/user-attachments/assets/5a283fcc-3e1b-41d7-8e70-072b2a3b6925" />
+       <img width="300" alt="image" src="https://github.com/user-attachments/assets/8151dbe4-d599-42ce-b889-77743b19a1d4" />
+        <br><br>
+        <img width="300" alt="image" src="https://github.com/user-attachments/assets/93a10da1-c826-4c88-8184-826390c19761" />
+        <img width="300" alt="image" src="https://github.com/user-attachments/assets/6fb47e43-e7a0-47d0-be27-7511e90530c8" />
+
+
+   
    </p>
 </details>
