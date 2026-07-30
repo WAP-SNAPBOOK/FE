@@ -50,20 +50,20 @@
 
 ### SNS 링크 접속 시 예약 페이지 자동 진입
 
-<img width="1200" height="675" alt="image" src="https://github.com/user-attachments/assets/a75bd0f1-f17a-4f76-8a06-3ee7476ad62f" />
+<img src="docs/videos/SNS 링크 접속 시 예약 페이지 자동 진입.gif" width="1000"><br>
 
 ### 예약 과정
 
-<img src="docs/photo/2.gif" width="1000"><br>
+<img src="docs/videos/예약 과정.gif" width="1000"><br>
 
 ### 상담 과정
 
-<img src="docs/photo/3.gif" width="1000"><br>
-<img src="docs/photo/4.gif" width="1000"><br>
+<img src="docs/videos/상담과정 -1.gif" width="1000"><br>
+<img src="docs/videos/삼당과정 -2.gif" width="1000"><br>
 
 ### 예약 처리 과정
 
-<img src="docs/photo/5.gif" width="1000"><br>
+<img src="docs/videos/예약처리과정.gif" width="1000"><br>
 
 </details>
 
