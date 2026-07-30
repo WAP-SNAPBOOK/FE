@@ -45,9 +45,6 @@
 
 ## 시연
 
-<details>
-   <summary><b>시연 토글</b></summary>
-
 ### SNS 링크 접속 시 예약 페이지 자동 진입
 
 <img src="docs/videos/SNS 링크 접속 시 예약 페이지 자동 진입.gif" width="1000"><br>
@@ -65,20 +62,12 @@
 
 <img src="docs/videos/예약처리과정.gif" width="1000"><br>
 
-</details>
-
 ## 주요 화면
 
-<details>
-   <summary><b>주요 화면 뷰 토글</b></summary>
-   <p align="center">
-       <img width="300" alt="image" src="https://github.com/user-attachments/assets/5a283fcc-3e1b-41d7-8e70-072b2a3b6925" />
-       <img width="300" alt="image" src="https://github.com/user-attachments/assets/8151dbe4-d599-42ce-b889-77743b19a1d4" />
-        <br><br>
-        <img width="300" alt="image" src="https://github.com/user-attachments/assets/93a10da1-c826-4c88-8184-826390c19761" />
-        <img width="300" alt="image" src="https://github.com/user-attachments/assets/6fb47e43-e7a0-47d0-be27-7511e90530c8" />
-
-
-   
-   </p>
-</details>
+<p align="center">
+    <img width="300" alt="image" src="https://github.com/user-attachments/assets/5a283fcc-3e1b-41d7-8e70-072b2a3b6925" />
+    <img width="300" alt="image" src="https://github.com/user-attachments/assets/8151dbe4-d599-42ce-b889-77743b19a1d4" />
+    <br><br>
+    <img width="300" alt="image" src="https://github.com/user-attachments/assets/93a10da1-c826-4c88-8184-826390c19761" />
+    <img width="300" alt="image" src="https://github.com/user-attachments/assets/6fb47e43-e7a0-47d0-be27-7511e90530c8" />
+</p>
