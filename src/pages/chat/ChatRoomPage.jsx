@@ -24,11 +24,15 @@ import { useShopInfoById } from '../../query/shopQueries';
 import { useInitFullReadyScroll } from '../../hooks/chat/useInitFullReadyScroll';
 import { useNormalizedMessages } from '../../hooks/chat/useNormalizedMessages';
 import { useReservationSocketHandler } from '../../hooks/chat/useReservationSocketHandler';
+import { chatService } from '../../api/services/chatService';
+
+const MESSAGE_SYNC_SIZE = 50;
 
 export default function ChatRoomPage() {
   const [input, setInput] = useState(''); //메시지 입력 상태
   const [liveMessages, setLiveMessages] = useState([]); //실시간 추가 메시지 상태
   const [readyToObserve, setReadyToObserve] = useState(false); //옵저버 등록 제어 상태
+  const [connectionStatus, setConnectionStatus] = useState('connecting');
 
   //메뉴 표시 여부 상태
   const [showMenu, setShowMenu] = useState(false);
@@ -112,6 +116,9 @@ export default function ChatRoomPage() {
   const topObserverRef = useRef(null);
   //스크롤 제어 ref
   const bottomRef = useRef(null);
+  const lastServerMessageIdRef = useRef(null);
+  const trackedChatRoomIdRef = useRef(chatRoomId);
+  const hasConnectedRef = useRef(false);
 
   //초기 메시지 조회 정보
   const rawOldMessages = useMemo(
@@ -132,8 +139,29 @@ export default function ChatRoomPage() {
       map.set(m.messageId, m);
     });
 
-    return Array.from(map.values());
+    return Array.from(map.values()).sort((a, b) => {
+      const aId = Number(a.messageId);
+      const bId = Number(b.messageId);
+      if (Number.isSafeInteger(aId) && Number.isSafeInteger(bId)) {
+        return aId - bId;
+      }
+
+      return new Date(a.sentAt).getTime() - new Date(b.sentAt).getTime();
+    });
   }, [normalizedOldMessages, liveMessages]);
+
+  useEffect(() => {
+    const latestServerMessageId = mergedMessages.reduce((latest, message) => {
+      if (message.pending) return latest;
+
+      const messageId = Number(message.messageId);
+      return Number.isSafeInteger(messageId) ? Math.max(latest, messageId) : latest;
+    }, 0);
+
+    if (latestServerMessageId > 0) {
+      lastServerMessageIdRef.current = latestServerMessageId;
+    }
+  }, [mergedMessages]);
 
   //메시지 전송 훅
   const { mutate: sendMessage } = useSendMessage(chatRoomId, (message) => {
@@ -153,21 +181,103 @@ export default function ChatRoomPage() {
 
   //WebSocket 연결
   useEffect(() => {
-    chatSocketService.connect(accessToken, () => {
-      chatSocketService.subscribe(chatRoomId, async (incoming) => {
-        const handled = await handleReservationMessage(incoming);
+    let active = true;
+    let synchronizing = false;
+    setConnectionStatus('connecting');
+    if (trackedChatRoomIdRef.current !== chatRoomId) {
+      lastServerMessageIdRef.current = null;
+      trackedChatRoomIdRef.current = chatRoomId;
+    }
+    hasConnectedRef.current = false;
 
-        if (handled) return;
+    const handleIncomingMessage = async (incoming) => {
+      if (!active) return;
 
-        // 예약 메시지가 아니면 일반 메시지 처리
-        replaceWithServerMessage(incoming);
-      });
+      const messageId = Number(incoming.messageId);
+      if (Number.isSafeInteger(messageId)) {
+        lastServerMessageIdRef.current = Math.max(lastServerMessageIdRef.current ?? 0, messageId);
+      }
+
+      const handled = await handleReservationMessage(incoming);
+
+      if (handled) return;
+
+      // 예약 메시지가 아니면 일반 메시지 처리
+      replaceWithServerMessage(incoming);
+    };
+
+    const synchronizeMissedMessages = async () => {
+      if (!active || synchronizing) return;
+
+      synchronizing = true;
+      try {
+        let afterMessageId = lastServerMessageIdRef.current;
+
+        if (!afterMessageId) {
+          await queryClient.invalidateQueries({ queryKey: ['messages', chatRoomId] });
+          return;
+        }
+
+        while (active) {
+          const missedMessages = await chatService.getMessagesAfter(
+            chatRoomId,
+            afterMessageId,
+            MESSAGE_SYNC_SIZE
+          );
+
+          for (const message of missedMessages) {
+            await handleIncomingMessage(message);
+          }
+
+          if (missedMessages.length < MESSAGE_SYNC_SIZE) break;
+
+          const nextMessageId = Number(missedMessages.at(-1)?.messageId);
+          if (!Number.isSafeInteger(nextMessageId) || nextMessageId <= afterMessageId) break;
+          afterMessageId = nextMessageId;
+        }
+
+        if (active) setConnectionStatus('connected');
+      } catch (error) {
+        console.error('누락 메시지 동기화 실패:', error);
+        if (active) setConnectionStatus('sync-error');
+      } finally {
+        synchronizing = false;
+      }
+    };
+
+    chatSocketService.connect(accessToken, {
+      onConnect: () => {
+        if (!active) return;
+
+        chatSocketService.subscribe(chatRoomId, handleIncomingMessage);
+        setConnectionStatus('connected');
+
+        if (hasConnectedRef.current) {
+          synchronizeMissedMessages();
+        }
+        hasConnectedRef.current = true;
+      },
+      onDisconnect: () => {
+        if (active) setConnectionStatus('reconnecting');
+      },
+      onError: () => {
+        if (active) setConnectionStatus('reconnecting');
+      },
     });
 
+    const handleWindowFocus = () => {
+      if (chatSocketService.client?.connected) {
+        synchronizeMissedMessages();
+      }
+    };
+    window.addEventListener('focus', handleWindowFocus);
+
     return () => {
+      active = false;
+      window.removeEventListener('focus', handleWindowFocus);
       chatSocketService.disconnect();
     };
-  }, [chatRoomId, replaceWithServerMessage]);
+  }, [accessToken, chatRoomId, handleReservationMessage, queryClient, replaceWithServerMessage]);
 
   //스크롤 제어(새로운 메시지 추가시 추가된 매시지 보기)
   // 메시지 전송 후 호출, behavior를 선택 가능
@@ -250,6 +360,19 @@ export default function ChatRoomPage() {
           <ChatRoomTitle>{headerTitle}</ChatRoomTitle>
           <S.BookButton onClick={handleClickReservation}>예약</S.BookButton>
         </S.Header>
+        {connectionStatus !== 'connected' && (
+          <S.ConnectionStatus
+            role="status"
+            aria-live="polite"
+            $error={connectionStatus === 'sync-error'}
+          >
+            {connectionStatus === 'sync-error'
+              ? '일부 메시지를 불러오지 못했습니다. 연결 상태를 확인해 주세요.'
+              : connectionStatus === 'reconnecting'
+                ? '실시간 연결이 끊겼습니다. 다시 연결하는 중입니다.'
+                : '실시간 연결 중입니다.'}
+          </S.ConnectionStatus>
+        )}
         <S.Messages ref={messageListRef} onScroll={handleScroll}>
           {/*상단 스크롤 감지용 */}
           <div ref={topObserverRef} />
