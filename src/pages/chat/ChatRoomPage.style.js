@@ -51,6 +51,15 @@ export const Messages = styled.div`
   gap: 10px;
 `;
 
+export const ConnectionStatus = styled.div`
+  padding: 8px 16px;
+  background: ${({ $error }) => ($error ? '#fff2f2' : '#fff8e8')};
+  color: ${({ $error }) => ($error ? '#b42318' : '#8a5a00')};
+  border-bottom: 1px solid ${({ $error }) => ($error ? '#ffd5d2' : '#f5dfad')};
+  font-size: 13px;
+  text-align: center;
+`;
+
 export const InputBar = styled.div`
   display: flex;
   align-items: center;
